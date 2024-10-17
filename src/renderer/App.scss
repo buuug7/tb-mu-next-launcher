@@ -1,0 +1,85 @@
+@import 'vendor/bootstrap.css';
+
+body {
+  font-size: 14px;
+}
+
+#root {
+  max-width: 100%;
+  position: relative;
+  margin: 0 auto;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.border1 {
+  border-color: #d2b9b9;
+}
+
+.features {
+  margin: 10px 10px 15px 0;
+  font-size: 14px;
+}
+
+.index-page {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 100vh;
+
+  .header {
+    background-size: cover;
+    width: 100%;
+    height: 150px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+
+    background-image: url('/assets/banner4.jpg');
+    background-repeat: no-repeat;
+
+  }
+
+  .header h2 {
+    font-size: 20px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    margin: 0;
+    padding: 5px 0;
+    text-shadow: 0px 1px 10px #fff;
+    color: #fff;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 4px;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 4px 8px;
+    // font-size: 13px;
+  }
+
+  .body {
+    margin-top: 0.25rem;
+  }
+}
+
+.setting-page {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+
+  h5 {
+    font-size: 16px;
+  }
+}
+
