@@ -108,7 +108,7 @@ export default function Home() {
 
       <div className="footer text-muted text-center">
         <Link to="/webpage" className="mx-2">
-          土鳖奇迹文档
+          小猪公益奇迹文档
         </Link>
         <span>v{meta.version}</span>
       </div>

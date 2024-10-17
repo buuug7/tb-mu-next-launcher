@@ -188,7 +188,7 @@
     "webpack-merge": "^5.8.0"
   },
   "build": {
-    "productName": "土鳖奇迹登录器",
+    "productName": "小猪公益奇迹登录器",
     "appId": "org.erb.TuBieQiJiDengLuQi",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
