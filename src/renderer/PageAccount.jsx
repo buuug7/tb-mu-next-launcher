@@ -1,10 +1,9 @@
 import dayjs from 'dayjs';
 import { useState, useContext } from 'react';
 import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 
 import Layout from './Layout';
-import { eraseCookie, getVipItem, setCookie } from '../util';
+import { getVipItem, setCookie } from '../util';
 import AccessDenied from './AccessDenied';
 
 import { UserContext } from './user-provider';
@@ -131,7 +130,7 @@ function ChangePassword({ username }) {
               oldPassword,
               newPassword,
             })
-              .then((res) => {
+              .then(() => {
                 alert('密码修改成功, 请重新登录!');
                 logout();
               })
@@ -203,7 +202,7 @@ export function AccountInfo() {
 }
 
 export default function PageAccount() {
-  const { user, updateUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   if (!user) {
     return <AccessDenied />;

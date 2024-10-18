@@ -1,6 +1,6 @@
 import { Form, Alert, Button } from 'react-bootstrap';
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { validateEmail } from '../util';
 import Layout from './Layout';
 import { register } from './api';
