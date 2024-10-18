@@ -8,6 +8,12 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'promise/always-return': 'off',
     'jsx-a11y/anchor-is-valid': 'off',
+    '@typescript-eslint/dot-notation': 'off',
+    'prefer-template': 'off',
+    'no-plusplus': 'off',
+    'object-shorthand': 'off',
+    'react/prop-types': 'off',
+    'promise/catch-or-return': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,
