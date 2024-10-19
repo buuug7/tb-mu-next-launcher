@@ -1,10 +1,32 @@
-import { getBaseUrl } from '../config';
 import http from '../http';
+import { getBaseUrl } from '../config';
 import { getDefaultServer } from '../util';
 
-export const getUserData = (userId) => {
-  return http.get(`${getBaseUrl()}/api/users/getUser?username=${userId}`);
+export const register = (data) => {
+  const url = getBaseUrl() + `/mu/api/register`;
+  return http.post(url, data);
 };
+
+export const login = (data) => {
+  const url = `${getBaseUrl()}/mu/api/login`;
+  return http.post(url, data);
+};
+
+export const getMyData = () => {
+  return http.get(`${getBaseUrl()}/mu/api/my`);
+};
+
+export const updateUserData = (userId, payload) => {
+  const url = `${getBaseUrl()}/mu/api/users/${userId}`;
+  return http.put(url, payload);
+};
+
+export const changePassword = (userId, payload) => {
+  const url = `${getBaseUrl()}/mu/api/users/${userId}/changePassword`;
+  return http.put(url, payload);
+};
+
+/* 11111111 */
 
 export const getCharacterByUsername = (userId) => {
   return http.get(`/api/users/getCharacterByUsername?username=${userId}`);
@@ -50,24 +72,4 @@ export const getTubieExtendItemInfo = (itemSerial) => {
 export const getCustomTitles = () => {
   const url = '/json/custom-title.json';
   return http.get(url);
-};
-
-export const register = (data) => {
-  const url = getBaseUrl() + `/api/register`;
-  return http.post(url, data);
-};
-
-export const login = (data) => {
-  const url = `${getBaseUrl()}/api/login`;
-  return http.post(url, data);
-};
-
-export const updateUserInfo = (data) => {
-  const url = `${getBaseUrl()}/api/users/updateUserInfo`;
-  return http.post(url, data);
-};
-
-export const changePassword = (data) => {
-  const url = `${getBaseUrl()}/api/users/changePassword`;
-  return http.post(url, data);
 };

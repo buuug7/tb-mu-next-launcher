@@ -8,7 +8,7 @@ import AccessDenied from './AccessDenied';
 
 import { UserContext } from './user-provider';
 import useMySession from './use-my-session';
-import { changePassword, updateUserInfo } from './api';
+import { changePassword, updateUserData } from './api';
 import useUserLogout from './use-user-logout';
 
 function MyInformation() {
@@ -52,12 +52,9 @@ function MyInformation() {
             setLoading(true);
             setMessage('');
 
-            updateUserInfo({
-              username: user.id,
-              payload: {
-                name,
-                email,
-              },
+            updateUserData(user.id, {
+              name,
+              email,
             })
               .then((r) => {
                 setMessage('更新成功');
@@ -125,8 +122,7 @@ function ChangePassword({ username }) {
 
             setLoading(true);
 
-            changePassword({
-              username,
+            changePassword(username, {
               oldPassword,
               newPassword,
             })
@@ -186,9 +182,7 @@ export function AccountInfo() {
 
   return (
     <Alert variant={isBlocked ? 'danger' : 'primary'}>
-      <h4 className="alert-heading">
-        {userAccount} {user['member'] ? `[VIP ${user['member']}]` : ''}
-      </h4>
+      <h4 className="alert-heading">{userAccount}</h4>
       <p>
         账号注册日期 <i>{dayjs(applyDays).format('YYYY/MM/DD HH:mm')}</i>,
         当前积分 <i>{jf}</i>, 您的会员信息为{' '}

@@ -10,7 +10,7 @@ export function setLocalStorageItem(key, value) {
 }
 
 export default function useMySession() {
-  const initValue = JSON.parse(window.localStorage.getItem(mySessionKey));
+  const initValue = window.localStorage.getItem(mySessionKey);
   const [session, setSession] = useState(initValue);
 
   useEffect(() => {
@@ -18,8 +18,7 @@ export default function useMySession() {
       console.log('localStorageChange', event);
       if (event.detail.key === mySessionKey) {
         const data = window.localStorage.getItem(mySessionKey);
-        const json = JSON.parse(data);
-        setSession(json);
+        setSession(data);
       }
     });
   }, []);

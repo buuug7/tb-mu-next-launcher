@@ -60,15 +60,7 @@ export default function PageLogin() {
               .then(({ data }) => {
                 console.log(data);
                 if (data) {
-                  setLocalStorageItem(
-                    mySessionKey,
-                    JSON.stringify({
-                      id: data['memb___id'],
-                      name: data['memb_name'],
-                      email: data['mail_addr'],
-                    })
-                  );
-
+                  setLocalStorageItem(mySessionKey, data.access_token);
                   navigate('/');
                 }
               })
