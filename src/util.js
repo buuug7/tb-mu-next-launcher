@@ -5,6 +5,9 @@ import {
   DEFAULT_SERVER_KEY_NAME,
   DEFAULT_SERVER_KEY_VALUE,
   VIPS,
+  defaultClassInfo,
+  RESET_LIFE_PER_POINTS,
+  MASTER_RESET_LIFE_PER_POINTS,
 } from './config';
 
 /**
@@ -66,3 +69,117 @@ export function getVipItem(user) {
   }
   return VIPS.find((it) => it.id === user.AccountLevel);
 }
+
+export const classToName = {
+  0: '法师',
+  1: '魔导士',
+  2: '神导师',
+
+  16: '剑士',
+  17: '骑士',
+  18: '神骑士',
+
+  32: '弓箭手',
+  33: '圣射手',
+  34: '神射手',
+
+  48: '魔剑士',
+  50: '剑圣',
+
+  64: '圣导师',
+  66: '祭师',
+
+  80: '召唤师',
+  81: '圣巫师',
+  82: '神巫师',
+
+  96: '格斗家',
+  98: '格斗大师',
+};
+
+export function class2Index(classNum) {
+  const dic = {
+    0: 0,
+    1: 0,
+    2: 0,
+    16: 1,
+    17: 1,
+    18: 1,
+    32: 2,
+    33: 2,
+    34: 2,
+    48: 3,
+    50: 3,
+    64: 4,
+    65: 4,
+    80: 5,
+    81: 5,
+    82: 5,
+    96: 6,
+    98: 6,
+  };
+
+  return dic[classNum] || 0;
+}
+
+export function getPointsPerLevel(classNum) {
+  // 不同角色每级几点属性点
+  // DW DK ELF MG DL SUM FR
+  const pointsPerLevelArr = [5, 5, 5, 5, 5, 5, 5];
+
+  return pointsPerLevelArr[class2Index(classNum)];
+}
+
+export function getTotalPoints(character) {
+  const cLevel = character['cLevel'];
+  const resets = character['ResetCount'];
+  const defaultInfo = defaultClassInfo[class2Index(character['Class'])];
+
+  const Strength = defaultInfo['Strength'];
+  const Dexterity = defaultInfo['Dexterity'];
+  const Vitality = defaultInfo['Vitality'];
+  const Energy = defaultInfo['Energy'];
+  const Leadership = defaultInfo['Leadership'];
+  const defaultPoints = Strength + Dexterity + Vitality + Energy + Leadership;
+  const pointsPerLevel = getPointsPerLevel(character['Class']);
+  const masterResetPoints =
+    MASTER_RESET_LIFE_PER_POINTS * character['MasterResetCount'];
+
+  return (
+    cLevel * pointsPerLevel +
+    resets * RESET_LIFE_PER_POINTS +
+    defaultPoints +
+    masterResetPoints
+  );
+}
+
+export const rankOrderTypes = [
+  {
+    name: '默认',
+    value: 'default',
+  },
+  {
+    name: '杀怪',
+    value: 'killMonster',
+  },
+  {
+    name: '杀人',
+    value: 'Kills',
+  },
+  {
+    name: '死亡',
+    value: 'Deads',
+  },
+  {
+    name: '血色城堡',
+    value: 'bloodScore',
+  },
+  {
+    name: '恶魔广场',
+    value: 'devilSquareScore',
+  },
+  {
+    name: '赤色要塞',
+    value: 'chaoCastleScore',
+  },
+];

@@ -109,7 +109,9 @@
     }
   },
   "dependencies": {
+    "@buuug7/simplify-skeleton": "^0.1.2",
     "axios": "^1.7.2",
+    "bootstrap": "^5.3.3",
     "dayjs": "^1.11.13",
     "electron-debug": "^3.2.0",
     "electron-log": "^5.0.0-beta.21",

@@ -1,5 +1,3 @@
-@import 'vendor/bootstrap.css';
-
 body {
   background-color: #faf8fb;
   font-family: JetBrains Sans, Inter, system-ui, -apple-system,
@@ -12,6 +10,48 @@ body {
 
 header nav {
   box-shadow: 0 0 8px 0 rgb(86 61 124 / 13%);
+}
+
+.rank {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.rank .card-body {
+  padding: 12px;
+}
+
+.rank .card {
+  border-radius: 0;
+  border: none;
+}
+
+@media (max-width: 1200px) {
+  .rank {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .rank {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card-rank .stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px 8px;
+}
+
+.card-rank .stats-row .stat-item {
+  text-align: left;
+  font-size: 15px;
+}
+.card-rank .stats-row .stat-item h6 {
+  color: #777;
 }
 
 /* old */

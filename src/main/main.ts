@@ -16,6 +16,7 @@ import {
   ipcMain,
   dialog,
   crashReporter,
+  protocol,
 } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
@@ -33,6 +34,17 @@ import {
 } from '../config';
 import { getRegedit, setRegedit } from './regedit';
 import store from './store';
+import { handleMyResourceProtocol, myResourceSchema } from './custom-protocol';
+
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: myResourceSchema,
+    privileges: {
+      standard: true,
+      secure: true,
+    },
+  },
+]);
 
 class AppUpdater {
   constructor() {
@@ -219,6 +231,7 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
+    protocol.registerBufferProtocol(myResourceSchema, handleMyResourceProtocol);
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the

@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { mySessionKey } from 'config';
 import { login } from './api';
-import { setCookie } from '../util';
 import { setLocalStorageItem } from './use-my-session';
 import Layout from './Layout';
 

@@ -34,7 +34,7 @@ export default function SettingPage() {
     msg: '检测更新...',
     finished: true,
   });
-  const [userData, setUserData] = useState({})
+  const [userData, setUserData] = useState({});
 
   const onResolutionChange = (e: any) => {
     setResolution(Number(e.target.value));
@@ -57,19 +57,19 @@ export default function SettingPage() {
 
     electron.ipcRenderer.sendMessage(EVENT_GET_REGEDIT, []);
 
-    const userData = window.electron.store.get(USER_DATA_KEY) || {};
-    setUserData(userData);
+    const newUserData = window.electron.store.get(USER_DATA_KEY) || {};
+    setUserData(newUserData);
 
-    if (userData.muFolder) {
-      setMuFolder(userData.muFolder);
+    if (newUserData.muFolder) {
+      setMuFolder(newUserData.muFolder);
     }
 
-    if (userData.ipAndPort) {
-      setIpAndPort(userData.ipAndPort);
+    if (newUserData.ipAndPort) {
+      setIpAndPort(newUserData.ipAndPort);
     }
 
-    if (userData.server) {
-      setServer(userData.server);
+    if (newUserData.server) {
+      setServer(newUserData.server);
     }
   }, []);
 
@@ -99,10 +99,7 @@ export default function SettingPage() {
           }}
         >
           {servers.map((it) => (
-            <option
-              value={it.key}
-              key={it.key}
-            >
+            <option value={it.key} key={it.key}>
               {it.name}
             </option>
           ))}

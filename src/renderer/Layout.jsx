@@ -1,16 +1,14 @@
 import { useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 
-import { copyRight, sitePrimaryTitle, SERVERS, mySessionKey } from '../config';
+import { copyRight, sitePrimaryTitle, SERVERS } from '../config';
 import { UserContext } from './user-provider';
-import { eraseCookie, setCookie } from '../util';
 import useMySession from './use-my-session';
 import useUserLogout from './use-user-logout';
 
 function MyNavbar() {
-  const { defaultServer, user, updateUser } = useContext(UserContext);
-  const navigate = useNavigate();
+  const { defaultServer, user } = useContext(UserContext);
   const logout = useUserLogout();
 
   return (

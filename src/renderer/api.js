@@ -26,6 +26,16 @@ export const changePassword = (userId, payload) => {
   return http.put(url, payload);
 };
 
+export const getUserOnlineStatus = () => {
+  return http.get(`${getBaseUrl()}/mu/api/users/onlineStatus`);
+};
+
+export const getCharactersByPage = (query) => {
+  return http.get(`${getBaseUrl()}/mu/api/users/characters`, {
+    params: query,
+  });
+};
+
 /* 11111111 */
 
 export const getCharacterByUsername = (userId) => {
