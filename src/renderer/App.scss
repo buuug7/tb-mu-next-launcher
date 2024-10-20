@@ -12,48 +12,18 @@ header nav {
   box-shadow: 0 0 8px 0 rgb(86 61 124 / 13%);
 }
 
-.rank {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 2rem;
+.ribbon {
+  position: absolute;
+  display: inline-block;
+  background-color: rgba(255, 0, 0, 0.7);
+  padding: 0.15rem 2rem;
+  color: #fff;
+  right: -1.5rem;
+  top: 0.5rem;
+  transform: rotate(45deg);
+  z-index: 15;
+  font-size: 12px;
 }
-
-.rank .card-body {
-  padding: 12px;
-}
-
-.rank .card {
-  border-radius: 0;
-  border: none;
-}
-
-@media (max-width: 1200px) {
-  .rank {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .rank {
-    grid-template-columns: 1fr;
-  }
-}
-
-.card-rank .stats-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 16px 8px;
-}
-
-.card-rank .stats-row .stat-item {
-  text-align: left;
-  font-size: 15px;
-}
-.card-rank .stats-row .stat-item h6 {
-  color: #777;
-}
-
 /* old */
 
 #root {

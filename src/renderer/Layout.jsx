@@ -4,7 +4,6 @@ import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 
 import { copyRight, sitePrimaryTitle, SERVERS } from '../config';
 import { UserContext } from './user-provider';
-import useMySession from './use-my-session';
 import useUserLogout from './use-user-logout';
 
 function MyNavbar() {
@@ -61,7 +60,7 @@ function MyNavbar() {
               </Link>
             ) : (
               <>
-                <NavDropdown title={user.id}>
+                <NavDropdown title={user.memb___id}>
                   <Link to="/account" className="dropdown-item">
                     我的账号
                   </Link>

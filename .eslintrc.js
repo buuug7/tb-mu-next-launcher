@@ -15,7 +15,7 @@ module.exports = {
     'react/prop-types': 'off',
     'react/jsx-boolean-value': 'warn',
     'promise/catch-or-return': 'off',
-    'prefer-destructuring': 'warn',
+    'prefer-destructuring': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/no-static-element-interactions': 'off',
     '@typescript-eslint/ban-ts-comment': 'warn',

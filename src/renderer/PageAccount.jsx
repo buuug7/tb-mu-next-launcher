@@ -1,13 +1,10 @@
 import dayjs from 'dayjs';
 import { useState, useContext } from 'react';
 import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
-
 import Layout from './Layout';
-import { getVipItem, setCookie } from '../util';
+import { getVipItem } from '../util';
 import AccessDenied from './AccessDenied';
-
 import { UserContext } from './user-provider';
-import useMySession from './use-my-session';
 import { changePassword, updateUserData } from './api';
 import useUserLogout from './use-user-logout';
 

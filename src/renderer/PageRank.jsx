@@ -8,6 +8,8 @@ import CharacterRankList from './CharacterRankList';
 import CharacterRankCardList from './CharacterRankCard';
 import { getCharactersByPage, getUserOnlineStatus } from './api';
 
+import './PageRank.scss';
+
 /**
  * @typedef {{ConnectStat: string}} UserOnlineStatus
  */

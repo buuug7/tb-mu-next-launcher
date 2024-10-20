@@ -36,6 +36,14 @@ export const getCharactersByPage = (query) => {
   });
 };
 
+export const buyVip = (username, payload) => {
+  return http.post(`${getBaseUrl()}/mu/api/users/buyVip/${username}`, payload);
+};
+
+export const cancelVip = (username) => {
+  return http.post(`${getBaseUrl()}/mu/api/users/cancelVip/${username}`);
+};
+
 /* 11111111 */
 
 export const getCharacterByUsername = (userId) => {

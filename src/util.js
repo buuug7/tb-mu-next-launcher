@@ -1,5 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 
+import dayjs from 'dayjs';
+
 import {
   SERVERS,
   DEFAULT_SERVER_KEY_NAME,
@@ -183,3 +185,30 @@ export const rankOrderTypes = [
     value: 'chaoCastleScore',
   },
 ];
+
+export function humanNumber(n) {
+  const formatter = Intl.NumberFormat('zh-CN', { notation: 'compact' });
+  return formatter.format(n);
+}
+
+/**
+ * 获取用户退订会员剩余积分或者元宝
+ * @param user
+ * @returns {number}
+ */
+export function getUserVipRemainingJF(user) {
+  const { AccountLevel, AccountExpireDate } = user;
+  const vipItem = VIPS.find((it) => it.id === AccountLevel);
+  if (!vipItem) {
+    return 0;
+  }
+  const days = dayjs(AccountExpireDate).diff(dayjs(), 'days');
+  const backJF = (vipItem.pricePerDay * days) / 2;
+  const returnValue = Math.floor(backJF);
+
+  if (returnValue < 0) {
+    return 0;
+  }
+
+  return returnValue;
+}

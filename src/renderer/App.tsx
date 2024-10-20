@@ -8,6 +8,7 @@ import PageRegister from './PageRegister';
 import PageLogin from './PageLogin';
 import PageAccount from './PageAccount';
 import PageRank from './PageRank';
+import PageVip from './PageVip';
 
 import UserProvider from './user-provider';
 
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/login" element={<PageLogin />} />
             <Route path="/account" element={<PageAccount />} />
             <Route path="/rank" element={<PageRank />} />
+            <Route path="/vip" element={<PageVip />} />
 
             <Route path="/setting" element={<Setting />} />
             <Route path="/webpage" element={<WebSite />} />

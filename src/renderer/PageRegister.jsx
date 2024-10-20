@@ -2,8 +2,8 @@ import { Form, Alert, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { validateEmail } from '../util';
-import Layout from './Layout';
 import { register } from './api';
+import Layout from './Layout';
 
 export default function PageRegister() {
   const [username, setUsername] = useState('');
