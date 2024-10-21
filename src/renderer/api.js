@@ -68,6 +68,10 @@ export const customExt1Reset = (data) => {
   return http.post(`${getBaseUrl()}/mu/api/users/customExt1Reset`, data);
 };
 
+export const selfHelp = (data) => {
+  return http.post(`${getBaseUrl()}/mu/api/users/selfHelp`, data);
+};
+
 /* 11111111 */
 
 export const getUpgradeItems = () => {

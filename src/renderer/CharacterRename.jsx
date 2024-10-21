@@ -7,6 +7,8 @@ import { CHANGE_NAME_NEED_JF } from '../config';
 import { UserContext } from './user-provider';
 import { changeCharacterName } from './api';
 
+import MySwal from './MySwal';
+
 /**
  *
  * @param {{UserCharacter}} item
@@ -67,14 +69,6 @@ export default function CharacterRename({
                 return;
               }
 
-              const confirmFn = confirm(
-                `在线改名要收取额外的 ${CHANGE_NAME_NEED_JF} 积分, 你同意吗?`
-              );
-
-              if (!confirmFn) {
-                return;
-              }
-
               if (JF < CHANGE_NAME_NEED_JF) {
                 updateMessage(
                   `在线改名需要 ${CHANGE_NAME_NEED_JF} 积分,你当前的积分还不够.`
@@ -82,26 +76,33 @@ export default function CharacterRename({
                 return;
               }
 
-              setLoading(true);
+              MySwal.confirm({
+                text: `在线改名要收取额外的 ${CHANGE_NAME_NEED_JF} 积分, 你同意吗?`,
+              }).then((result) => {
+                if (!result.isConfirmed) {
+                  return;
+                }
 
-              changeCharacterName({
-                username: item['AccountID'],
-                oldName: item['Name'],
-                newName: changedName,
-              })
-                .then(({ data }) => {
-                  console.log(data);
-                  setShowChangeNameModal(false);
-                  updateMessage('成功修改角色名称');
-                  notifyUserDataChange();
+                setLoading(true);
+
+                changeCharacterName({
+                  username: item['AccountID'],
+                  oldName: item['Name'],
+                  newName: changedName,
                 })
-                .catch((err) => {
-                  console.log(err.response.data);
-                  updateMessage(err.response.data.message);
-                })
-                .finally(() => {
-                  setLoading(false);
-                });
+                  .then(() => {
+                    setShowChangeNameModal(false);
+                    updateMessage('成功修改角色名称');
+                    notifyUserDataChange();
+                  })
+                  .catch((err) => {
+                    console.log(err.response.data);
+                    updateMessage(err.response.data.message);
+                  })
+                  .finally(() => {
+                    setLoading(false);
+                  });
+              });
             }}
           >
             {loading ? 'Loading...' : '保存'}

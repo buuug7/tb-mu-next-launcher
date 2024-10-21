@@ -7,6 +7,7 @@ import { customTitle, getSomeJson } from './api';
 import { CUSTOM_TITLE_JF } from '../config';
 import { checkName, checkNameLength, groupBy } from '../util';
 import { UserContext } from './user-provider';
+import MySwal from './MySwal';
 
 export default function CustomTitle({ character }) {
   const { updateMessage, user, notifyUserDataChange } = useContext(UserContext);
@@ -138,13 +139,6 @@ export default function CustomTitle({ character }) {
                 }
 
                 const currentJF = JF;
-                const confirmFn = confirm(
-                  `自定义称号需要收取额外的 ${CUSTOM_TITLE_JF} 积分, 你同意吗?`
-                );
-
-                if (!confirmFn) {
-                  return;
-                }
 
                 if (currentJF - CUSTOM_TITLE_JF < 0) {
                   updateMessage(
@@ -153,27 +147,35 @@ export default function CustomTitle({ character }) {
                   return;
                 }
 
-                setLoading(true);
+                MySwal.confirm({
+                  text: `自定义称号需要收取额外的 ${CUSTOM_TITLE_JF} 积分, 你同意吗?`,
+                }).then((result) => {
+                  if (!result.isConfirmed) {
+                    return;
+                  }
 
-                customTitle({
-                  username: character['AccountID'],
-                  characterName: character['Name'],
-                  customTitleName,
-                  customTitleIndex,
-                })
-                  .then(({ data }) => {
-                    console.log(data);
-                    updateMessage('成功修改称号');
-                    setShowModal(false);
-                    notifyUserDataChange();
+                  setLoading(true);
+
+                  customTitle({
+                    username: character['AccountID'],
+                    characterName: character['Name'],
+                    customTitleName,
+                    customTitleIndex,
                   })
-                  .catch((err) => {
-                    console.log(err.response.data);
-                    updateMessage(err.response.data.error);
-                  })
-                  .finally(() => {
-                    setLoading(false);
-                  });
+                    .then(({ data }) => {
+                      console.log(data);
+                      updateMessage('成功修改称号');
+                      setShowModal(false);
+                      notifyUserDataChange();
+                    })
+                    .catch((err) => {
+                      console.log(err.response.data);
+                      updateMessage(err.response.data.error);
+                    })
+                    .finally(() => {
+                      setLoading(false);
+                    });
+                });
               }}
             >
               {loading ? 'Loading...' : '保存'}

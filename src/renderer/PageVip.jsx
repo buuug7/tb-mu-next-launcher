@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { Col, Row } from 'react-bootstrap';
 import Layout from './Layout';
 import { UserContext } from './user-provider';
 

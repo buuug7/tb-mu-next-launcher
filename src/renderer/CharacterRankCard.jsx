@@ -15,7 +15,7 @@ function CharacterRankCard({ item, index, onlineStatus }) {
         <div className="card-body">
           <div className="d-flex justify-content-start align-items-center">
             <div className="char-img me-1">
-              <CharacterAvatar roleName={roleName} item={item} isRank={true} />
+              <CharacterAvatar roleName={roleName} item={item} isRank />
             </div>
 
             <div className="d-flex flex-column justify-content-start">

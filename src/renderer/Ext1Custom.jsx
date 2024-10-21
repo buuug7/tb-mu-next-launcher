@@ -7,7 +7,9 @@ import { getExt1ValueByIndex } from '../util';
 import { UserContext } from './user-provider';
 import { customExt1Reset, customExt1Update } from './api';
 
-export default function Ext1Custom({ character, onReset }) {
+import MySwal from './MySwal';
+
+export default function Ext1Custom({ character }) {
   const { updateMessage, user, notifyUserDataChange } = useContext(UserContext);
   const [type, setType] = useState(UPDATE_EXT1_TYPE.comboRate);
   const [addProb, setAddProb] = useState(0);
@@ -26,7 +28,7 @@ export default function Ext1Custom({ character, onReset }) {
       return currentValue + addProb;
     });
 
-    setCostJf((r1) => {
+    setCostJf(() => {
       return addProb * type.jfPerValue;
     });
   }, [addProb, currentValue, type]);
@@ -111,39 +113,38 @@ export default function Ext1Custom({ character, onReset }) {
                 return;
               }
 
-              const confirmFn = confirm(
-                `你当前的 ${type.name} 为 ${currentValue}%, 提升之后为 ${totalProb}%, 提升需要积分 ${costJf}`
-              );
-
               if (JF - costJf < 0) {
-                alert(`当前用户积分不够`);
+                updateMessage(`当前用户积分不够`);
                 return;
               }
 
-              if (!confirmFn) {
-                return;
-              }
+              MySwal.confirm({
+                text: `你当前的 ${type.name} 为 ${currentValue}%, 提升之后为 ${totalProb}%, 提升需要积分 ${costJf}, 你同意吗? `,
+              }).then((result) => {
+                if (!result.isConfirmed) {
+                  return;
+                }
 
-              setLoading(true);
-              customExt1Update({
-                username: character['AccountID'],
-                charName: character['Name'],
-                addProb: addProb,
-                typeKey: type.key,
-              })
-                .then(({ data }) => {
-                  console.log(data);
-                  updateMessage(`升级成功!`);
-                  notifyUserDataChange();
-                  resetInitial();
+                setLoading(true);
+                customExt1Update({
+                  username: character['AccountID'],
+                  charName: character['Name'],
+                  addProb: addProb,
+                  typeKey: type.key,
                 })
-                .catch((err) => {
-                  console.log(err.response.data);
-                  updateMessage(err.response.data.error);
-                })
-                .finally(() => {
-                  setLoading(false);
-                });
+                  .then(() => {
+                    MySwal.message(`升级成功!`);
+                    notifyUserDataChange();
+                    resetInitial();
+                  })
+                  .catch((err) => {
+                    console.log(err.response.data);
+                    updateMessage(err.response.data.error);
+                  })
+                  .finally(() => {
+                    setLoading(false);
+                  });
+              });
             }}
           >
             {loading ? 'Loading...' : '确认'}
@@ -154,33 +155,32 @@ export default function Ext1Custom({ character, onReset }) {
             size="sm"
             variant="link"
             onClick={() => {
-              const confirmFn = confirm(
-                `重置**${type.name}**到初始状态, 积分只能退还花费的一半, 你同意吗? `
-              );
+              MySwal.confirm({
+                text: `重置**${type.name}**到初始状态, 积分只能退还花费的一半, 你同意吗? `,
+              }).then((result) => {
+                if (!result.isConfirmed) {
+                  return;
+                }
 
-              if (!confirmFn) {
-                return;
-              }
-
-              setLoading(true);
-              customExt1Reset({
-                username: character['AccountID'],
-                charName: character['Name'],
-                typeKey: type.key,
-              })
-                .then(({ data }) => {
-                  console.log(data);
-                  updateMessage(`重置成功!`);
-                  notifyUserDataChange();
-                  resetInitial();
+                setLoading(true);
+                customExt1Reset({
+                  username: character['AccountID'],
+                  charName: character['Name'],
+                  typeKey: type.key,
                 })
-                .catch((err) => {
-                  console.log(err.response.data);
-                  updateMessage(err.response.data.error);
-                })
-                .finally(() => {
-                  setLoading(false);
-                });
+                  .then(({ data }) => {
+                    MySwal.message(`重置成功!`);
+                    notifyUserDataChange();
+                    resetInitial();
+                  })
+                  .catch((err) => {
+                    console.log(err.response.data);
+                    updateMessage(err.response.data.error);
+                  })
+                  .finally(() => {
+                    setLoading(false);
+                  });
+              });
             }}
           >
             {loading ? 'Loading...' : '重置'}

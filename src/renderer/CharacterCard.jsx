@@ -39,7 +39,8 @@ import Ext1Custom from './Ext1Custom';
 import CustomTitle from './CustomTitle';
 import CharacterRename from './CharacterRename';
 import { UserContext } from './user-provider';
-import { getMyData } from './api';
+import { selfHelp } from './api';
+import MySwal from './MySwal';
 
 /**
  *
@@ -231,38 +232,6 @@ export default function CharacterCard({ item }) {
       .then((r) => {
         console.log(r.data);
         updateMessage('加点成功');
-        // setTimeout(() => {
-        //   location.reload();
-        // }, 500);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-        updateMessage(err.response.data.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const meHelp = () => {
-    if (loading) {
-      return;
-    }
-    const confirmFn = confirm('你确定要进行自救吗？');
-
-    if (!confirmFn) {
-      return;
-    }
-
-    setLoading(true);
-    http
-      .post(`/api/users/meHelp`, {
-        username: item['AccountID'],
-        characterName: item['Name'],
-      })
-      .then((r) => {
-        console.log('r1=', r.data);
-        updateMessage('成功自救');
         // setTimeout(() => {
         //   location.reload();
         // }, 500);
@@ -551,7 +520,36 @@ export default function CharacterCard({ item }) {
           <Button
             disabled={loading}
             variant="outline-primary"
-            onClick={meHelp}
+            onClick={() => {
+              if (loading) {
+                return;
+              }
+
+              MySwal.confirm({
+                text: '你确定要进行自救吗？',
+              }).then((result) => {
+                if (!result.isConfirmed) {
+                  return;
+                }
+
+                setLoading(true);
+
+                selfHelp({
+                  username: item['AccountID'],
+                  characterName: item['Name'],
+                })
+                  .then(() => {
+                    updateMessage('成功自救');
+                  })
+                  .catch((err) => {
+                    console.log(err.response.data);
+                    updateMessage(err.response.data.error);
+                  })
+                  .finally(() => {
+                    setLoading(false);
+                  });
+              });
+            }}
             size="sm"
           >
             {loading ? 'Loading...' : '自救'}

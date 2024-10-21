@@ -125,7 +125,7 @@ function ChangePasswordComponent({ username }) {
               newPassword,
             })
               .then(() => {
-                alert('密码修改成功, 请重新登录!');
+                setMessage('密码修改成功, 请重新登录!');
                 logout();
               })
               .catch((err) => {

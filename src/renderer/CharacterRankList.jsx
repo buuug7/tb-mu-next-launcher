@@ -64,7 +64,7 @@ export default function CharacterRankList({ users, userOnlineStatus }) {
                 <CharacterAvatar
                   roleName={classToName[item['Class']]}
                   item={item}
-                  isRank={true}
+                  isRank
                   width={32}
                   height={32}
                 />{' '}
