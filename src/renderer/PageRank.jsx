@@ -88,7 +88,7 @@ export default function PageRank() {
 
   return (
     <Layout>
-      <div className="indexBanner" />
+      <div className="RankBanner" />
       <h3 className="text-center mb-4">
         <span>玩家排行榜</span>{' '}
         <span className="text-muted">
