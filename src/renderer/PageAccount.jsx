@@ -73,7 +73,7 @@ function MyInformation() {
   );
 }
 
-function ChangePassword({ username }) {
+function ChangePasswordComponent({ username }) {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -200,7 +200,7 @@ export default function PageAccount() {
       <h5 className="mb-3">修改密码</h5>
       <Row className="mb-3">
         <Col lg={6}>
-          <ChangePassword username={user.id} />
+          <ChangePasswordComponent username={user.memb___id} />
         </Col>
       </Row>
     </Layout>
