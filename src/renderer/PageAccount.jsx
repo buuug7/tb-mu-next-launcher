@@ -10,7 +10,7 @@ import useUserLogout from './use-user-logout';
 import IconAlert from './icons/IconAlert';
 
 function MyInformation() {
-  const { user, updateUser } = useContext(UserContext);
+  const { user, notifyUserDataChange } = useContext(UserContext);
   const [name, setName] = useState(user.memb_name);
   const [email, setEmail] = useState(user.mail_addr);
   const [loading, setLoading] = useState(false);
@@ -56,7 +56,7 @@ function MyInformation() {
             })
               .then((r) => {
                 setMessage('更新成功');
-                updateUser(r.data);
+                notifyUserDataChange();
               })
               .catch((err) => {
                 console.log(err);

@@ -9,7 +9,7 @@ import { UserContext } from './user-provider';
 import { buyVip, cancelVip } from './api';
 
 export default function VipBuyWCoinC() {
-  const { updateMessage, user, updateUser } = useContext(UserContext);
+  const { updateMessage, user, notifyUserDataChange } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const [vip, setVip] = useState(getVipItem(user));
   const [buyType, setBuyType] = useState(VIP_BUY_TYPE[1]);
@@ -23,7 +23,7 @@ export default function VipBuyWCoinC() {
     <div className="VipBuy p-3 bg-white">
       <Alert>
         你好 <i>{user['id']}</i>, 当前积分 <i>{JF}</i>, 当前元宝 <i>{YB}</i>,
-        你的会员信息为 <b>{vip.name}</b>, 到期时间{' '}
+        你的会员信息为 <b>{getVipItem(user)?.name}</b>, 到期时间{' '}
         <i>{dayjs(user['AccountExpireDate']).format('YYYY/MM/DD HH:mm')}</i>,
         VIP 购买后支持取消, 不过元宝只返还剩余时间一半价格的元宝.
       </Alert>
@@ -164,8 +164,7 @@ export default function VipBuyWCoinC() {
             })
               .then((r) => {
                 alert('购买成功');
-                updateUser(r.data);
-                // location.reload();
+                notifyUserDataChange();
               })
               .catch((err) => {
                 console.log(err);
@@ -206,8 +205,7 @@ export default function VipBuyWCoinC() {
             cancelVip(user.memb___id)
               .then(({ data }) => {
                 alert('退订会员成功');
-                updateUser(data);
-                // location.reload();
+                notifyUserDataChange();
               })
               .catch((err) => {
                 console.log(err);

@@ -8,8 +8,8 @@ export default function useUserData() {
   useEffect(() => {
     if (session) {
       getMyData(session)
-        .then((r) => {
-          setUser(r.data);
+        .then(({ data }) => {
+          setUser(data);
         })
         .catch(() => {});
     }

@@ -1,6 +1,13 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
+import {
+  Navbar,
+  Container,
+  Nav,
+  NavDropdown,
+  Toast,
+  ToastContainer,
+} from 'react-bootstrap';
 
 import { copyRight, sitePrimaryTitle, SERVERS } from '../config';
 import { UserContext } from './user-provider';
@@ -23,7 +30,7 @@ function MyNavbar() {
             <Link to="/blog" className="nav-link">
               博客
             </Link>
-            <Link to="/dashboard" className="nav-link">
+            <Link to="/characters" className="nav-link">
               角色
             </Link>
             <Link to="/vip" className="nav-link">
@@ -79,6 +86,8 @@ function MyNavbar() {
 }
 
 export default function Layout({ children }) {
+  const { message, updateMessage } = useContext(UserContext);
+
   return (
     <div className="layout">
       <header>
@@ -86,6 +95,29 @@ export default function Layout({ children }) {
       </header>
       <main style={{ marginTop: '5rem' }}>
         <div className="container mt-4">
+          {message && (
+            <ToastContainer
+              className="p-3"
+              position="bottom-center"
+              style={{ zIndex: 9999 }}
+            >
+              <Toast
+                onClose={() => {
+                  updateMessage('');
+                }}
+                show={true}
+                animation={false}
+                delay={3000}
+                autohide
+              >
+                <Toast.Header>
+                  <strong className="me-auto">消息</strong>
+                  <small>just now</small>
+                </Toast.Header>
+                <Toast.Body>{message}</Toast.Body>
+              </Toast>
+            </ToastContainer>
+          )}
           <div>{children}</div>
           <div className="footer text-muted py-2">
             <p>{copyRight}</p>

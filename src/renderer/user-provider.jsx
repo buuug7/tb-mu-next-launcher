@@ -2,10 +2,11 @@ import { createContext, useEffect, useState } from 'react';
 import { getDefaultServer } from '../util';
 import useUserData from './use-user-data';
 import { SERVERS } from '../config';
+import { getMyData } from './api';
 
 export const UserContext = createContext({
   user: null,
-  updateUser: () => {},
+  notifyUserDataChange: () => {},
   message: '',
   updateMessage: () => {},
   defaultServer: SERVERS[0],
@@ -22,9 +23,20 @@ export default function UserProvider({ children }) {
     setDefaultServer(getDefaultServer());
   }, []);
 
+  const handleUserDataChange = (event) => {
+    if (event && event.clean) {
+      setUser(null);
+      return;
+    }
+
+    getMyData().then(({ data }) => {
+      setUser(data);
+    });
+  };
+
   const value = {
     user: user,
-    updateUser: setUser,
+    notifyUserDataChange: handleUserDataChange,
     message: message,
     updateMessage: setMessage,
     defaultServer: defaultServer,
