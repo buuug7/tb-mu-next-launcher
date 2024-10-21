@@ -212,3 +212,150 @@ export function getUserVipRemainingJF(user) {
 
   return returnValue;
 }
+
+export function randomPick(arr) {
+  const index = Math.floor(Math.random() * arr.length);
+  return arr[index];
+}
+
+export function getInventoryItemByIndex(Inventory, index) {
+  return Inventory.substring(32 * index, 32 * index + 32).toLowerCase();
+}
+
+export function replaceAt(str, index, replacement) {
+  return (
+    str.substr(0, index) + replacement + str.substr(index + replacement.length)
+  );
+}
+
+export function replaceAt2(str, index, replacement) {
+  return (
+    str.substring(0, index) +
+    replacement +
+    str.substring(index + replacement.length)
+  );
+}
+
+export function getCharacterAbbr(code) {
+  let cName = '';
+  switch (code) {
+    case 0:
+    case 1:
+    case 3:
+      cName = 'dw';
+      break;
+    case 16:
+    case 17:
+    case 19:
+      cName = 'dk';
+      break;
+    case 32:
+    case 33:
+    case 35:
+      cName = 'elf';
+      break;
+    case 80:
+    case 81:
+    case 83:
+      cName = 'sum';
+      break;
+    case 48:
+    case 50:
+      cName = 'mg';
+      break;
+    case 64:
+    case 66:
+      cName = 'dl';
+      break;
+    default:
+      cName = 'elf';
+  }
+
+  return cName;
+}
+
+export function isChinese(str) {
+  const re = /[^\u4e00-\u9fa5]/;
+  return !re.test(str);
+}
+
+export const invalidNameArr = [
+  'net user',
+  ';',
+  'xp_cmdshell',
+  'add',
+  'exec%20master.dbo.xp_cmdshell',
+  'net localgroup administrators',
+  'select',
+  'count',
+  'Asc(',
+  'char(',
+  'mid(',
+  "'",
+  ':',
+  '""',
+  'insert',
+  'delete from',
+  'drop table',
+  'update',
+  'truncate',
+  'from(',
+  'long',
+  '１',
+];
+
+export function checkName(name) {
+  let isInvalidName = false;
+  // eslint-disable-next-line no-restricted-syntax
+  for (const str of invalidNameArr) {
+    if (name.indexOf(str) !== -1) {
+      isInvalidName = true;
+      break;
+    }
+  }
+
+  return !isInvalidName;
+}
+
+export function checkNameLength(name, len = 10) {
+  let count = 0;
+
+  name.split('').forEach((item) => {
+    if (isChinese(item)) {
+      count += 2;
+    } else {
+      count += 1;
+    }
+  });
+
+  return count <= len;
+}
+
+export const groupBy = (x, f) => {
+  // eslint-disable-next-line
+  return x.reduce((a, b, i) => ((a[f(b, i, x)] ||= []).push(b), a), {});
+};
+
+/**
+ * 获取 Ext1 字段中特定位置的数字
+ * 其中 index = 0, 从最后开始, 获取第 1-2 位数字
+ * 其中 index = 1, 从最后开始, 获取第 2-3 位数字
+ * 依此类推
+ * @param n 数字 n 总位数位 10 位, 最小位为 1000000000
+ * @param index
+ * @returns {number}
+ */
+export function getExt1ValueByIndex(n, index) {
+  let num = n;
+  let i = index;
+
+  if (i === 0) {
+    return num % 100;
+  }
+
+  while (i--) {
+    num = Math.floor(num / 100);
+  }
+
+  return num % 100;
+}

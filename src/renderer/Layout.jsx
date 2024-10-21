@@ -97,7 +97,7 @@ export default function Layout({ children }) {
         <div className="container mt-4">
           {message && (
             <ToastContainer
-              className="p-3"
+              className="position-fixed p-3"
               position="bottom-center"
               style={{ zIndex: 9999 }}
             >

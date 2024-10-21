@@ -54,7 +54,7 @@ function MyInformation() {
               name,
               email,
             })
-              .then((r) => {
+              .then(() => {
                 setMessage('更新成功');
                 notifyUserDataChange();
               })

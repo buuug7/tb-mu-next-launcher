@@ -44,11 +44,31 @@ export const cancelVip = (username) => {
   return http.post(`${getBaseUrl()}/mu/api/users/cancelVip/${username}`);
 };
 
-/* 11111111 */
-
-export const getCharacterByUsername = (userId) => {
-  return http.get(`/api/users/getCharacterByUsername?username=${userId}`);
+export const getCharacterByUsername = (username) => {
+  return http.get(`${getBaseUrl()}/mu/api/users/${username}/characters`);
 };
+
+export const getSomeJson = (id) => {
+  return http.get(`${getBaseUrl()}/mu/api/json/${id}`);
+};
+
+export const customTitle = (data) => {
+  return http.post(`${getBaseUrl()}/mu/api/users/customTitle`, data);
+};
+
+export const changeCharacterName = (data) => {
+  return http.post(`${getBaseUrl()}/mu/api/users/changeCharacterName`, data);
+};
+
+export const customExt1Update = (data) => {
+  return http.post(`${getBaseUrl()}/mu/api/users/customExt1Update`, data);
+};
+
+export const customExt1Reset = (data) => {
+  return http.post(`${getBaseUrl()}/mu/api/users/customExt1Reset`, data);
+};
+
+/* 11111111 */
 
 export const getUpgradeItems = () => {
   return this.getSocketItem();
@@ -84,10 +104,5 @@ export const getWarehouseInfo = (username) => {
 
 export const getTubieExtendItemInfo = (itemSerial) => {
   const url = `/api/users/getTubieExtendItem?itemSerial=${itemSerial}`;
-  return http.get(url);
-};
-
-export const getCustomTitles = () => {
-  const url = '/json/custom-title.json';
   return http.get(url);
 };

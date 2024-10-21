@@ -162,7 +162,7 @@ export default function VipBuyWCoinC() {
               name: buyType.name,
               days: buyType.days,
             })
-              .then((r) => {
+              .then(() => {
                 alert('购买成功');
                 notifyUserDataChange();
               })
@@ -203,7 +203,7 @@ export default function VipBuyWCoinC() {
             setLoading(true);
 
             cancelVip(user.memb___id)
-              .then(({ data }) => {
+              .then(() => {
                 alert('退订会员成功');
                 notifyUserDataChange();
               })
