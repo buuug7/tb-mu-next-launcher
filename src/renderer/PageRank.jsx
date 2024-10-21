@@ -60,8 +60,6 @@ export default function PageRank() {
 
   useEffect(() => {
     setLoading(true);
-
-    console.log(`order`, order);
     getCharactersByPage({
       page,
       order: order.value,

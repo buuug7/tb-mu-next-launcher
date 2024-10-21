@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { mySessionKey } from './config';
+import { fireHttp401Event } from './renderer/MyCustomEvent';
 
 const instance = axios.create();
 
@@ -27,7 +28,7 @@ instance.interceptors.response.use(
   },
   function (error) {
     if (error.response.status === 401) {
-      window.localStorage.removeItem(mySessionKey);
+      fireHttp401Event(error.response);
     }
 
     // Any status codes that falls outside the range of 2xx cause this function to trigger

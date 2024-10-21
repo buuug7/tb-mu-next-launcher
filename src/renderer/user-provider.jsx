@@ -1,8 +1,9 @@
 import { createContext, useEffect, useState } from 'react';
 import { getDefaultServer } from '../util';
 import useUserData from './use-user-data';
-import { SERVERS } from '../config';
+import { mySessionKey, SERVERS } from '../config';
 import { getMyData } from './api';
+import { HTTP_401_EVENT } from './MyCustomEvent';
 
 export const UserContext = createContext({
   user: null,
@@ -17,11 +18,18 @@ export default function UserProvider({ children }) {
   const [defaultServer, setDefaultServer] = useState(SERVERS[0]);
   const [user, setUser] = useUserData();
 
-  console.log(`user userProvider`, user);
-
   useEffect(() => {
     setDefaultServer(getDefaultServer());
   }, []);
+
+  useEffect(() => {
+    window.addEventListener(HTTP_401_EVENT, (event) => {
+      console.log(HTTP_401_EVENT, event);
+      window.localStorage.removeItem(mySessionKey);
+      setUser(null);
+      window.location.reload();
+    });
+  });
 
   const handleUserDataChange = (event) => {
     if (event && event.clean) {

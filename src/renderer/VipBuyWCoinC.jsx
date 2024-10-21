@@ -17,8 +17,6 @@ export default function VipBuyWCoinC() {
   const JF = user['WCoinP'];
   const YB = user['WCoinC'];
 
-  console.log(`users`, user);
-
   return (
     <div className="VipBuy p-3 bg-white">
       <Alert>
