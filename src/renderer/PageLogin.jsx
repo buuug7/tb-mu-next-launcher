@@ -1,6 +1,6 @@
 import { Form, Alert, Button } from 'react-bootstrap';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { mySessionKey } from 'config';
 import { login } from './api';
 import Layout from './Layout';
@@ -75,9 +75,9 @@ export default function PageLogin() {
           {loading ? 'loading...' : '登陆'}
         </Button>
 
-        <Button variant="link" href="/register" className="ml">
+        <Link variant="link" to="/register" className="btn btn-link ml">
           注册账号
-        </Button>
+        </Link>
       </Form>
     </Layout>
   );

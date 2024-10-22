@@ -1,9 +1,10 @@
 import { Form, Alert, Button } from 'react-bootstrap';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { validateEmail } from '../util';
-import { register } from './api';
 import Layout from './Layout';
+import { register } from './api';
+import MySwal from './MySwal';
 
 export default function PageRegister() {
   const [username, setUsername] = useState('');
@@ -12,6 +13,9 @@ export default function PageRegister() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
   return (
     <Layout>
       <h5 className="mb-3">用户注册</h5>
@@ -111,12 +115,12 @@ export default function PageRegister() {
               password,
             })
               .then(() => {
-                alert('注册成功');
-                // router.replace('/api/auth/signin').then(() => {});
+                MySwal.message(`注册成功`);
+                navigate('/login');
               })
               .catch((err) => {
                 console.log(err);
-                setMessage(err.response.data.message);
+                setMessage(err?.response?.data?.message);
               })
               .finally(() => {
                 setLoading(false);
