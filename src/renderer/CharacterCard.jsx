@@ -9,6 +9,8 @@ import {
   OverlayTrigger,
   Popover,
   Button,
+  Alert,
+  Badge,
 } from 'react-bootstrap';
 
 import {
@@ -355,10 +357,23 @@ export default function CharacterCard({ item }) {
           </div>
         </div>
       </Card.Header>
+      <Card.Body className="">
+        <Alert className="mb-0 py-2 px-2">
+          <Badge bg="primary" pill>
+            转生次数 {item['ResetCount']}
+          </Badge>
+          <Badge bg="primary" pill>
+            普通等级 {item['cLevel']}
+          </Badge>
+          <Badge bg="primary" pill>
+            大师等级 {item['MasterLevel']}
+          </Badge>
+          <Badge bg="primary" pill>
+            剩余点数 {LevelUpPoint}
+          </Badge>
+        </Alert>
+      </Card.Body>
       <ListGroup className="list-group-flush">
-        <ListGroupItem>转生次数: {item['ResetCount']}</ListGroupItem>
-        <ListGroupItem>当前等级: {item['cLevel']}</ListGroupItem>
-        <ListGroupItem>剩余点数: {LevelUpPoint}</ListGroupItem>
         <ListGroupItem>
           <div className="add-points-row">
             <span>力量</span>

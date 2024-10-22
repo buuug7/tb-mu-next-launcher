@@ -40,9 +40,9 @@ export default function CustomTitle({ character }) {
           </div>
           <div className="pb-1 fst-italic ">
             {character.customTitleName ? (
-              <span>{'{' + character.customTitleName + '}'}</span>
+              <b>{character.customTitleName}</b>
             ) : (
-              <span className="text-secondary">{'{暂无称号}'}</span>
+              <b className="text-secondary">暂无称号</b>
             )}
           </div>
           <div onClick={() => setShowModal(true)} style={{ cursor: 'pointer' }}>

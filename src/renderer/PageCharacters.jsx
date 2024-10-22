@@ -44,9 +44,9 @@ export default function PageCharacters() {
         <div>
           账号注册日期{' '}
           <i>{dayjs(user['appl_days']).format('YYYY/MM/DD HH:mm')}</i>, 当前积分{' '}
-          <b style={{ color: 'green' }}>{user['WCoinP']}</b>, 当前元宝为{' '}
-          <b style={{ color: 'red' }}>{user['WCoinC']}</b>, 您的会员信息为{' '}
-          <b style={{ color: 'red' }}>{vipItem?.name}</b>, 到期时间{' '}
+          <b className="text-danger">{user['WCoinP']}</b>, 当前元宝为{' '}
+          <b className="text-danger">{user['WCoinC']}</b>, 您的会员信息为{' '}
+          <b className="text-danger">{vipItem?.name}</b>, 到期时间{' '}
           <i>{dayjs(user['AccountExpireDate']).format('YYYY/MM/DD HH:mm')}</i>.
         </div>
       </Alert>
