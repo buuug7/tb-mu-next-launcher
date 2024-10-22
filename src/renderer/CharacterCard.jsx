@@ -39,7 +39,7 @@ import Ext1Custom from './Ext1Custom';
 import CustomTitle from './CustomTitle';
 import CharacterRename from './CharacterRename';
 import { UserContext } from './user-provider';
-import { selfHelp, toThirdEvolution } from './api';
+import { deleteCharacter, selfHelp, toThirdEvolution } from './api';
 import MySwal from './MySwal';
 
 /**
@@ -49,7 +49,8 @@ import MySwal from './MySwal';
  */
 
 export default function CharacterCard({ item }) {
-  const { updateMessage, defaultServer } = useContext(UserContext);
+  const { updateMessage, defaultServer, notifyUserDataChange } =
+    useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const [Strength, setStrength] = useState(item['Strength']);
   const [Dexterity, setDexterit] = useState(item['Dexterity']);
@@ -228,39 +229,6 @@ export default function CharacterCard({ item }) {
       .then((r) => {
         console.log(r.data);
         updateMessage('加点成功');
-        // setTimeout(() => {
-        //   location.reload();
-        // }, 500);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-        updateMessage(err.response.data.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const deleteCharacter = () => {
-    if (loading) {
-      return;
-    }
-    const confirmFn = confirm('删除的角色无法恢复, 你确定要删除该角色吗？');
-
-    if (!confirmFn) {
-      return;
-    }
-
-    setLoading(true);
-
-    http
-      .post(`/api/users/deleteCharacter`, {
-        username: item['AccountID'],
-        characterName: item.Name,
-      })
-      .then((r) => {
-        console.log(r.data);
-        updateMessage('成功删除角色');
         // setTimeout(() => {
         //   location.reload();
         // }, 500);
@@ -579,7 +547,35 @@ export default function CharacterCard({ item }) {
           <Button
             disabled={loading}
             variant="outline-primary"
-            onClick={deleteCharacter}
+            onClick={() => {
+              if (loading) {
+                return;
+              }
+
+              MySwal.confirm({
+                text: '删除的角色无法恢复, 你确定要删除该角色吗？',
+              }).then((result) => {
+                if (!result.isConfirmed) {
+                  return;
+                }
+
+                setLoading(true);
+                deleteCharacter({
+                  charName: item.Name,
+                })
+                  .then((r) => {
+                    MySwal.message('成功删除角色');
+                    notifyUserDataChange();
+                  })
+                  .catch((err) => {
+                    console.log(err.response.data);
+                    updateMessage(err.response.data.message);
+                  })
+                  .finally(() => {
+                    setLoading(false);
+                  });
+              });
+            }}
             size="sm"
           >
             {loading ? 'Loading...' : '删除角色'}

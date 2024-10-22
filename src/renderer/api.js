@@ -76,6 +76,10 @@ export const toThirdEvolution = (data) => {
   return http.post(`${getBaseUrl()}/mu/api/users/toThirdEvolution`, data);
 };
 
+export const deleteCharacter = (data) => {
+  return http.post(`${getBaseUrl()}/mu/api/users/deleteCharacter`, data);
+};
+
 /* 11111111 */
 
 export const getUpgradeItems = () => {
