@@ -127,7 +127,6 @@ export default function Ext1Custom({ character }) {
 
                 setLoading(true);
                 customExt1Update({
-                  username: character['AccountID'],
                   charName: character['Name'],
                   addProb: addProb,
                   typeKey: type.key,
@@ -164,7 +163,6 @@ export default function Ext1Custom({ character }) {
 
                 setLoading(true);
                 customExt1Reset({
-                  username: character['AccountID'],
                   charName: character['Name'],
                   typeKey: type.key,
                 })
@@ -175,7 +173,7 @@ export default function Ext1Custom({ character }) {
                   })
                   .catch((err) => {
                     console.log(err.response.data);
-                    updateMessage(err.response.data.error);
+                    updateMessage(err.response.data.message);
                   })
                   .finally(() => {
                     setLoading(false);

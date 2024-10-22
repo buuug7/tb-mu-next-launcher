@@ -21,8 +21,8 @@ export const updateUserData = (userId, payload) => {
   return http.put(url, payload);
 };
 
-export const changePassword = (userId, payload) => {
-  const url = `${getBaseUrl()}/mu/api/users/${userId}/changePassword`;
+export const changePassword = (payload) => {
+  const url = `${getBaseUrl()}/mu/api/users/changePassword`;
   return http.put(url, payload);
 };
 
@@ -36,12 +36,12 @@ export const getCharactersByPage = (query) => {
   });
 };
 
-export const buyVip = (username, payload) => {
-  return http.post(`${getBaseUrl()}/mu/api/users/buyVip/${username}`, payload);
+export const buyVip = (payload) => {
+  return http.post(`${getBaseUrl()}/mu/api/users/buyVip`, payload);
 };
 
-export const cancelVip = (username) => {
-  return http.post(`${getBaseUrl()}/mu/api/users/cancelVip/${username}`);
+export const cancelVip = () => {
+  return http.post(`${getBaseUrl()}/mu/api/users/cancelVip`);
 };
 
 export const getCharacterByUsername = (username) => {
@@ -70,6 +70,10 @@ export const customExt1Reset = (data) => {
 
 export const selfHelp = (data) => {
   return http.post(`${getBaseUrl()}/mu/api/users/selfHelp`, data);
+};
+
+export const toThirdEvolution = (data) => {
+  return http.post(`${getBaseUrl()}/mu/api/users/toThirdEvolution`, data);
 };
 
 /* 11111111 */

@@ -39,7 +39,7 @@ import Ext1Custom from './Ext1Custom';
 import CustomTitle from './CustomTitle';
 import CharacterRename from './CharacterRename';
 import { UserContext } from './user-provider';
-import { selfHelp } from './api';
+import { selfHelp, toThirdEvolution } from './api';
 import MySwal from './MySwal';
 
 /**
@@ -106,36 +106,32 @@ export default function CharacterCard({ item }) {
       return;
     }
 
-    const confirmFn = confirm('确定要转职?');
-
-    if (!confirmFn) {
-      return;
-    }
-
     if (![1, 17, 33, 48, 64, 81, 96].includes(item['Class'])) {
-      updateMessage('只有二转职业才能进行快速三转');
+      updateMessage('只有二次转职职业才能进行三次转职');
       return;
     }
 
-    setLoading(true);
-    http
-      .post(`/api/users/zhuanZhi3`, {
-        username: item['AccountID'],
-        characterName: item['Name'],
+    MySwal.confirm({
+      text: '确定要转职?',
+    }).then((result) => {
+      if (!result.isConfirmed) {
+        return;
+      }
+      setLoading(true);
+      toThirdEvolution({
+        charName: item['Name'],
       })
-      .then(() => {
-        updateMessage('成功3次转职');
-        setTimeout(() => {
-          location.reload();
-        }, 500);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-        updateMessage(err.response.data.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+        .then(() => {
+          updateMessage('成功3次转职');
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+          updateMessage(err.response.data.message);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    });
   };
 
   const backTo2Zhuan = () => {
@@ -499,7 +495,7 @@ export default function CharacterCard({ item }) {
             </Button>
           ) : (
             <Button
-              disabled={true}
+              disabled={loading}
               variant="outline-primary"
               onClick={to3Zhuan}
               size="sm"
@@ -535,15 +531,14 @@ export default function CharacterCard({ item }) {
                 setLoading(true);
 
                 selfHelp({
-                  username: item['AccountID'],
-                  characterName: item['Name'],
+                  charName: item['Name'],
                 })
                   .then(() => {
                     updateMessage('成功自救');
                   })
                   .catch((err) => {
-                    console.log(err.response.data);
-                    updateMessage(err.response.data.error);
+                    console.log(err);
+                    updateMessage(err.response?.data?.message);
                   })
                   .finally(() => {
                     setLoading(false);

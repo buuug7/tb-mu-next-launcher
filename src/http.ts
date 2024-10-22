@@ -27,7 +27,10 @@ instance.interceptors.response.use(
     return response;
   },
   function (error) {
-    if (error.response.status === 401) {
+    if (
+      error.response.status === 401 &&
+      !error.config.url.includes('/mu/api/login') // 排除登录接口
+    ) {
       fireHttp401Event(error.response);
     }
 

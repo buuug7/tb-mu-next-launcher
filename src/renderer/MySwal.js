@@ -4,7 +4,7 @@ import withReactContent from 'sweetalert2-react-content';
 const MySwal = withReactContent(Swal);
 
 function confirm({
-  title = '你确认吗？',
+  title = '',
   text,
   confirmButtonText = '确定',
   cancelButtonText = '取消',
@@ -18,7 +18,7 @@ function confirm({
     cancelButtonColor: '#d33',
     confirmButtonText,
     cancelButtonText,
-    width: '20em',
+    width: '18em',
   });
 }
 

@@ -7,6 +7,7 @@ import { VIP_BUY_TYPE, VIPS } from '../config';
 import { getUserVipRemainingJF, getVipItem, humanNumber } from '../util';
 import { UserContext } from './user-provider';
 import { buyVip, cancelVip } from './api';
+import MySwal from './MySwal';
 
 export default function VipBuyWCoinC() {
   const { updateMessage, user, notifyUserDataChange } = useContext(UserContext);
@@ -134,43 +135,42 @@ export default function VipBuyWCoinC() {
             const vipItem = VIPS.find((it) => it.id === AccountLevel);
 
             if (AccountLevel > 0) {
-              alert(
+              updateMessage(
                 `您已经是 ${vipItem.name}, 不能重复购买, 如果要更换, 请先退订会员!`
               );
               return;
             }
 
-            const confirmFn = confirm(
-              `你正在购买 ${vip.name}, 购买方式为 ${buyType.name}, 需要 ${cost} 元宝, 你同意吗?`
-            );
-
-            if (!confirmFn) {
-              return;
-            }
-
             if (YB - cost < 0) {
-              alert(`当前用户元宝不够`);
+              updateMessage(`当前用户元宝不够`);
               return;
             }
 
-            setLoading(true);
+            MySwal.confirm({
+              text: `你正在购买 ${vip.name}, 购买方式为 ${buyType.name}, 需要 ${cost} 元宝, 你同意吗?`,
+            }).then((result) => {
+              if (!result.isConfirmed) {
+                return;
+              }
 
-            buyVip(user.memb___id, {
-              vipId: vip.id,
-              name: buyType.name,
-              days: buyType.days,
-            })
-              .then(() => {
-                alert('购买成功');
-                notifyUserDataChange();
+              setLoading(true);
+              buyVip({
+                vipId: vip.id,
+                name: buyType.name,
+                days: buyType.days,
               })
-              .catch((err) => {
-                console.log(err);
-                updateMessage(err.response.data.message);
-              })
-              .finally(() => {
-                setLoading(false);
-              });
+                .then(() => {
+                  updateMessage('购买成功');
+                  notifyUserDataChange();
+                })
+                .catch((err) => {
+                  console.log(err);
+                  updateMessage(err.response.data.message);
+                })
+                .finally(() => {
+                  setLoading(false);
+                });
+            });
           }}
         >
           {loading ? 'Loading' : '购买会员'}
@@ -184,34 +184,35 @@ export default function VipBuyWCoinC() {
             const vipItem = VIPS.find((it) => it.id === AccountLevel);
 
             if (AccountLevel <= 0) {
-              alert(`你貌似没有购买会员`);
+              updateMessage(`你貌似没有购买会员`);
               return;
             }
 
-            const backJF = getUserVipRemainingJF(user);
+            MySwal.confirm({
+              text: `你当前的会员是 ${
+                vipItem.name
+              }, 退订会员将会返还剩余时间一半的元宝, 退还 ${getUserVipRemainingJF(
+                user
+              )} 元宝, 你同意吗?`,
+            }).then((result) => {
+              if (!result.isConfirmed) {
+                return;
+              }
 
-            const confirmFn = confirm(
-              `你当前的会员是 ${vipItem.name}, 退订会员将会返还剩余时间一半的元宝, 退还 ${backJF} 元宝, 你同意吗?`
-            );
-
-            if (!confirmFn) {
-              return;
-            }
-
-            setLoading(true);
-
-            cancelVip(user.memb___id)
-              .then(() => {
-                alert('退订会员成功');
-                notifyUserDataChange();
-              })
-              .catch((err) => {
-                console.log(err);
-                updateMessage(err.response.data.message);
-              })
-              .finally(() => {
-                setLoading(false);
-              });
+              setLoading(true);
+              cancelVip()
+                .then(() => {
+                  updateMessage('退订会员成功');
+                  notifyUserDataChange();
+                })
+                .catch((err) => {
+                  console.log(err);
+                  updateMessage(err.response.data.message);
+                })
+                .finally(() => {
+                  setLoading(false);
+                });
+            });
           }}
         >
           {loading ? 'Loading' : '退订会员'}

@@ -78,6 +78,7 @@ function ChangePasswordComponent({ username }) {
   const [newPassword, setNewPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const { updateMessage } = useContext(UserContext);
 
   const logout = useUserLogout();
 
@@ -119,18 +120,17 @@ function ChangePasswordComponent({ username }) {
             }
 
             setLoading(true);
-
-            changePassword(username, {
+            changePassword({
               oldPassword,
               newPassword,
             })
               .then(() => {
-                setMessage('密码修改成功, 请重新登录!');
+                updateMessage('密码修改成功, 请重新登录!');
                 logout();
               })
               .catch((err) => {
                 console.log(err);
-                setMessage(err.response.data.message);
+                updateMessage(err.response.data.message);
               })
               .finally(() => {
                 setLoading(false);
