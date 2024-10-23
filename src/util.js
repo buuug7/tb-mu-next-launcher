@@ -359,3 +359,172 @@ export function getExt1ValueByIndex(n, index) {
 
   return num % 100;
 }
+
+export function getCatAndIndexFromIndexN(indexN) {
+  let category = 0;
+  let index = 0;
+  let find = false;
+
+  for (let i = 0; i <= 15; i++) {
+    if (find) {
+      break;
+    }
+
+    for (let j = 0; j < 300; j++) {
+      if (512 * i + j === indexN) {
+        category = i;
+        index = j;
+        find = true;
+        break;
+      }
+    }
+  }
+
+  return {
+    category,
+    index,
+  };
+}
+
+// from Muonline server c++ code
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export function MAKE_NUMBER_W(x, y) {
+  return (y & 0xff) | ((x & 0xff) << 8);
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export function MAKE_NUMBER_DW(x, y) {
+  return (y & 0xffff) | ((x & 0xffff) << 16);
+}
+
+export function getItemSocketSlotCount(socketOption) {
+  let count = 0;
+
+  (socketOption || []).forEach((it) => {
+    if (it !== 255) {
+      count++;
+    }
+  });
+
+  return count;
+}
+
+/**
+ * 解析物品 byte: 0A78FB019215863F00D000FFFFFFFFFF
+ * @param rawHex
+ * @returns {{setOption: number, isExpiredItem: number, jewelOfHarmonyOption: *, itemOptionEx: number, level: number, newOption: number, durability: *, index: number, isPeriodicItem: number, serial: *, indexN: number, option3: number, socketOption: *[], option1: number, option2: number, category: number}}
+ */
+export function parseItemByte(rawHex) {
+  console.log(`rawHex`, rawHex);
+  const rawArr = rawHex.match(/.{1,2}/g).map((it) => Number(`0x` + it));
+  const indexN =
+    rawArr[0] | ((rawArr[9] & 0xf0) * 32) | ((rawArr[7] & 0x80) * 2);
+  const { category, index } = getCatAndIndexFromIndexN(indexN);
+
+  const level = Math.floor(rawArr[1] / 8) & 15;
+  const durability = rawArr[2];
+
+  // 序列号
+  const serial = MAKE_NUMBER_DW(
+    MAKE_NUMBER_W(rawArr[3], rawArr[4]),
+    MAKE_NUMBER_W(rawArr[5], rawArr[6])
+  );
+
+  // 幸运
+  const option1 = Math.floor(rawArr[1] / 128) & 1;
+  // 技能
+  const option2 = Math.floor(rawArr[1] / 4) & 1;
+  // 追加
+  const option3 = (rawArr[1] & 3) + Math.floor((rawArr[7] & 64) / 16);
+  // 卓越
+  const newOption = rawArr[7] & 63;
+  // 套装标记
+  const setOption = rawArr[8] & 15;
+  const itemOptionEx = (rawArr[9] & 8) * 16;
+  const isPeriodicItem = ((rawArr[9] & 2) / 2) & 1;
+  const isExpiredItem = ((rawArr[9] & 4) / 4) & 1;
+  // 镶嵌属性
+  const socketOption = [
+    rawArr[11],
+    rawArr[12],
+    rawArr[13],
+    rawArr[14],
+    rawArr[15],
+  ];
+  // 强化属性
+  const jewelOfHarmonyOption = rawArr[10];
+
+  return {
+    serial,
+    indexN,
+    index,
+    category,
+    level,
+    durability,
+    option1,
+    option2,
+    option3,
+    newOption,
+    setOption,
+    itemOptionEx,
+    isPeriodicItem,
+    isExpiredItem,
+    socketOption,
+    jewelOfHarmonyOption,
+  };
+}
+
+export function getWareHouseItemsArr(Items) {
+  const arr = Items.match(/.{1,32}/g);
+  return arr;
+}
+
+export function getWareHouseItems(Items, num = -1) {
+  const arr = Items.match(/.{1,32}/g);
+  const rs = arr
+    .map((it, index) => ({
+      index,
+      value: it,
+    }))
+    .filter((it) => !it.value.startsWith('FF'));
+
+  console.log(`items`, rs);
+
+  if (num >= 0 && rs.length > num) {
+    return rs.length > num ? rs[num] : null;
+  }
+
+  return null;
+}
+
+/**
+ * get warehouse item by index
+ * @param Items
+ * @param index
+ * @param muItems
+ * @returns {{setOption: number, rawIndex, isExpiredItem: number, jewelOfHarmonyOption: *, itemOptionEx: number, level: number, newOption: number, durability: *, index: number, isPeriodicItem: number, serial: *, indexN: number, rawValue, option3: number, socketOption: *[], name: (*|string), option1: number, option2: number, category: number}|null}
+ */
+export function getWareHouseItemByIndex(Items, index = 0, muItems = []) {
+  const item = getWareHouseItems(Items, index);
+
+  if (!item) {
+    return null;
+  }
+  const parsed = parseItemByte(item.value);
+  const findIt = muItems.find(
+    (it) => it.category === parsed.category && it.index === parsed.index
+  );
+  const info = {
+    ...parsed,
+    name: findIt ? findIt.name : `${parsed.category} - ${parsed.index}`,
+    rawValue: item.value,
+    rawIndex: item.index,
+  };
+
+  return info;
+}
+
+export function getSocketPropertyByValue(arr, value) {
+  return arr.find((it) => parseInt('0x' + it.value, 16) === value);
+}

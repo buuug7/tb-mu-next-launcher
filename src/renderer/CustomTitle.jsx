@@ -24,7 +24,7 @@ export default function CustomTitle({ character }) {
   const JF = user['WCoinP'];
 
   useEffect(() => {
-    getSomeJson('custom.title').then(({ data }) => {
+    getSomeJson('custom-title').then(({ data }) => {
       setTitles(data);
     });
   }, []);

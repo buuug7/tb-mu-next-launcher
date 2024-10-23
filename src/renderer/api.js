@@ -80,6 +80,23 @@ export const deleteCharacter = (data) => {
   return http.post(`${getBaseUrl()}/mu/api/users/deleteCharacter`, data);
 };
 
+export const getWarehouseInfo = () => {
+  return http.get(`${getBaseUrl()}/mu/api/users/warehouseInfo`);
+};
+
+export const updateWarehouseFirstItem = (data) => {
+  return http.post(
+    `${getBaseUrl()}/mu/api/users/warehouse/updateFirstItem`,
+    data
+  );
+};
+
+export const itemCheckSocket = (category, index) => {
+  return http.get(
+    `${getBaseUrl()}/mu/api/items/checkSocket/${category}/${index}`
+  );
+};
+
 /* 11111111 */
 
 export const getUpgradeItems = () => {
@@ -96,22 +113,8 @@ export const getSocketItem = () => {
   return http.get(url);
 };
 
-export const getSocketItemProperties = () => {
-  const server = getDefaultServer();
-  return http.get(`/json/socket-item-properties-${server.key}.json`);
-};
-
-export const getMuItems = () => {
-  return http.get('/json/mu-items.json');
-};
-
 export const getRecycleItems = () => {
   return http.get('/json/recycle-items.json');
-};
-
-export const getWarehouseInfo = (username) => {
-  const url = `/api/users/getWarehouseInfo?username=${username}`;
-  return http.get(url);
 };
 
 export const getTubieExtendItemInfo = (itemSerial) => {

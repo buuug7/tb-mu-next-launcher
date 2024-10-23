@@ -10,6 +10,7 @@ import PageAccount from './PageAccount';
 import PageRank from './PageRank';
 import PageVip from './PageVip';
 import PageCharacters from './PageCharacters';
+import Custom from './PageCustom';
 
 import UserProvider from './user-provider';
 
@@ -28,6 +29,7 @@ export default function App() {
             <Route path="/rank" element={<PageRank />} />
             <Route path="/vip" element={<PageVip />} />
             <Route path="/characters" element={<PageCharacters />} />
+            <Route path="/custom" element={<Custom />} />
 
             <Route path="/setting" element={<Setting />} />
             <Route path="/webpage" element={<WebSite />} />

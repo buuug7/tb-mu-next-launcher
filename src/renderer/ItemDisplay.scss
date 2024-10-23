@@ -1,0 +1,25 @@
+.ItemDisplay {
+  border: 1px solid #f4f1f1;
+  padding: 5px;
+  text-align: center;
+}
+
+.ItemDisplay .name {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.ItemDisplay .item {
+  color: var(--bs-primary);
+  font-size: 14px;
+}
+
+.ItemDisplay .socketTitle {
+  color: var(--bs-pink);
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.ItemDisplay .socketItem {
+  font-size: 14px;
+}
