@@ -1,6 +1,5 @@
 import http from '../http';
 import { getBaseUrl } from '../config';
-import { getDefaultServer } from '../util';
 
 export const register = (data) => {
   const url = getBaseUrl() + `/mu/api/register`;
@@ -73,7 +72,17 @@ export const selfHelp = (data) => {
 };
 
 export const toThirdEvolution = (data) => {
-  return http.post(`${getBaseUrl()}/mu/api/users/toThirdEvolution`, data);
+  return http.post(
+    `${getBaseUrl()}/mu/api/users/characters/toThirdEvolution`,
+    data
+  );
+};
+
+export const backToSecondEvolution = (data) => {
+  return http.post(
+    `${getBaseUrl()}/mu/api/users/characters/backToSecondEvolution`,
+    data
+  );
 };
 
 export const deleteCharacter = (data) => {

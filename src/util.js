@@ -241,23 +241,18 @@ export function getCharacterAbbr(code) {
   switch (code) {
     case 0:
     case 1:
-    case 3:
+    case 2:
       cName = 'dw';
       break;
     case 16:
     case 17:
-    case 19:
+    case 18:
       cName = 'dk';
       break;
     case 32:
     case 33:
-    case 35:
+    case 34:
       cName = 'elf';
-      break;
-    case 80:
-    case 81:
-    case 83:
-      cName = 'sum';
       break;
     case 48:
     case 50:
@@ -266,6 +261,11 @@ export function getCharacterAbbr(code) {
     case 64:
     case 66:
       cName = 'dl';
+      break;
+    case 80:
+    case 81:
+    case 82:
+      cName = 'sum';
       break;
     default:
       cName = 'elf';
@@ -527,4 +527,16 @@ export function getWareHouseItemByIndex(Items, index = 0, muItems = []) {
 
 export function getSocketPropertyByValue(arr, value) {
   return arr.find((it) => parseInt('0x' + it.value, 16) === value);
+}
+
+export function isSecondEvolution(classCode) {
+  return [1, 17, 33, 48, 64, 81, 96].includes(classCode);
+}
+
+export function isThirdEvolution(classCode) {
+  return [2, 18, 34, 50, 66, 82, 98].includes(classCode);
+}
+
+export function isFirstEvolution(classCode) {
+  return [0, 16, 32, 80].includes(classCode);
 }

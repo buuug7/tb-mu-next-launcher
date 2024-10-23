@@ -18,6 +18,9 @@ import {
   getCharacterAbbr,
   getInventoryItemByIndex,
   getTotalPoints,
+  isFirstEvolution,
+  isSecondEvolution,
+  isThirdEvolution,
   randomPick,
   replaceAt,
 } from '../util';
@@ -25,8 +28,6 @@ import {
   CAN_RESET_LIFE,
   CUSTOM_TITLE_ENABLE,
   EXT1_ENABLE,
-  PRIZE1,
-  PRIZE_1_NEED_RESET_COUNT,
   RECYCLE_CHARACTER_YB,
   RECYCLE_CHARACTER_LEVEL,
   RESET_LIFT_MAX_COUNT,
@@ -41,7 +42,12 @@ import Ext1Custom from './Ext1Custom';
 import CustomTitle from './CustomTitle';
 import CharacterRename from './CharacterRename';
 import { UserContext } from './user-provider';
-import { deleteCharacter, selfHelp, toThirdEvolution } from './api';
+import {
+  backToSecondEvolution,
+  deleteCharacter,
+  selfHelp,
+  toThirdEvolution,
+} from './api';
 import MySwal from './MySwal';
 
 /**
@@ -94,78 +100,6 @@ export default function CharacterCard({ item }) {
         setTimeout(() => {
           location.reload();
         }, 200);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-        updateMessage(err.response.data.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const to3Zhuan = () => {
-    if (loading) {
-      return;
-    }
-
-    if (![1, 17, 33, 48, 64, 81, 96].includes(item['Class'])) {
-      updateMessage('只有二次转职职业才能进行三次转职');
-      return;
-    }
-
-    MySwal.confirm({
-      text: '确定要转职?',
-    }).then((result) => {
-      if (!result.isConfirmed) {
-        return;
-      }
-      setLoading(true);
-      toThirdEvolution({
-        charName: item['Name'],
-      })
-        .then(() => {
-          updateMessage('成功3次转职');
-        })
-        .catch((err) => {
-          console.log(err.response.data);
-          updateMessage(err.response.data.message);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    });
-  };
-
-  const backTo2Zhuan = () => {
-    if (loading) {
-      return;
-    }
-    const confirmFn = confirm(
-      '你确定要恢复到二转吗?恢复2转请取下三代翅膀,不然会丢失'
-    );
-
-    if (!confirmFn) {
-      return;
-    }
-
-    if (![3, 19, 35, 83, 50, 66].includes(item['Class'])) {
-      updateMessage('貌似你还没有三转');
-      return;
-    }
-
-    setLoading(true);
-    http
-      .post(`/api/users/backTo2Zhuan`, {
-        username: item['AccountID'],
-        characterName: item['Name'],
-      })
-      .then((r) => {
-        console.log(r.data);
-        updateMessage('成功恢复到二转');
-        // setTimeout(() => {
-        //   location.reload();
-        // }, 500);
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -275,9 +209,6 @@ export default function CharacterCard({ item }) {
       })
       .then(() => {
         alert('成功回收该角色, 请查看你的元宝，元宝可以用来购买进阶宝石');
-        // setTimeout(() => {
-        //   location.reload();
-        // }, 500);
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -288,58 +219,6 @@ export default function CharacterCard({ item }) {
       });
   };
 
-  const getPrize = () => {
-    const emptySlot = 'ffffffffffffffffffffffffffffffff';
-    const myPrize = randomPick(PRIZE1);
-    let inventoryIsEmpty = true;
-
-    for (let i = 12; i < 12 + 64; i++) {
-      if (getInventoryItemByIndex(item.Inventory, i) !== emptySlot) {
-        inventoryIsEmpty = false;
-        break;
-      }
-    }
-
-    if (!inventoryIsEmpty) {
-      alert(
-        `当前背包不为空, 兑换装备的时候请保持你的背包是空的, 不然会覆盖原有的物品`
-      );
-      location.reload();
-      return;
-    }
-
-    let inventory = item.Inventory;
-    inventory = replaceAt(inventory, 32 * 12, myPrize.hex);
-
-    if (loading) {
-      return;
-    }
-
-    setLoading(true);
-    http
-      .post(`/api/users/getMyPrize1`, {
-        username: item['AccountID'],
-        charName: item['Name'],
-        inventory,
-        msg: myPrize.name,
-      })
-      .then((r) => {
-        console.log(r.data);
-        alert(`奖励兑换成功 (${myPrize.name}), 请进入游戏查看`);
-        // setTimeout(() => {
-        //   location.reload();
-        // }, 500);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-        updateMessage(err.response.data.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const is3Zhuan = [3, 19, 35, 83, 50, 66].includes(item['Class']);
   const abbr = getCharacterAbbr(item['Class']);
 
   return (
@@ -467,20 +346,85 @@ export default function CharacterCard({ item }) {
           >
             {loading ? 'Loading...' : '在线加点'}
           </Button>
-          {is3Zhuan ? (
+          {isThirdEvolution(item['Class']) ? (
             <Button
-              disabled={true}
+              disabled={loading}
               variant="outline-primary"
-              onClick={backTo2Zhuan}
+              onClick={() => {
+                if (loading) {
+                  return;
+                }
+
+                if (!isThirdEvolution(item['Class'])) {
+                  updateMessage('貌似你还没有三转');
+                  return;
+                }
+
+                MySwal.confirm({
+                  text: '你确定要恢复到二转吗? 恢复二转请取下三代翅膀,不然会丢失',
+                }).then((result) => {
+                  if (!result.isConfirmed) {
+                    return;
+                  }
+
+                  setLoading(true);
+                  backToSecondEvolution({
+                    charName: item['Name'],
+                  })
+                    .then(() => {
+                      MySwal.message('成功恢复到二转');
+                      notifyUserDataChange();
+                    })
+                    .catch((err) => {
+                      console.log(err.response.data);
+                      updateMessage(err.response.data.message);
+                    })
+                    .finally(() => {
+                      setLoading(false);
+                    });
+                });
+              }}
               size="sm"
             >
               {loading ? 'Loading...' : '退回二转'}
             </Button>
           ) : (
             <Button
-              disabled={loading}
+              disabled={loading || isFirstEvolution(item['Class'])}
               variant="outline-primary"
-              onClick={to3Zhuan}
+              onClick={() => {
+                if (loading) {
+                  return;
+                }
+
+                if (!isSecondEvolution(item['Class'])) {
+                  updateMessage('只有二次转职职业才能进行三次转职');
+                  return;
+                }
+
+                MySwal.confirm({
+                  text: '确定要三次转职?',
+                }).then((result) => {
+                  if (!result.isConfirmed) {
+                    return;
+                  }
+                  setLoading(true);
+                  toThirdEvolution({
+                    charName: item['Name'],
+                  })
+                    .then(() => {
+                      MySwal.message('成功三次转职');
+                      notifyUserDataChange();
+                    })
+                    .catch((err) => {
+                      console.log(err.response.data);
+                      updateMessage(err.response.data.message);
+                    })
+                    .finally(() => {
+                      setLoading(false);
+                    });
+                });
+              }}
               size="sm"
             >
               {loading ? 'Loading...' : '三次转职'}
@@ -518,6 +462,7 @@ export default function CharacterCard({ item }) {
                 })
                   .then(() => {
                     updateMessage('成功自救');
+                    notifyUserDataChange();
                   })
                   .catch((err) => {
                     console.log(err);
@@ -595,17 +540,6 @@ export default function CharacterCard({ item }) {
           >
             {loading ? 'Loading...' : '删除角色'}
           </Button>
-
-          {item.prize1 !== 1 && item.ResetCount >= PRIZE_1_NEED_RESET_COUNT && (
-            <Button
-              disabled={loading}
-              variant="outline-primary"
-              onClick={getPrize}
-              size="sm"
-            >
-              {loading ? 'Loading...' : '领取奖品'}
-            </Button>
-          )}
         </div>
       </Card.Body>
 
