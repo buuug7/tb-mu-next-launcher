@@ -155,7 +155,7 @@ export default function Ext1Custom({ character }) {
             variant="link"
             onClick={() => {
               MySwal.confirm({
-                text: `重置**${type.name}**到初始状态, 积分只能退还花费的一半, 你同意吗? `,
+                text: `重置**${type.name}**到初始状态, 花费的积分不会退还, 你同意吗? `,
               }).then((result) => {
                 if (!result.isConfirmed) {
                   return;
