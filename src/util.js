@@ -540,3 +540,15 @@ export function isThirdEvolution(classCode) {
 export function isFirstEvolution(classCode) {
   return [0, 16, 32, 80].includes(classCode);
 }
+
+export function validateSinglePoints(num) {
+  if (num > 65000) {
+    return 65000;
+  }
+
+  if (num < 0) {
+    return 0;
+  }
+
+  return num;
+}

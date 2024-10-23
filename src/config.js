@@ -264,7 +264,7 @@ export const RESET_LIFT_REQUIRE_LEVEL = 400;
 // 每等级点数
 export const LEVEL_UP_POINTS = 8;
 // 允许在线转生
-export const CAN_RESET_LIFE = false;
+export const CAN_RESET_LIFE = true;
 // 镶嵌需要积分
 export const SOCKET_NEED_JF = 500000;
 // 进阶需要积分
@@ -293,7 +293,11 @@ export const CUSTOM_TITLE_ENABLE = true;
 export const CUSTOM_TITLE_JF = 500000;
 
 // 是否允许在线加点
-export const ENABLE_ADD_POINTS = false;
+export const ENABLE_ADD_POINTS = true;
+// 是否允许在线洗点
+export const EnableResetPoints = true;
+// 是否允许回收角色
+export const EnableRecycleCharacter = true;
 
 // 是否开启EXT1的定制
 export const EXT1_ENABLE = true;

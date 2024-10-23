@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Card,
   Form,
@@ -12,17 +12,14 @@ import {
   Alert,
   Badge,
 } from 'react-bootstrap';
-
 import {
   classToName,
   getCharacterAbbr,
-  getInventoryItemByIndex,
   getTotalPoints,
   isFirstEvolution,
   isSecondEvolution,
   isThirdEvolution,
-  randomPick,
-  replaceAt,
+  validateSinglePoints,
 } from '../util';
 import {
   CAN_RESET_LIFE,
@@ -34,31 +31,27 @@ import {
   RESET_LIFT_REQUIRE_LEVEL,
   RECYCLE_CHARACTER_RESET_COUNT,
   ENABLE_ADD_POINTS,
+  EnableResetPoints,
+  EnableRecycleCharacter,
 } from '../config';
-import http from '../http';
-
 import CharacterAvatar from './CharacterAvatar';
 import Ext1Custom from './Ext1Custom';
 import CustomTitle from './CustomTitle';
 import CharacterRename from './CharacterRename';
 import { UserContext } from './user-provider';
 import {
+  addPoints,
   backToSecondEvolution,
   deleteCharacter,
+  recycleCharacter,
+  resetPoints,
   selfHelp,
   toThirdEvolution,
 } from './api';
 import MySwal from './MySwal';
 
-/**
- *
- * @param item {UserCharacter}
- * @returns {JSX.Element}
- */
-
-export default function CharacterCard({ item }) {
-  const { updateMessage, defaultServer, notifyUserDataChange } =
-    useContext(UserContext);
+export default function CharacterCard({ item, onRefresh }) {
+  const { updateMessage } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const [Strength, setStrength] = useState(item['Strength']);
   const [Dexterity, setDexterit] = useState(item['Dexterity']);
@@ -70,161 +63,18 @@ export default function CharacterCard({ item }) {
   const totalPoints = getTotalPoints(item);
   const roleName = classToName[item['Class']];
 
-  const resetLifeFn = () => {
-    if (loading) {
-      return;
-    }
-
-    const resetLife = item['ResetLife'];
-    const cLevel = item['cLevel'];
-
-    if (resetLife >= RESET_LIFT_MAX_COUNT) {
-      updateMessage('你已经满转了');
-      return;
-    }
-
-    if (cLevel < RESET_LIFT_REQUIRE_LEVEL) {
-      updateMessage(`当前角色等级不到 ${RESET_LIFT_REQUIRE_LEVEL}`);
-      return;
-    }
-
-    setLoading(true);
-    http
-      .post(`/api/users/resetLife`, {
-        username: item['AccountID'],
-        characterName: item['Name'],
-      })
-      .then((r) => {
-        console.log(r.data);
-        updateMessage('成功转职');
-        setTimeout(() => {
-          location.reload();
-        }, 200);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-        updateMessage(err.response.data.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const clearPoints = () => {
-    if (loading) {
-      return;
-    }
-
-    setLoading(true);
-
-    http
-      .post(`/api/users/resetUserPoints`, {
-        username: item['AccountID'],
-        characterName: item['Name'],
-      })
-      .then((r) => {
-        console.log(r.data);
-        updateMessage('洗点成功');
-        // setTimeout(() => {
-        //   location.reload();
-        // }, 500);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-        updateMessage(err.response.data.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const addPoints = () => {
-    if (loading) {
-      return;
-    }
-
-    if (!ENABLE_ADD_POINTS) {
-      return;
-    }
-
-    if (LevelUpPoint < 0) {
-      updateMessage('剩余点数不能为负数');
-      return;
-    }
-
-    setLoading(true);
-    http
-      .post(`/api/users/addPoints`, {
-        username: item['AccountID'],
-        characterName: item['Name'],
-        Strength: Strength,
-        Dexterity: Dexterity,
-        Vitality: Vitality,
-        Energy: Energy,
-      })
-      .then((r) => {
-        console.log(r.data);
-        updateMessage('加点成功');
-        // setTimeout(() => {
-        //   location.reload();
-        // }, 500);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-        updateMessage(err.response.data.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const recycleCharacter = () => {
-    if (loading) {
-      return;
-    }
-    const confirmFn = confirm(
-      `回收角色需要 ${RECYCLE_CHARACTER_LEVEL} 等级, 回收将获得 ${RECYCLE_CHARACTER_YB} 元宝, 你确定要回收该角色吗？`
-    );
-
-    if (!confirmFn) {
-      return;
-    }
-
-    if (Number(item['ResetCount']) < RECYCLE_CHARACTER_RESET_COUNT) {
-      alert(`回收角色转生次数低于 ${RECYCLE_CHARACTER_RESET_COUNT} 次`);
-      return;
-    }
-
-    if (Number(item['cLevel']) < RECYCLE_CHARACTER_LEVEL) {
-      alert(`回收角色等级低于 ${RECYCLE_CHARACTER_LEVEL} 级`);
-      return;
-    }
-
-    setLoading(true);
-
-    http
-      .post(`/api/users/recycleCharacter`, {
-        username: item['AccountID'],
-        characterName: item['Name'],
-      })
-      .then(() => {
-        alert('成功回收该角色, 请查看你的元宝，元宝可以用来购买进阶宝石');
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-        updateMessage(err.response.data.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+  useEffect(() => {
+    setStrength(item.Strength);
+    setDexterit(item.Dexterity);
+    setVitality(item.Vitality);
+    setEnergy(item.Vitality);
+  }, [item]);
 
   const abbr = getCharacterAbbr(item['Class']);
 
   return (
     <Card
       style={{ width: '100%', border: 'none', borderRadius: 0 }}
-      key={item['Name']}
       className={`rank-card ${abbr} shadow-sm`}
     >
       <Card.Header className="bg-light">
@@ -247,12 +97,11 @@ export default function CharacterCard({ item }) {
           <Badge bg="primary" pill>
             大师等级 {item['MasterLevel']}
           </Badge>
-          <Badge bg="primary" pill>
-            剩余点数 {LevelUpPoint}
-          </Badge>
         </Alert>
       </Card.Body>
+
       <ListGroup className="list-group-flush">
+        <ListGroupItem>剩余点数: {LevelUpPoint}</ListGroupItem>
         <ListGroupItem>
           <div className="add-points-row">
             <span>力量</span>
@@ -261,7 +110,7 @@ export default function CharacterCard({ item }) {
               placeholder="力量"
               value={Strength}
               onChange={(e) => {
-                const v = Number(e.target.value);
+                const v = validateSinglePoints(Number(e.target.value));
                 setStrength(v);
                 setLevelUpPoint(() => {
                   return totalPoints - v - Dexterity - Vitality - Energy;
@@ -276,7 +125,9 @@ export default function CharacterCard({ item }) {
               placeholder="敏捷"
               value={Dexterity}
               onChange={(e) => {
-                const v = Number(e.target.value);
+                console.log(`e`, e);
+
+                const v = validateSinglePoints(Number(e.target.value));
                 setDexterit(v);
                 setLevelUpPoint(() => {
                   return totalPoints - Strength - v - Vitality - Energy;
@@ -291,7 +142,7 @@ export default function CharacterCard({ item }) {
               placeholder="体力"
               value={Vitality}
               onChange={(e) => {
-                const v = Number(e.target.value);
+                const v = validateSinglePoints(Number(e.target.value));
                 setVitality(v);
                 setLevelUpPoint(() => {
                   return totalPoints - Strength - Dexterity - v - Energy;
@@ -306,7 +157,7 @@ export default function CharacterCard({ item }) {
               placeholder="智力"
               value={Energy}
               onChange={(e) => {
-                const v = Number(e.target.value);
+                const v = validateSinglePoints(Number(e.target.value));
                 setEnergy(v);
                 setLevelUpPoint(() => {
                   return totalPoints - Strength - Dexterity - Vitality - v;
@@ -325,24 +176,134 @@ export default function CharacterCard({ item }) {
               disabled={loading}
               variant="outline-primary"
               size="sm"
-              onClick={resetLifeFn}
+              onClick={() => {
+                if (loading) {
+                  return;
+                }
+
+                const resetLife = item['ResetLife'];
+                const cLevel = item['cLevel'];
+
+                if (resetLife >= RESET_LIFT_MAX_COUNT) {
+                  updateMessage('你已经满转了');
+                  return;
+                }
+
+                if (cLevel < RESET_LIFT_REQUIRE_LEVEL) {
+                  updateMessage(`当前角色等级不到 ${RESET_LIFT_REQUIRE_LEVEL}`);
+                  return;
+                }
+
+                MySwal.confirm({
+                  text: '你确定要转生吗?',
+                }).then((result) => {
+                  if (!result.isConfirmed) {
+                    return;
+                  }
+
+                  setLoading(true);
+                  resetLife({
+                    charName: item['Name'],
+                  })
+                    .then((r) => {
+                      MySwal.message('成功转职');
+                      onRefresh();
+                    })
+                    .catch((err) => {
+                      console.log(err.response.data);
+                      updateMessage(err.response.data.message);
+                    })
+                    .finally(() => {
+                      setLoading(false);
+                    });
+                });
+              }}
             >
-              {loading ? 'Loading...' : '转生'}
+              {loading ? 'Loading...' : '在线转生'}
             </Button>
           )}
           <Button
-            disabled={true}
+            disabled={!EnableResetPoints}
             variant="outline-primary"
             size="sm"
-            onClick={clearPoints}
+            onClick={() => {
+              if (loading) {
+                return;
+              }
+
+              MySwal.confirm({
+                text: `你确定要洗点吗？`,
+              }).then((result) => {
+                if (!result.isConfirmed) {
+                  return;
+                }
+
+                setLoading(true);
+                resetPoints({
+                  charName: item['Name'],
+                })
+                  .then(() => {
+                    MySwal.message('洗点成功');
+                    onRefresh();
+                  })
+                  .catch((err) => {
+                    console.log(err.response.data);
+                    updateMessage(err.response.data.message);
+                  })
+                  .finally(() => {
+                    setLoading(false);
+                  });
+              });
+            }}
           >
             {loading ? 'Loading...' : '在线洗点'}
           </Button>
           <Button
-            disabled={ENABLE_ADD_POINTS}
+            disabled={!ENABLE_ADD_POINTS}
             variant="outline-primary"
             size="sm"
-            onClick={addPoints}
+            onClick={() => {
+              if (loading) {
+                return;
+              }
+
+              if (!ENABLE_ADD_POINTS) {
+                return;
+              }
+
+              if (LevelUpPoint < 0) {
+                updateMessage('剩余点数不能为负数');
+                return;
+              }
+
+              MySwal.confirm({
+                text: '你确定要加点吗？',
+              }).then((result) => {
+                if (!result.isConfirmed) {
+                  return;
+                }
+
+                setLoading(true);
+                addPoints({
+                  charName: item['Name'],
+                  Strength: Strength,
+                  Dexterity: Dexterity,
+                  Vitality: Vitality,
+                  Energy: Energy,
+                })
+                  .then(() => {
+                    MySwal.message('加点成功');
+                    onRefresh();
+                  })
+                  .catch((err) => {
+                    console.log(err.response.data);
+                    updateMessage(err.response.data.message);
+                  })
+                  .finally(() => {
+                    setLoading(false);
+                  });
+              });
+            }}
           >
             {loading ? 'Loading...' : '在线加点'}
           </Button>
@@ -373,7 +334,7 @@ export default function CharacterCard({ item }) {
                   })
                     .then(() => {
                       MySwal.message('成功恢复到二转');
-                      notifyUserDataChange();
+                      onRefresh();
                     })
                     .catch((err) => {
                       console.log(err.response.data);
@@ -414,7 +375,7 @@ export default function CharacterCard({ item }) {
                   })
                     .then(() => {
                       MySwal.message('成功三次转职');
-                      notifyUserDataChange();
+                      onRefresh();
                     })
                     .catch((err) => {
                       console.log(err.response.data);
@@ -461,8 +422,8 @@ export default function CharacterCard({ item }) {
                   charName: item['Name'],
                 })
                   .then(() => {
-                    updateMessage('成功自救');
-                    notifyUserDataChange();
+                    MySwal.message('成功自救');
+                    onRefresh();
                   })
                   .catch((err) => {
                     console.log(err);
@@ -477,8 +438,7 @@ export default function CharacterCard({ item }) {
           >
             {loading ? 'Loading...' : '自救'}
           </Button>
-
-          {defaultServer.key === '2' && (
+          {EnableRecycleCharacter && (
             <OverlayTrigger
               key={1}
               placement="top"
@@ -496,7 +456,53 @@ export default function CharacterCard({ item }) {
             >
               <Button
                 variant="outline-primary"
-                onClick={recycleCharacter}
+                onClick={() => {
+                  if (loading) {
+                    return;
+                  }
+
+                  if (
+                    Number(item['ResetCount']) < RECYCLE_CHARACTER_RESET_COUNT
+                  ) {
+                    updateMessage(
+                      `回收角色转生次数低于 ${RECYCLE_CHARACTER_RESET_COUNT} 次`
+                    );
+                    return;
+                  }
+
+                  if (Number(item['cLevel']) < RECYCLE_CHARACTER_LEVEL) {
+                    updateMessage(
+                      `回收角色等级低于 ${RECYCLE_CHARACTER_LEVEL} 级`
+                    );
+                    return;
+                  }
+
+                  MySwal.confirm({
+                    text: `回收角色需要 ${RECYCLE_CHARACTER_LEVEL} 等级, 回收将获得 ${RECYCLE_CHARACTER_YB} 元宝, 你确定要回收该角色吗？`,
+                  }).then((result) => {
+                    if (!result.isConfirmed) {
+                      return;
+                    }
+
+                    setLoading(true);
+                    recycleCharacter({
+                      charName: item['Name'],
+                    })
+                      .then(() => {
+                        MySwal.message(
+                          '成功回收该角色, 请查看你的元宝，元宝可以用来购买进阶宝石'
+                        );
+                        onRefresh();
+                      })
+                      .catch((err) => {
+                        console.log(err.response.data);
+                        updateMessage(err.response.data.message);
+                      })
+                      .finally(() => {
+                        setLoading(false);
+                      });
+                  });
+                }}
                 size="sm"
               >
                 {loading ? 'Loading...' : '回收角色'}
@@ -523,9 +529,9 @@ export default function CharacterCard({ item }) {
                 deleteCharacter({
                   charName: item.Name,
                 })
-                  .then((r) => {
+                  .then(() => {
                     MySwal.message('成功删除角色');
-                    notifyUserDataChange();
+                    onRefresh();
                   })
                   .catch((err) => {
                     console.log(err.response.data);

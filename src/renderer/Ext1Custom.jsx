@@ -166,7 +166,7 @@ export default function Ext1Custom({ character }) {
                   charName: character['Name'],
                   typeKey: type.key,
                 })
-                  .then(({ data }) => {
+                  .then(() => {
                     MySwal.message(`重置成功!`);
                     notifyUserDataChange();
                     resetInitial();

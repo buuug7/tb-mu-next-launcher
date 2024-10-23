@@ -106,6 +106,25 @@ export const itemCheckSocket = (category, index) => {
   );
 };
 
+export const addPoints = (data) => {
+  return http.post(`${getBaseUrl()}/mu/api/users/characters/addPoints`, data);
+};
+
+export const resetPoints = (data) => {
+  return http.post(`${getBaseUrl()}/mu/api/users/characters/resetPoints`, data);
+};
+
+export const recycleCharacter = (data) => {
+  return http.post(
+    `${getBaseUrl()}/mu/api/users/characters/recycleCharacter`,
+    data
+  );
+};
+
+export const resetLife = (data) => {
+  return http.post(`${getBaseUrl()}/mu/api/users/characters/resetLife`, data);
+};
+
 /* 11111111 */
 
 export const getUpgradeItems = () => {

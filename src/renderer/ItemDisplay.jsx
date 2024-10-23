@@ -47,7 +47,7 @@ export default function ItemDisplay({
       ))}
 
       <div className="item socketTitle">镶宝 物品属性信息</div>
-      {socketOption.map((it, index) => (
+      {socketOption.map((it) => (
         <div className="item socketItem" key={it}>
           {it}
         </div>

@@ -11,11 +11,7 @@ import {
   updateWarehouseFirstItem,
   itemCheckSocket,
 } from './api';
-import {
-  getWareHouseItemByIndex,
-  replaceAt,
-  getItemSocketSlotCount,
-} from '../util';
+import { getWareHouseItemByIndex, getItemSocketSlotCount } from '../util';
 
 export default function ItemSocket({ muItems }) {
   const { user, notifyUserDataChange, updateMessage } = useContext(UserContext);

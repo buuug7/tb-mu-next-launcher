@@ -11,7 +11,7 @@ import { getCharacterByUsername } from './api';
 import './PageCharacters.scss';
 
 export default function PageCharacters() {
-  const { user, updateMessage } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [characters, setCharacters] = useState([]);
 
   useEffect(() => {
@@ -19,15 +19,10 @@ export default function PageCharacters() {
       return;
     }
 
-    getCharacterByUsername(user['memb___id'])
-      .then(({ data }) => {
-        setCharacters(data);
-      })
-      .catch((err) => {
-        console.log(err);
-        updateMessage(err.response.data.error);
-      });
-  }, [user, updateMessage]);
+    getCharacterByUsername(user['memb___id']).then(({ data }) => {
+      setCharacters(data);
+    });
+  }, [user]);
 
   if (!user) {
     return <AccessDenied />;
@@ -57,7 +52,15 @@ export default function PageCharacters() {
 
       <div className="characters mb-5">
         {characters.map((item) => (
-          <CharacterCard item={item} key={item['Name']} />
+          <CharacterCard
+            item={item}
+            key={item.Name}
+            onRefresh={() => {
+              getCharacterByUsername(user['memb___id']).then(({ data }) => {
+                setCharacters(data);
+              });
+            }}
+          />
         ))}
       </div>
     </Layout>

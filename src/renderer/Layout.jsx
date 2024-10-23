@@ -105,7 +105,7 @@ export default function Layout({ children }) {
                 onClose={() => {
                   updateMessage('');
                 }}
-                show={true}
+                show
                 animation={false}
                 delay={3000}
                 autohide
