@@ -9,6 +9,7 @@ import CharacterRankCardList from './CharacterRankCard';
 import { getCharactersByPage, getUserOnlineStatus } from './api';
 
 import './PageRank.scss';
+import useErrorHandler from './use-error-handle';
 
 /**
  * @typedef {{ConnectStat: string}} UserOnlineStatus
@@ -39,23 +40,14 @@ export default function PageRank() {
   const [loading, setLoading] = useState(false);
   const [order, setOrder] = useState(rankOrderTypes[0]);
   const [listType, setListType] = useState('table');
+  const [userOnlineStatus, setUserOnlineStatus] = useState([]);
 
-  const [
-    /**
-     * @type UserOnlineStatus
-     */
-    userOnlineStatus,
-    setUserOnlineStatus,
-  ] = useState([]);
+  const errorHandler = useErrorHandler();
 
   useEffect(() => {
-    getUserOnlineStatus()
-      .then(({ data }) => {
-        setUserOnlineStatus(data);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
+    getUserOnlineStatus().then(({ data }) => {
+      setUserOnlineStatus(data);
+    });
   }, []);
 
   useEffect(() => {
@@ -72,13 +64,9 @@ export default function PageRank() {
           return state.concat(data.data);
         });
       })
-      .catch((err) => {
-        console.log(err.response.data);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [page, order]);
+      .catch(errorHandler)
+      .finally(() => setLoading(false));
+  }, [page, order, errorHandler]);
 
   const onlineUserIds = userOnlineStatus
     .filter((it) => it.ConnectStat === 1)

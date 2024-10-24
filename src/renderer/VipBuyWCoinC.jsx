@@ -163,10 +163,6 @@ export default function VipBuyWCoinC() {
                   updateMessage('购买成功');
                   notifyUserDataChange();
                 })
-                .catch((err) => {
-                  console.log(err);
-                  updateMessage(err.response.data.message);
-                })
                 .finally(() => {
                   setLoading(false);
                 });
@@ -204,10 +200,6 @@ export default function VipBuyWCoinC() {
                 .then(() => {
                   updateMessage('退订会员成功');
                   notifyUserDataChange();
-                })
-                .catch((err) => {
-                  console.log(err);
-                  updateMessage(err.response.data.message);
                 })
                 .finally(() => {
                   setLoading(false);

@@ -1,8 +1,10 @@
 import axios from 'axios';
-import { mySessionKey } from './config';
-import { fireHttp401Event } from './renderer/MyCustomEvent';
+import { getBaseUrl, mySessionKey } from './config';
+import { fireHttpCustomException } from './renderer/MyCustomEvent';
 
-const instance = axios.create();
+const instance = axios.create({
+  baseURL: getBaseUrl(),
+});
 
 // Add a request interceptor
 instance.interceptors.request.use(
@@ -27,12 +29,8 @@ instance.interceptors.response.use(
     return response;
   },
   function (error) {
-    if (
-      error.response.status === 401 &&
-      !error.config.url.includes('/mu/api/login') // 排除登录接口
-    ) {
-      fireHttp401Event(error.response);
-    }
+    console.log(`error`, error);
+    fireHttpCustomException(error);
 
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error

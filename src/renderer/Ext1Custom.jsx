@@ -8,6 +8,7 @@ import { UserContext } from './user-provider';
 import { customExt1Reset, customExt1Update } from './api';
 
 import MySwal from './MySwal';
+import useErrorHandler from './use-error-handle';
 
 export default function Ext1Custom({ character }) {
   const { updateMessage, user, notifyUserDataChange } = useContext(UserContext);
@@ -16,6 +17,8 @@ export default function Ext1Custom({ character }) {
   const [totalProb, setTotalProb] = useState(0);
   const [costJf, setCostJf] = useState(0);
   const [loading, setLoading] = useState(false);
+
+  const errorHandler = useErrorHandler();
 
   const JF = user['WCoinP'];
   const currentValue = getExt1ValueByIndex(character['Ext1'], type.extIndex);
@@ -136,13 +139,8 @@ export default function Ext1Custom({ character }) {
                     notifyUserDataChange();
                     resetInitial();
                   })
-                  .catch((err) => {
-                    console.log(err.response.data);
-                    updateMessage(err.response.data.error);
-                  })
-                  .finally(() => {
-                    setLoading(false);
-                  });
+                  .catch(errorHandler)
+                  .finally(() => setLoading(false));
               });
             }}
           >
@@ -171,13 +169,8 @@ export default function Ext1Custom({ character }) {
                     notifyUserDataChange();
                     resetInitial();
                   })
-                  .catch((err) => {
-                    console.log(err.response.data);
-                    updateMessage(err.response.data.message);
-                  })
-                  .finally(() => {
-                    setLoading(false);
-                  });
+                  .catch(errorHandler)
+                  .finally(() => setLoading(false));
               });
             }}
           >

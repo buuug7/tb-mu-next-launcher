@@ -1,24 +1,25 @@
 import dayjs from 'dayjs';
 import { useState, useContext } from 'react';
 import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
-import Layout from './Layout';
 import { getVipItem } from '../util';
-import AccessDenied from './AccessDenied';
 import { UserContext } from './user-provider';
 import { changePassword, updateUserData } from './api';
+import Layout from './Layout';
+import AccessDenied from './AccessDenied';
 import useUserLogout from './use-user-logout';
 import IconAlert from './icons/IconAlert';
+import useErrorHandler from './use-error-handle';
 
 function MyInformation() {
-  const { user, notifyUserDataChange } = useContext(UserContext);
+  const { user, notifyUserDataChange, updateMessage } = useContext(UserContext);
   const [name, setName] = useState(user.memb_name);
   const [email, setEmail] = useState(user.mail_addr);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+
+  const errorHandler = useErrorHandler();
 
   return (
     <div className="myInformation p-3 bg-white">
-      {message && <Alert>{message}</Alert>}
       <Form>
         <Form.Group className="mb-3">
           <Form.Label>用户名</Form.Label>
@@ -48,22 +49,16 @@ function MyInformation() {
           onClick={(e) => {
             e.preventDefault();
             setLoading(true);
-            setMessage('');
-
-            updateUserData(user.id, {
+            updateUserData({
               name,
               email,
             })
               .then(() => {
-                setMessage('更新成功');
+                updateMessage('更新成功');
                 notifyUserDataChange();
               })
-              .catch((err) => {
-                console.log(err);
-              })
-              .finally(() => {
-                setLoading(false);
-              });
+              .catch(errorHandler)
+              .finally(() => setLoading(false));
           }}
         >
           {loading ? 'Loading' : '更新资料'}
@@ -81,6 +76,7 @@ function ChangePasswordComponent() {
   const { updateMessage } = useContext(UserContext);
 
   const logout = useUserLogout();
+  const errorHandler = useErrorHandler();
 
   return (
     <div className="changePassword p-3 bg-white">
@@ -128,13 +124,8 @@ function ChangePasswordComponent() {
                 updateMessage('密码修改成功, 请重新登录!');
                 logout();
               })
-              .catch((err) => {
-                console.log(err);
-                updateMessage(err.response.data.message);
-              })
-              .finally(() => {
-                setLoading(false);
-              });
+              .catch(errorHandler)
+              .finally(() => setLoading(false));
           }}
         >
           {loading ? 'loading' : '修改密码'}

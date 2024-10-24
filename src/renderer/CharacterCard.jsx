@@ -209,10 +209,6 @@ export default function CharacterCard({ item, onRefresh }) {
                       MySwal.message('成功转职');
                       onRefresh();
                     })
-                    .catch((err) => {
-                      console.log(err.response.data);
-                      updateMessage(err.response.data.message);
-                    })
                     .finally(() => {
                       setLoading(false);
                     });
@@ -245,10 +241,6 @@ export default function CharacterCard({ item, onRefresh }) {
                   .then(() => {
                     MySwal.message('洗点成功');
                     onRefresh();
-                  })
-                  .catch((err) => {
-                    console.log(err.response.data);
-                    updateMessage(err.response.data.message);
                   })
                   .finally(() => {
                     setLoading(false);
@@ -295,10 +287,6 @@ export default function CharacterCard({ item, onRefresh }) {
                     MySwal.message('加点成功');
                     onRefresh();
                   })
-                  .catch((err) => {
-                    console.log(err.response.data);
-                    updateMessage(err.response.data.message);
-                  })
                   .finally(() => {
                     setLoading(false);
                   });
@@ -336,10 +324,6 @@ export default function CharacterCard({ item, onRefresh }) {
                       MySwal.message('成功恢复到二转');
                       onRefresh();
                     })
-                    .catch((err) => {
-                      console.log(err.response.data);
-                      updateMessage(err.response.data.message);
-                    })
                     .finally(() => {
                       setLoading(false);
                     });
@@ -376,10 +360,6 @@ export default function CharacterCard({ item, onRefresh }) {
                     .then(() => {
                       MySwal.message('成功三次转职');
                       onRefresh();
-                    })
-                    .catch((err) => {
-                      console.log(err.response.data);
-                      updateMessage(err.response.data.message);
                     })
                     .finally(() => {
                       setLoading(false);
@@ -424,10 +404,6 @@ export default function CharacterCard({ item, onRefresh }) {
                   .then(() => {
                     MySwal.message('成功自救');
                     onRefresh();
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                    updateMessage(err.response?.data?.message);
                   })
                   .finally(() => {
                     setLoading(false);
@@ -494,10 +470,6 @@ export default function CharacterCard({ item, onRefresh }) {
                         );
                         onRefresh();
                       })
-                      .catch((err) => {
-                        console.log(err.response.data);
-                        updateMessage(err.response.data.message);
-                      })
                       .finally(() => {
                         setLoading(false);
                       });
@@ -532,10 +504,6 @@ export default function CharacterCard({ item, onRefresh }) {
                   .then(() => {
                     MySwal.message('成功删除角色');
                     onRefresh();
-                  })
-                  .catch((err) => {
-                    console.log(err.response.data);
-                    updateMessage(err.response.data.message);
                   })
                   .finally(() => {
                     setLoading(false);

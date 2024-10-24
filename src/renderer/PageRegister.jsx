@@ -2,9 +2,10 @@ import { Form, Alert, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { validateEmail } from '../util';
-import Layout from './Layout';
 import { register } from './api';
+import Layout from './Layout';
 import MySwal from './MySwal';
+import useErrorHandler from './use-error-handle';
 
 export default function PageRegister() {
   const [username, setUsername] = useState('');
@@ -14,6 +15,7 @@ export default function PageRegister() {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const errorHandler = useErrorHandler();
   const navigate = useNavigate();
 
   return (
@@ -118,13 +120,8 @@ export default function PageRegister() {
                 MySwal.message(`注册成功`);
                 navigate('/login');
               })
-              .catch((err) => {
-                console.log(err);
-                setMessage(err?.response?.data?.message);
-              })
-              .finally(() => {
-                setLoading(false);
-              });
+              .catch(errorHandler)
+              .finally(() => setLoading(false));
           }}
         >
           {loading ? 'loading...' : '注册'}

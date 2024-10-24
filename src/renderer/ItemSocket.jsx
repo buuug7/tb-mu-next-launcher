@@ -12,6 +12,7 @@ import {
   itemCheckSocket,
 } from './api';
 import { getWareHouseItemByIndex, getItemSocketSlotCount } from '../util';
+import useErrorHandler from './use-error-handle';
 
 export default function ItemSocket({ muItems }) {
   const { user, notifyUserDataChange, updateMessage } = useContext(UserContext);
@@ -25,14 +26,15 @@ export default function ItemSocket({ muItems }) {
   const [socket4, setSocket4] = useState('FF');
   const [socket5, setSocket5] = useState('FF');
   const [yg, setYg] = useState('F');
-
-  const JF = user['WCoinP'];
-
   const [socketItemProperties, setSocketItemProperties] = useState({
     puTongShuXing: [],
     yingGuangShuXing: [],
   });
+
+  const errorHandler = useErrorHandler();
+
   const { puTongShuXing, yingGuangShuXing } = socketItemProperties;
+  const JF = user['WCoinP'];
 
   useEffect(() => {
     getSomeJson('socket-item-properties-1').then(({ data }) =>
@@ -106,9 +108,8 @@ export default function ItemSocket({ muItems }) {
 
                   getMyData(user.id).then(notifyUserDataChange);
                 })
-                .finally(() => {
-                  setLoading(false);
-                });
+                .catch(errorHandler)
+                .finally(() => setLoading(false));
             }}
           >
             {loading ? 'loading...' : '检测物品'}
@@ -244,13 +245,8 @@ export default function ItemSocket({ muItems }) {
                           .then(() => {
                             MySwal.message('成功镶嵌!');
                           })
-                          .catch((err) => {
-                            console.log(err);
-                            updateMessage(err.response.data.message);
-                          })
-                          .finally(() => {
-                            setLoading(false);
-                          });
+                          .catch(errorHandler)
+                          .finally(() => setLoading(false));
                       });
                     }}
                   >

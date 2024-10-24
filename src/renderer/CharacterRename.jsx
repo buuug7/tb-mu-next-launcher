@@ -95,10 +95,6 @@ export default function CharacterRename({
                     updateMessage('成功修改角色名称');
                     notifyUserDataChange();
                   })
-                  .catch((err) => {
-                    console.log(err.response.data);
-                    updateMessage(err.response.data.message);
-                  })
                   .finally(() => {
                     setLoading(false);
                   });

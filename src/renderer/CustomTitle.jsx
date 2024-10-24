@@ -168,10 +168,6 @@ export default function CustomTitle({ character }) {
                       setShowModal(false);
                       notifyUserDataChange();
                     })
-                    .catch((err) => {
-                      console.log(err.response.data);
-                      updateMessage(err.response.data.error);
-                    })
                     .finally(() => {
                       setLoading(false);
                     });

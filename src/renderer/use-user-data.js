@@ -7,11 +7,9 @@ export default function useUserData() {
   const [user, setUser] = useState(null);
   useEffect(() => {
     if (session) {
-      getMyData(session)
-        .then(({ data }) => {
-          setUser(data);
-        })
-        .catch(() => {});
+      getMyData(session).then(({ data }) => {
+        setUser(data);
+      });
     }
   }, [session]);
 

@@ -1,10 +1,11 @@
-import { Form, Alert, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { Form, Alert, Button } from 'react-bootstrap';
 import { mySessionKey } from 'config';
 import { login } from './api';
-import Layout from './Layout';
 import { setLocalStorageItem } from './MyCustomEvent';
+import Layout from './Layout';
+import useErrorHandler from './use-error-handle';
 
 export default function PageLogin() {
   const [username, setUsername] = useState('');
@@ -12,6 +13,7 @@ export default function PageLogin() {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const errorHandler = useErrorHandler();
 
   return (
     <Layout>
@@ -54,22 +56,15 @@ export default function PageLogin() {
             }
 
             setLoading(true);
-
             login({ username, password })
               .then(({ data }) => {
-                console.log(data);
                 if (data) {
                   setLocalStorageItem(mySessionKey, data.access_token);
-                  navigate('/');
+                  navigate('/characters');
                 }
               })
-              .catch((err) => {
-                console.log(err);
-                setMessage(err.response.data.message);
-              })
-              .finally(() => {
-                setLoading(false);
-              });
+              .catch(errorHandler)
+              .finally(() => setLoading(false));
           }}
         >
           {loading ? 'loading...' : '登陆'}
