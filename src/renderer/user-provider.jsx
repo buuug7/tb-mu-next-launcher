@@ -1,8 +1,7 @@
 import { createContext, useEffect, useState } from 'react';
 import { getDefaultServer } from '../util';
-import { mySessionKey, SERVERS } from '../config';
+import { SERVERS } from '../config';
 import { getMyData } from './api';
-import { HTTP_CUSTOM_EXCEPTION } from './MyCustomEvent';
 import useUserData from './use-user-data';
 
 export const UserContext = createContext({
