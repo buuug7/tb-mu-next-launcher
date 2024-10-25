@@ -150,37 +150,6 @@ export function getTotalPoints(character, defaultClassInfo = []) {
   );
 }
 
-export const rankOrderTypes = [
-  {
-    name: '默认',
-    value: 'default',
-  },
-  {
-    name: '杀怪',
-    value: 'killMonster',
-  },
-  {
-    name: '杀人',
-    value: 'Kills',
-  },
-  {
-    name: '死亡',
-    value: 'Deads',
-  },
-  {
-    name: '血色城堡',
-    value: 'bloodScore',
-  },
-  {
-    name: '恶魔广场',
-    value: 'devilSquareScore',
-  },
-  {
-    name: '赤色要塞',
-    value: 'chaoCastleScore',
-  },
-];
-
 export function humanNumber(n) {
   const formatter = Intl.NumberFormat('zh-CN', { notation: 'compact' });
   return formatter.format(n);

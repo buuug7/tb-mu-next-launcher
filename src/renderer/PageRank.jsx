@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Button } from 'react-bootstrap';
 import IconList from './icons/IconList';
 import IconListGrid from './icons/IconListGrid';
 import Layout from './Layout';
-import { rankOrderTypes } from '../util';
 import CharacterRankList from './CharacterRankList';
 import CharacterRankCardList from './CharacterRankCard';
 import { getCharactersByPage, getUserOnlineStatus } from './api';
 
 import './PageRank.scss';
 import useErrorHandler from './use-error-handle';
+import { MuConfigContext } from './MuConfigProvider';
 
 /**
  * @typedef {{ConnectStat: string}} UserOnlineStatus
@@ -35,10 +35,16 @@ function RankSkeleton() {
 }
 
 export default function PageRank() {
+  const { muConfig } = useContext(MuConfigContext);
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [order, setOrder] = useState(rankOrderTypes[0]);
+  const [order, setOrder] = useState(
+    muConfig?.rankOrderTypes?.[0] || {
+      name: '默认',
+      value: 'default',
+    }
+  );
   const [listType, setListType] = useState('table');
   const [userOnlineStatus, setUserOnlineStatus] = useState([]);
 
@@ -84,7 +90,7 @@ export default function PageRank() {
       </h3>
       <div className="filter my-2 d-flex align-items-center justify-content-between">
         <div>
-          {rankOrderTypes.map((item) => (
+          {(muConfig?.rankOrderTypes || []).map((item) => (
             <Button
               variant={item.value === order.value ? 'outline-primary' : 'link'}
               size="sm"
