@@ -24,14 +24,11 @@ import {
 import {
   CAN_RESET_LIFE,
   CUSTOM_TITLE_ENABLE,
-  EXT1_ENABLE,
   RECYCLE_CHARACTER_YB,
   RECYCLE_CHARACTER_LEVEL,
   RESET_LIFT_MAX_COUNT,
   RESET_LIFT_REQUIRE_LEVEL,
   RECYCLE_CHARACTER_RESET_COUNT,
-  ENABLE_ADD_POINTS,
-  EnableResetPoints,
   EnableRecycleCharacter,
 } from '../config';
 import CharacterAvatar from './CharacterAvatar';
@@ -62,7 +59,7 @@ export default function CharacterCard({ item, onRefresh }) {
   const [LevelUpPoint, setLevelUpPoint] = useState(item['LevelUpPoint']);
   const [showChangeNameModal, setShowChangeNameModal] = useState(false);
 
-  const totalPoints = getTotalPoints(item, muConfig?.defaultClassInfo);
+  const totalPoints = getTotalPoints(item, muConfig?.defaultClassInfo || []);
   const roleName = classToName[item['Class']];
 
   useEffect(() => {
@@ -170,7 +167,7 @@ export default function CharacterCard({ item, onRefresh }) {
         </ListGroupItem>
       </ListGroup>
       <Card.Body style={{ padding: '0.5rem 1rem' }}>
-        {EXT1_ENABLE && <Ext1Custom character={item} />}
+        {muConfig.enableExt1 && <Ext1Custom character={item} />}
         {CUSTOM_TITLE_ENABLE && <CustomTitle character={item} />}
         <div className="characters-actions">
           {CAN_RESET_LIFE && (
@@ -221,7 +218,7 @@ export default function CharacterCard({ item, onRefresh }) {
             </Button>
           )}
           <Button
-            disabled={!EnableResetPoints}
+            disabled={!muConfig.enableResetPoints}
             variant="outline-primary"
             size="sm"
             onClick={() => {
@@ -253,15 +250,11 @@ export default function CharacterCard({ item, onRefresh }) {
             {loading ? 'Loading...' : '在线洗点'}
           </Button>
           <Button
-            disabled={!ENABLE_ADD_POINTS}
+            disabled={!muConfig.enableAddPoints}
             variant="outline-primary"
             size="sm"
             onClick={() => {
               if (loading) {
-                return;
-              }
-
-              if (!ENABLE_ADD_POINTS) {
                 return;
               }
 

@@ -102,16 +102,8 @@ export const RECYCLE_CHARACTER_RESET_COUNT = 500;
 export const CUSTOM_TITLE_ENABLE = true;
 // 自定义称号积分
 export const CUSTOM_TITLE_JF = 500000;
-
-// 是否允许在线加点
-export const ENABLE_ADD_POINTS = true;
-// 是否允许在线洗点
-export const EnableResetPoints = true;
 // 是否允许回收角色
 export const EnableRecycleCharacter = true;
-
-// 是否开启EXT1的定制
-export const EXT1_ENABLE = true;
 
 // 连击概率
 export const EXT1_INDEX0 = 0;
