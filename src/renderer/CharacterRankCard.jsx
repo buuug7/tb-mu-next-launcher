@@ -1,14 +1,15 @@
 import dayjs from 'dayjs';
-
+import { useContext } from 'react';
 import IconOnline from './icons/IconOnline';
 import IconRank from './icons/IconRank';
-
 import { classToName, getTotalPoints } from '../util';
 import CharacterAvatar from './CharacterAvatar';
+import { MuConfigContext } from './MuConfigProvider';
 
 function CharacterRankCard({ item, index, onlineStatus }) {
+  const { muConfig } = useContext(MuConfigContext);
   const roleName = classToName[item['Class']];
-  const totalPoints = getTotalPoints(item);
+  const totalPoints = getTotalPoints(item, muConfig?.defaultClassInfo);
   return (
     <div>
       <div className="card-rank card shadow-sm">

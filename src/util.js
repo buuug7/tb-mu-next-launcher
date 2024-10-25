@@ -6,7 +6,6 @@ import {
   SERVERS,
   DEFAULT_SERVER_KEY_NAME,
   DEFAULT_SERVER_KEY_VALUE,
-  defaultClassInfo,
   RESET_LIFE_PER_POINTS,
   MASTER_RESET_LIFE_PER_POINTS,
 } from './config';
@@ -128,7 +127,7 @@ export function getPointsPerLevel(classNum) {
   return pointsPerLevelArr[class2Index(classNum)];
 }
 
-export function getTotalPoints(character) {
+export function getTotalPoints(character, defaultClassInfo = []) {
   const cLevel = character['cLevel'];
   const resets = character['ResetCount'];
   const defaultInfo = defaultClassInfo[class2Index(character['Class'])];

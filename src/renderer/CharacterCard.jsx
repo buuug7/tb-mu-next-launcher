@@ -49,9 +49,11 @@ import {
 } from './api';
 import MySwal from './MySwal';
 import { MessageContext } from './MessageProvider';
+import { MuConfigContext } from './MuConfigProvider';
 
 export default function CharacterCard({ item, onRefresh }) {
   const { updateMessage } = useContext(MessageContext);
+  const { muConfig } = useContext(MuConfigContext);
   const [loading, setLoading] = useState(false);
   const [Strength, setStrength] = useState(item['Strength']);
   const [Dexterity, setDexterit] = useState(item['Dexterity']);
@@ -60,7 +62,7 @@ export default function CharacterCard({ item, onRefresh }) {
   const [LevelUpPoint, setLevelUpPoint] = useState(item['LevelUpPoint']);
   const [showChangeNameModal, setShowChangeNameModal] = useState(false);
 
-  const totalPoints = getTotalPoints(item);
+  const totalPoints = getTotalPoints(item, muConfig?.defaultClassInfo);
   const roleName = classToName[item['Class']];
 
   useEffect(() => {

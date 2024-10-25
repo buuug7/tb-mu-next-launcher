@@ -1,8 +1,10 @@
 import dayjs from 'dayjs';
+import { useContext } from 'react';
 import { Table } from 'react-bootstrap';
 import IconRank from './icons/IconRank';
 import { classToName, getTotalPoints } from '../util';
 import CharacterAvatar from './CharacterAvatar';
+import { MuConfigContext } from './MuConfigProvider';
 
 function getUserOnlineStatus(userOnlineStatus, item) {
   return userOnlineStatus.find((it) => it.memb___id === item.AccountID) || {};
@@ -24,6 +26,7 @@ function OnlineStatus({ status }) {
 }
 
 export default function CharacterRankList({ users, userOnlineStatus }) {
+  const { muConfig } = useContext(MuConfigContext);
   return (
     <div>
       <Table responsive striped variant="default" className="rankTable">
@@ -82,7 +85,7 @@ export default function CharacterRankList({ users, userOnlineStatus }) {
               <td>{item['killMonster']}</td>
               <td>{item['Kills']}</td>
               <td>{item['Deads']}</td>
-              <td>{getTotalPoints(item)}</td>
+              <td>{getTotalPoints(item, muConfig?.defaultClassInfo)}</td>
               <td>{item['bloodScore'] || 0}</td>
               <td>{item['devilSquareScore'] || 0}</td>
               <td>{item['chaoCastleScore'] || 0}</td>
