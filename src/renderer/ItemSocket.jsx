@@ -15,7 +15,7 @@ import { getWareHouseItemByIndex, getItemSocketSlotCount } from '../util';
 import useErrorHandler from './use-error-handle';
 
 export default function ItemSocket({ muItems }) {
-  const { user, notifyUserDataChange, updateMessage } = useContext(UserContext);
+  const { user, notifyUserDataChange } = useContext(UserContext);
   const [warehouse, setWarehouse] = useState(null);
   const [item1, setItem1] = useState(null);
   const [loading, setLoading] = useState(false);

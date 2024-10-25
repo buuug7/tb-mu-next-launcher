@@ -60,7 +60,6 @@ export function getDefaultServer() {
     return SERVERS.find((it) => String(it.key) === DEFAULT_SERVER_KEY_VALUE);
   }
 
-  console.log(`defaultSer`, defaultServer);
   return defaultServer;
 }
 
@@ -479,14 +478,11 @@ export function getWareHouseItemsArr(Items) {
 
 export function getWareHouseItems(Items, num = -1) {
   const arr = Items.match(/.{1,32}/g);
-  const rs = arr
-    .map((it, index) => ({
-      index,
-      value: it,
-    }))
-    .filter((it) => !it.value.startsWith('FF'));
-
-  console.log(`items`, rs);
+  const rs = arr.map((it, index) => ({
+    index,
+    value: it,
+  }));
+  // .filter((it) => !it.value.startsWith('FF'));
 
   if (num >= 0 && rs.length > num) {
     return rs.length > num ? rs[num] : null;

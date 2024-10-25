@@ -1,11 +1,10 @@
 import { useContext, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Container, Toast, ToastContainer } from 'react-bootstrap';
-import { copyRight, sitePrimaryTitle, SERVERS, mySessionKey } from '../config';
+import { useNavigate } from 'react-router-dom';
+import { Toast, ToastContainer } from 'react-bootstrap';
+import { copyRight, mySessionKey } from '../config';
 import { UserContext } from './UserProvider';
 import { HTTP_CUSTOM_EXCEPTION } from './MyCustomEvent';
 import MyNavbar from './MyNavbar';
-import useUserLogout from './use-user-logout';
 import { MessageContext } from './MessageProvider';
 
 export default function Layout({ children }) {

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { getDefaultServer } from '../util';
 import { SERVERS } from '../config';
 import { getMyData } from './api';

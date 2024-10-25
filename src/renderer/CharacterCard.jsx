@@ -38,7 +38,6 @@ import CharacterAvatar from './CharacterAvatar';
 import Ext1Custom from './Ext1Custom';
 import CustomTitle from './CustomTitle';
 import CharacterRename from './CharacterRename';
-import { UserContext } from './UserProvider';
 import {
   addPoints,
   backToSecondEvolution,
