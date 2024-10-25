@@ -2,7 +2,6 @@
 
 import { useContext, useEffect, useState } from 'react';
 import { Alert, Button } from 'react-bootstrap';
-import { UPDATE_EXT1_TYPE } from '../config';
 import { getExt1ValueByIndex } from '../util';
 import { UserContext } from './UserProvider';
 import { customExt1Reset, customExt1Update } from './api';
@@ -10,11 +9,13 @@ import { MessageContext } from './MessageProvider';
 
 import MySwal from './MySwal';
 import useErrorHandler from './use-error-handle';
+import { MuConfigContext } from './MuConfigProvider';
 
 export default function Ext1Custom({ character }) {
   const { user, notifyUserDataChange } = useContext(UserContext);
+  const { muConfig } = useContext(MuConfigContext);
   const { updateMessage } = useContext(MessageContext);
-  const [type, setType] = useState(UPDATE_EXT1_TYPE.comboRate);
+  const [type, setType] = useState(muConfig?.updateExt1Type?.comboRate);
   const [addProb, setAddProb] = useState(0);
   const [totalProb, setTotalProb] = useState(0);
   const [costJf, setCostJf] = useState(0);
@@ -46,22 +47,22 @@ export default function Ext1Custom({ character }) {
     <div>
       <Alert style={{ padding: '0.5rem' }}>
         <div className="mb-2 UPDATE_EXT1_TYPE-buttons">
-          {Object.keys(UPDATE_EXT1_TYPE).map((key) => (
+          {Object.keys(muConfig.updateExt1Type).map((key) => (
             <Button
               size="sm"
               className="me-1"
               variant={
-                type.extIndex === UPDATE_EXT1_TYPE[key].extIndex
+                type.extIndex === muConfig.updateExt1Type[key].extIndex
                   ? 'primary'
                   : 'outline-primary'
               }
               key={key}
               onClick={() => {
-                setType(UPDATE_EXT1_TYPE[key]);
+                setType(muConfig.updateExt1Type[key]);
                 setAddProb(0);
               }}
             >
-              {UPDATE_EXT1_TYPE[key].nameAbbr}
+              {muConfig.updateExt1Type[key].nameAbbr}
             </Button>
           ))}
         </div>

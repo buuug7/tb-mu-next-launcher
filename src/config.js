@@ -104,29 +104,3 @@ export const CUSTOM_TITLE_ENABLE = true;
 export const CUSTOM_TITLE_JF = 500000;
 // 是否允许回收角色
 export const EnableRecycleCharacter = true;
-
-// 连击概率
-export const EXT1_INDEX0 = 0;
-// 三倍伤害率
-export const EXT1_INDEX1 = 1;
-//
-export const EXT1_INDEX2 = 0;
-
-export const UPDATE_EXT1_TYPE = {
-  comboRate: {
-    name: '连击概率',
-    nameAbbr: '连击',
-    jfPerValue: 50000,
-    maxValue: 20,
-    extIndex: EXT1_INDEX0,
-    key: 'comboRate',
-  },
-  tripleRate: {
-    name: '三倍伤害率',
-    nameAbbr: '三倍',
-    jfPerValue: 50000,
-    maxValue: 20,
-    extIndex: EXT1_INDEX1,
-    key: 'tripleRate',
-  },
-};
