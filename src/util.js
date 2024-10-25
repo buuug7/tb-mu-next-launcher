@@ -3,7 +3,6 @@
 import dayjs from 'dayjs';
 
 import {
-  SERVERS,
   DEFAULT_SERVER_KEY_NAME,
   DEFAULT_SERVER_KEY_VALUE,
   RESET_LIFE_PER_POINTS,
@@ -49,14 +48,14 @@ export function eraseCookie(name) {
   document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
 }
 
-export function getDefaultServer() {
-  const defaultServer = SERVERS.find(
+export function getDefaultServer(servers) {
+  const defaultServer = servers.find(
     (it) => String(it.key) === getCookie(DEFAULT_SERVER_KEY_NAME)
   );
 
   if (!defaultServer) {
     setCookie(DEFAULT_SERVER_KEY_NAME, DEFAULT_SERVER_KEY_VALUE);
-    return SERVERS.find((it) => String(it.key) === DEFAULT_SERVER_KEY_VALUE);
+    return servers.find((it) => String(it.key) === DEFAULT_SERVER_KEY_VALUE);
   }
 
   return defaultServer;

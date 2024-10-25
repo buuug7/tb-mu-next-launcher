@@ -3,11 +3,14 @@ import { Link } from 'react-router-dom';
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import useUserLogout from './use-user-logout';
 import { UserContext } from './UserProvider';
-import { sitePrimaryTitle, SERVERS } from '../config';
+import { sitePrimaryTitle } from '../config';
+import { MuConfigContext } from './MuConfigProvider';
 
 export default function MyNavbar() {
-  const { defaultServer, user } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const { muConfig, defaultServer } = useContext(MuConfigContext);
   const logout = useUserLogout();
+  const currentServer = defaultServer || muConfig?.servers?.[0] || [];
 
   return (
     <Navbar variant="light" bg="light" expand="md" fixed="top">
@@ -40,8 +43,8 @@ export default function MyNavbar() {
           </Nav>
 
           <Nav>
-            <NavDropdown title={defaultServer.name}>
-              {SERVERS.map((item) => (
+            <NavDropdown title={currentServer.name}>
+              {(muConfig?.servers || []).map((item) => (
                 <NavDropdown.Item
                   key={item.key}
                   onClick={() => {

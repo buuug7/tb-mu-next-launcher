@@ -59,19 +59,6 @@ export const keywords = '小猪奇迹,小猪奇迹私服,奇迹,奇迹sf,s6,1.03
 
 export const qqLink = `https://qm.qq.com/q/2Qy6PGxSY8`;
 
-export const SERVERS = [
-  {
-    name: '小猪一区',
-    key: '1',
-    active: false,
-  },
-  // {
-  //   name: '小猪二区',
-  //   key: '2',
-  //   active: false,
-  // },
-];
-
 export const DEFAULT_SERVER_KEY_NAME = 'DEFAULT_SERVER_KEY';
 export const DEFAULT_SERVER_KEY_VALUE = '1';
 
