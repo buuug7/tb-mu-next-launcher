@@ -23,8 +23,11 @@ export default function ItemDisplay({
     });
   }, []);
 
-  const socketOption = item.socketOption.map((it) => {
-    return getSocketPropertyByValue(socketPropertiesArr, it)?.name;
+  const socketOption = item.socketOption.map((it, index) => {
+    return {
+      name: getSocketPropertyByValue(socketPropertiesArr, it)?.name,
+      index,
+    };
   });
 
   return (
@@ -48,8 +51,8 @@ export default function ItemDisplay({
 
       <div className="item socketTitle">镶宝 物品属性信息</div>
       {socketOption.map((it) => (
-        <div className="item socketItem" key={it}>
-          {it}
+        <div className="item socketItem" key={it.index}>
+          {it.name}
         </div>
       ))}
     </div>

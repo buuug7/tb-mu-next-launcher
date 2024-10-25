@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import Layout from './Layout';
-import { UserContext } from './user-provider';
+import { UserContext } from './UserProvider';
 
 import VipBuyWCoinC from './VipBuyWCoinC';
 import AccessDenied from './AccessDenied';

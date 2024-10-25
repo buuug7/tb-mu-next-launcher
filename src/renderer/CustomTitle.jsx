@@ -6,11 +6,13 @@ import { Alert, Form, Modal, Button } from 'react-bootstrap';
 import { customTitle, getSomeJson } from './api';
 import { CUSTOM_TITLE_JF } from '../config';
 import { checkName, checkNameLength, groupBy } from '../util';
-import { UserContext } from './user-provider';
+import { UserContext } from './UserProvider';
+import { MessageContext } from './MessageProvider';
 import MySwal from './MySwal';
 
 export default function CustomTitle({ character }) {
-  const { updateMessage, user, notifyUserDataChange } = useContext(UserContext);
+  const { user, notifyUserDataChange } = useContext(UserContext);
+  const { updateMessage } = useContext(MessageContext);
   const [customTitleName, setCustomTitleName] = useState(
     character.customTitleName || ''
   );

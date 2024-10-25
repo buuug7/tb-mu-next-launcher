@@ -3,17 +3,23 @@
 import dayjs from 'dayjs';
 import { useContext, useState } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
-import { VIP_BUY_TYPE, VIPS } from '../config';
 import { getUserVipRemainingJF, getVipItem, humanNumber } from '../util';
-import { UserContext } from './user-provider';
+import { UserContext } from './UserProvider';
 import { buyVip, cancelVip } from './api';
 import MySwal from './MySwal';
+import { MuConfigContext } from './MuConfigProvider';
+import useErrorHandler from './use-error-handle';
+import { MessageContext } from './MessageProvider';
 
 export default function VipBuyWCoinC() {
-  const { updateMessage, user, notifyUserDataChange } = useContext(UserContext);
+  const { muConfig } = useContext(MuConfigContext);
+  const { user, notifyUserDataChange } = useContext(UserContext);
+  const { updateMessage } = useContext(MessageContext);
   const [loading, setLoading] = useState(false);
-  const [vip, setVip] = useState(getVipItem(user));
-  const [buyType, setBuyType] = useState(VIP_BUY_TYPE[1]);
+  const [vip, setVip] = useState(getVipItem(user, muConfig?.vips || []));
+  const [buyType, setBuyType] = useState(muConfig?.vipBuyTime?.[0]);
+
+  const errorHandler = useErrorHandler();
 
   const JF = user['WCoinP'];
   const YB = user['WCoinC'];
@@ -22,13 +28,13 @@ export default function VipBuyWCoinC() {
     <div className="VipBuy p-3 bg-white">
       <Alert>
         你好 <i>{user['id']}</i>, 当前积分 <i>{JF}</i>, 当前元宝 <i>{YB}</i>,
-        你的会员信息为 <b>{getVipItem(user)?.name}</b>, 到期时间{' '}
+        你的会员信息为 <b>{getVipItem(user, muConfig.vips)?.name}</b>, 到期时间{' '}
         <i>{dayjs(user['AccountExpireDate']).format('YYYY/MM/DD HH:mm')}</i>,
         VIP 购买后支持取消, 不过元宝只返还剩余时间一半价格的元宝.
       </Alert>
 
       <div className="mb-2 vipContainer">
-        {VIPS.map((item) => (
+        {muConfig.vips.map((item) => (
           <div
             className={`vipCard bg-white shadow-sm ${
               item.id === vip.id ? 'checked' : ''
@@ -101,7 +107,7 @@ export default function VipBuyWCoinC() {
       <div className="mt-3 mb-1 d-flex">
         <div className="me-2">购买时长:</div>
         <div>
-          {VIP_BUY_TYPE.map((item) => (
+          {muConfig.vipBuyTime.map((item) => (
             <Form.Check
               inline
               name="buyType"
@@ -132,7 +138,7 @@ export default function VipBuyWCoinC() {
           onClick={() => {
             const cost = vip.pricePerDay * buyType.days;
             const AccountLevel = user['AccountLevel'];
-            const vipItem = VIPS.find((it) => it.id === AccountLevel);
+            const vipItem = muConfig.vips.find((it) => it.id === AccountLevel);
 
             if (AccountLevel > 0) {
               updateMessage(
@@ -160,12 +166,11 @@ export default function VipBuyWCoinC() {
                 days: buyType.days,
               })
                 .then(() => {
-                  updateMessage('购买成功');
+                  MySwal.message('购买成功会员');
                   notifyUserDataChange();
                 })
-                .finally(() => {
-                  setLoading(false);
-                });
+                .catch(errorHandler)
+                .finally(() => setLoading(false));
             });
           }}
         >
@@ -177,7 +182,7 @@ export default function VipBuyWCoinC() {
           disabled={loading}
           onClick={() => {
             const AccountLevel = user['AccountLevel'];
-            const vipItem = VIPS.find((it) => it.id === AccountLevel);
+            const vipItem = muConfig.vips.find((it) => it.id === AccountLevel);
 
             if (AccountLevel <= 0) {
               updateMessage(`你貌似没有购买会员`);
@@ -188,7 +193,8 @@ export default function VipBuyWCoinC() {
               text: `你当前的会员是 ${
                 vipItem.name
               }, 退订会员将会返还剩余时间一半的元宝, 退还 ${getUserVipRemainingJF(
-                user
+                user,
+                muConfig?.vips
               )} 元宝, 你同意吗?`,
             }).then((result) => {
               if (!result.isConfirmed) {
@@ -198,12 +204,11 @@ export default function VipBuyWCoinC() {
               setLoading(true);
               cancelVip()
                 .then(() => {
-                  updateMessage('退订会员成功');
+                  MySwal.message('退订会员成功');
                   notifyUserDataChange();
                 })
-                .finally(() => {
-                  setLoading(false);
-                });
+                .catch(errorHandler)
+                .finally(() => setLoading(false));
             });
           }}
         >

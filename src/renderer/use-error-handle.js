@@ -1,10 +1,11 @@
-import { useContext } from 'react';
-import { UserContext } from './user-provider';
+import { useCallback, useContext, useMemo } from 'react';
+import MySwal from './MySwal';
+import { MessageContext } from './MessageProvider';
 
 export default function useErrorHandler() {
-  const { updateMessage } = useContext(UserContext);
+  const { updateMessage } = useContext(MessageContext);
 
-  return (err) => {
+  function callback(err) {
     console.log(`err`, err);
 
     let errMsg = '';
@@ -18,5 +19,7 @@ export default function useErrorHandler() {
     }
 
     updateMessage(errMsg);
-  };
+  }
+
+  return useCallback(callback, [updateMessage]);
 }

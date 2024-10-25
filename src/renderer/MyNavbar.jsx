@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import useUserLogout from './use-user-logout';
-import { UserContext } from './user-provider';
+import { UserContext } from './UserProvider';
 import { sitePrimaryTitle, SERVERS } from '../config';
 
 export default function MyNavbar() {

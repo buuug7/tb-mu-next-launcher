@@ -4,10 +4,11 @@ import { useContext, useState } from 'react';
 import { Form, Modal, Button } from 'react-bootstrap';
 import { checkName, checkNameLength } from '../util';
 import { CHANGE_NAME_NEED_JF } from '../config';
-import { UserContext } from './user-provider';
+import { UserContext } from './UserProvider';
 import { changeCharacterName } from './api';
 
 import MySwal from './MySwal';
+import { MessageContext } from './MessageProvider';
 
 /**
  *
@@ -21,7 +22,8 @@ export default function CharacterRename({
 }) {
   const [changedName, setChangedName] = useState(item['Name']);
   const [loading, setLoading] = useState(false);
-  const { updateMessage, user, notifyUserDataChange } = useContext(UserContext);
+  const { user, notifyUserDataChange } = useContext(UserContext);
+  const { updateMessage } = useContext(MessageContext);
   const JF = user['WCoinP'];
 
   return (

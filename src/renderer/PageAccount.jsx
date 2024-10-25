@@ -2,16 +2,19 @@ import dayjs from 'dayjs';
 import { useState, useContext } from 'react';
 import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
 import { getVipItem } from '../util';
-import { UserContext } from './user-provider';
+import { UserContext } from './UserProvider';
 import { changePassword, updateUserData } from './api';
 import Layout from './Layout';
 import AccessDenied from './AccessDenied';
 import useUserLogout from './use-user-logout';
 import IconAlert from './icons/IconAlert';
 import useErrorHandler from './use-error-handle';
+import { MuConfigContext } from './MuConfigProvider';
+import { MessageContext } from './MessageProvider';
 
 function MyInformation() {
-  const { user, notifyUserDataChange, updateMessage } = useContext(UserContext);
+  const { user, notifyUserDataChange } = useContext(UserContext);
+  const { updateMessage } = useContext(MessageContext);
   const [name, setName] = useState(user.memb_name);
   const [email, setEmail] = useState(user.mail_addr);
   const [loading, setLoading] = useState(false);
@@ -136,6 +139,7 @@ function ChangePasswordComponent() {
 }
 
 export function AccountInfo() {
+  const { muConfig } = useContext(MuConfigContext);
   const { user } = useContext(UserContext);
   const isBlocked = user.bloc_code !== '0';
   const userAccount = user.id;
@@ -152,7 +156,7 @@ export function AccountInfo() {
     </div>
   );
 
-  const vipItem = getVipItem(user);
+  const vipItem = getVipItem(user, muConfig?.vips || []);
 
   return (
     <Alert variant={isBlocked ? 'danger' : 'primary'}>

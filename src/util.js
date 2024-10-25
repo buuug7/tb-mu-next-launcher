@@ -6,7 +6,6 @@ import {
   SERVERS,
   DEFAULT_SERVER_KEY_NAME,
   DEFAULT_SERVER_KEY_VALUE,
-  VIPS,
   defaultClassInfo,
   RESET_LIFE_PER_POINTS,
   MASTER_RESET_LIFE_PER_POINTS,
@@ -65,11 +64,9 @@ export function getDefaultServer() {
   return defaultServer;
 }
 
-export function getVipItem(user) {
-  if (!user) {
-    return VIPS[0];
-  }
-  return VIPS.find((it) => it.id === user.AccountLevel);
+export function getVipItem(user, vips = []) {
+  if (!user) return vips[0];
+  return vips.find((it) => it.id === user.AccountLevel);
 }
 
 export const classToName = {
@@ -196,9 +193,9 @@ export function humanNumber(n) {
  * @param user
  * @returns {number}
  */
-export function getUserVipRemainingJF(user) {
+export function getUserVipRemainingJF(user, vips = []) {
   const { AccountLevel, AccountExpireDate } = user;
-  const vipItem = VIPS.find((it) => it.id === AccountLevel);
+  const vipItem = vips.find((it) => it.id === AccountLevel);
   if (!vipItem) {
     return 0;
   }

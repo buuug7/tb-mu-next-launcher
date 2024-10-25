@@ -4,14 +4,16 @@ import { useContext, useEffect, useState } from 'react';
 import { Alert, Button } from 'react-bootstrap';
 import { UPDATE_EXT1_TYPE } from '../config';
 import { getExt1ValueByIndex } from '../util';
-import { UserContext } from './user-provider';
+import { UserContext } from './UserProvider';
 import { customExt1Reset, customExt1Update } from './api';
+import { MessageContext } from './MessageProvider';
 
 import MySwal from './MySwal';
 import useErrorHandler from './use-error-handle';
 
 export default function Ext1Custom({ character }) {
-  const { updateMessage, user, notifyUserDataChange } = useContext(UserContext);
+  const { user, notifyUserDataChange } = useContext(UserContext);
+  const { updateMessage } = useContext(MessageContext);
   const [type, setType] = useState(UPDATE_EXT1_TYPE.comboRate);
   const [addProb, setAddProb] = useState(0);
   const [totalProb, setTotalProb] = useState(0);

@@ -4,7 +4,7 @@ import { getSomeJson, getWarehouseInfo } from './api';
 import Layout from './Layout';
 import ItemSocket from './ItemSocket';
 import AccessDenied from './AccessDenied';
-import { UserContext } from './user-provider';
+import { UserContext } from './UserProvider';
 
 export default function Custom() {
   const [key, setKey] = useState('高级镶嵌');

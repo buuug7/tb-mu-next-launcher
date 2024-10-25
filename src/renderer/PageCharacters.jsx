@@ -5,30 +5,36 @@ import Layout from './Layout';
 import AccessDenied from './AccessDenied';
 import CharacterCard from './CharacterCard';
 import { getVipItem } from '../util';
-import { UserContext } from './user-provider';
+import { UserContext } from './UserProvider';
 import { getCharacterByUsername } from './api';
 
 import './PageCharacters.scss';
+import { MuConfigContext } from './MuConfigProvider';
+import useErrorHandler from './use-error-handle';
 
 export default function PageCharacters() {
+  const { muConfig } = useContext(MuConfigContext);
   const { user } = useContext(UserContext);
   const [characters, setCharacters] = useState([]);
+  const errorHandler = useErrorHandler();
 
   useEffect(() => {
     if (!user) {
       return;
     }
 
-    getCharacterByUsername(user['memb___id']).then(({ data }) => {
-      setCharacters(data);
-    });
-  }, [user]);
+    getCharacterByUsername(user['memb___id'])
+      .then(({ data }) => {
+        setCharacters(data);
+      })
+      .catch(errorHandler);
+  }, [user, errorHandler]);
 
   if (!user) {
     return <AccessDenied />;
   }
 
-  const vipItem = getVipItem(user);
+  const vipItem = getVipItem(user, muConfig?.vips || []);
 
   return (
     <Layout>
@@ -39,9 +45,9 @@ export default function PageCharacters() {
         <div>
           账号注册日期{' '}
           <i>{dayjs(user['appl_days']).format('YYYY/MM/DD HH:mm')}</i>, 当前积分{' '}
-          <b className="text-danger">{user['WCoinP']}</b>, 当前元宝为{' '}
-          <b className="text-danger">{user['WCoinC']}</b>, 您的会员信息为{' '}
-          <b className="text-danger">{vipItem?.name}</b>, 到期时间{' '}
+          <i className="text-danger">{user['WCoinP']}</i>, 当前元宝为{' '}
+          <i className="text-danger">{user['WCoinC']}</i>, 您的会员信息为{' '}
+          <i className="text-danger">{vipItem?.name}</i>, 到期时间{' '}
           <i>{dayjs(user['AccountExpireDate']).format('YYYY/MM/DD HH:mm')}</i>.
         </div>
       </Alert>

@@ -1,7 +1,7 @@
 import { mySessionKey } from 'config';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from './user-provider';
+import { UserContext } from './UserProvider';
 
 export default function useUserLogout() {
   const { notifyUserDataChange } = useContext(UserContext);

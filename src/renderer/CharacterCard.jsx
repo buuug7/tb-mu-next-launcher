@@ -38,7 +38,7 @@ import CharacterAvatar from './CharacterAvatar';
 import Ext1Custom from './Ext1Custom';
 import CustomTitle from './CustomTitle';
 import CharacterRename from './CharacterRename';
-import { UserContext } from './user-provider';
+import { UserContext } from './UserProvider';
 import {
   addPoints,
   backToSecondEvolution,
@@ -49,9 +49,10 @@ import {
   toThirdEvolution,
 } from './api';
 import MySwal from './MySwal';
+import { MessageContext } from './MessageProvider';
 
 export default function CharacterCard({ item, onRefresh }) {
-  const { updateMessage } = useContext(UserContext);
+  const { updateMessage } = useContext(MessageContext);
   const [loading, setLoading] = useState(false);
   const [Strength, setStrength] = useState(item['Strength']);
   const [Dexterity, setDexterit] = useState(item['Dexterity']);
@@ -205,7 +206,7 @@ export default function CharacterCard({ item, onRefresh }) {
                   resetLife({
                     charName: item['Name'],
                   })
-                    .then((r) => {
+                    .then(() => {
                       MySwal.message('成功转职');
                       onRefresh();
                     })

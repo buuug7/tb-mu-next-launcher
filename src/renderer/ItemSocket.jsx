@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
 import { SOCKET_NEED_JF } from '../config';
 import ItemDisplay from './ItemDisplay';
-import { UserContext } from './user-provider';
+import { UserContext } from './UserProvider';
 import MySwal from './MySwal';
 import {
   getMyData,
