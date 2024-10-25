@@ -4,13 +4,14 @@
 import { useContext, useEffect, useState } from 'react';
 import { Alert, Form, Modal, Button } from 'react-bootstrap';
 import { customTitle, getSomeJson } from './api';
-import { CUSTOM_TITLE_JF } from '../config';
 import { checkName, checkNameLength, groupBy } from '../util';
 import { UserContext } from './UserProvider';
 import { MessageContext } from './MessageProvider';
 import MySwal from './MySwal';
+import { MuConfigContext } from './MuConfigProvider';
 
 export default function CustomTitle({ character }) {
+  const { muConfig } = useContext(MuConfigContext);
   const { user, notifyUserDataChange } = useContext(UserContext);
   const { updateMessage } = useContext(MessageContext);
   const [customTitleName, setCustomTitleName] = useState(
@@ -23,7 +24,6 @@ export default function CustomTitle({ character }) {
   const [loading, setLoading] = useState(false);
 
   const [titles, setTitles] = useState([]);
-  const JF = user['WCoinP'];
 
   useEffect(() => {
     getSomeJson('custom-title').then(({ data }) => {
@@ -140,17 +140,15 @@ export default function CustomTitle({ character }) {
                   return;
                 }
 
-                const currentJF = JF;
-
-                if (currentJF - CUSTOM_TITLE_JF < 0) {
+                if (user['WCoinP'] - muConfig.customTitleNeedWcoin < 0) {
                   updateMessage(
-                    `自定义称号需要 ${CUSTOM_TITLE_JF} 积分,你当前的积分还不够.`
+                    `自定义称号需要 ${muConfig.customTitleNeedWcoin} 积分,你当前的积分还不够.`
                   );
                   return;
                 }
 
                 MySwal.confirm({
-                  text: `自定义称号需要收取额外的 ${CUSTOM_TITLE_JF} 积分, 你同意吗?`,
+                  text: `自定义称号需要收取额外的 ${muConfig.customTitleNeedWcoin} 积分, 你同意吗?`,
                 }).then((result) => {
                   if (!result.isConfirmed) {
                     return;

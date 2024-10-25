@@ -3,12 +3,12 @@
 import { useContext, useState } from 'react';
 import { Form, Modal, Button } from 'react-bootstrap';
 import { checkName, checkNameLength } from '../util';
-import { CHANGE_NAME_NEED_JF } from '../config';
 import { UserContext } from './UserProvider';
 import { changeCharacterName } from './api';
 
 import MySwal from './MySwal';
 import { MessageContext } from './MessageProvider';
+import { MuConfigContext } from './MuConfigProvider';
 
 /**
  *
@@ -20,6 +20,7 @@ export default function CharacterRename({
   showChangeNameModal,
   setShowChangeNameModal,
 }) {
+  const { muConfig } = useContext(MuConfigContext);
   const [changedName, setChangedName] = useState(item['Name']);
   const [loading, setLoading] = useState(false);
   const { user, notifyUserDataChange } = useContext(UserContext);
@@ -71,15 +72,15 @@ export default function CharacterRename({
                 return;
               }
 
-              if (JF < CHANGE_NAME_NEED_JF) {
+              if (JF < muConfig.changeNameNeedWcoin) {
                 updateMessage(
-                  `在线改名需要 ${CHANGE_NAME_NEED_JF} 积分,你当前的积分还不够.`
+                  `在线改名需要 ${muConfig.changeNameNeedWcoin} 积分,你当前的积分还不够.`
                 );
                 return;
               }
 
               MySwal.confirm({
-                text: `在线改名要收取额外的 ${CHANGE_NAME_NEED_JF} 积分, 你同意吗?`,
+                text: `在线改名要收取额外的 ${muConfig.changeNameNeedWcoin} 积分, 你同意吗?`,
               }).then((result) => {
                 if (!result.isConfirmed) {
                   return;

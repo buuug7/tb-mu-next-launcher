@@ -85,7 +85,7 @@ export default function CharacterRankList({ users, userOnlineStatus }) {
               <td>{item['killMonster']}</td>
               <td>{item['Kills']}</td>
               <td>{item['Deads']}</td>
-              <td>{getTotalPoints(item, muConfig?.defaultClassInfo)}</td>
+              <td>{getTotalPoints(item, muConfig)}</td>
               <td>{item['bloodScore'] || 0}</td>
               <td>{item['devilSquareScore'] || 0}</td>
               <td>{item['chaoCastleScore'] || 0}</td>

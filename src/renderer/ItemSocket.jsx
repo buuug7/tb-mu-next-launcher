@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
-import { SOCKET_NEED_JF } from '../config';
 import ItemDisplay from './ItemDisplay';
 import { UserContext } from './UserProvider';
 import MySwal from './MySwal';
@@ -13,8 +12,10 @@ import {
 } from './api';
 import { getWareHouseItemByIndex, getItemSocketSlotCount } from '../util';
 import useErrorHandler from './use-error-handle';
+import { MuConfigContext } from './MuConfigProvider';
 
 export default function ItemSocket({ muItems }) {
+  const { muConfig } = useContext(MuConfigContext);
   const { user, notifyUserDataChange } = useContext(UserContext);
   const [warehouse, setWarehouse] = useState(null);
   const [item1, setItem1] = useState(null);
@@ -50,7 +51,7 @@ export default function ItemSocket({ muItems }) {
             <i>当前积分为 {user['WCoinP']}</i>,
             请将镶嵌物品放在仓库左上角第一格, 支持属性重复镶嵌, 最大镶嵌孔数 5
             个, 镶嵌的时候请确保物品有 5 个插槽, 可以用镶嵌宝石砸出 5
-            个孔在镶嵌, 镶嵌费用为 {SOCKET_NEED_JF} 积分
+            个孔在镶嵌, 镶嵌费用为 {muConfig.socketNeedWcoin} 积分
           </Alert>
           {message && <Alert variant="danger">{message}</Alert>}
           <Button
@@ -220,15 +221,15 @@ export default function ItemSocket({ muItems }) {
                         return;
                       }
 
-                      if (JF < SOCKET_NEED_JF) {
+                      if (JF < muConfig.socketNeedWcoin) {
                         setMessage(
-                          `镶嵌需要 ${SOCKET_NEED_JF} 积分,你当前的积分还不够.`
+                          `镶嵌需要 ${muConfig.socketNeedWcoin} 积分,你当前的积分还不够.`
                         );
                         return;
                       }
 
                       MySwal.confirm({
-                        text: `镶嵌要收取额外的 ${SOCKET_NEED_JF} 积分, 你同意吗?`,
+                        text: `镶嵌要收取额外的 ${muConfig.socketNeedWcoin} 积分, 你同意吗?`,
                       }).then((result) => {
                         if (!result.isConfirmed) {
                           return;

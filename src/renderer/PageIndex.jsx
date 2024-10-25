@@ -1,18 +1,21 @@
-import { qqLink, siteDescription, siteSecondaryTitle } from 'config';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { MuConfigContext } from './MuConfigProvider';
 import Layout from './Layout';
 import bigThanks from './bigThanks';
 
 import './PageIndex.scss';
 
 export default function PageIndex() {
+  const { muConfig } = useContext(MuConfigContext);
+
   return (
     <Layout>
       <div className="p-4 mb-4 bg-white bg-jump">
         <div className="overlay" />
         <div className="container-fluid">
-          <h1 className="display-5 fw-bold">{siteSecondaryTitle}</h1>
-          <p className="fs-4">{siteDescription}</p>
+          <h1 className="display-5 fw-bold">{muConfig.siteSecondaryTitle}</h1>
+          <p className="fs-4">{muConfig.siteDescription}</p>
           <hr />
           <div>
             <Link to="/" className="btn btn-outline-primary">
@@ -25,7 +28,7 @@ export default function PageIndex() {
               更多设定
             </a>
             <a
-              href={qqLink}
+              href={muConfig.qqLink}
               className="btn btn-link ms-2"
               target="_blank"
               rel="noreferrer"

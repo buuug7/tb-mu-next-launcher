@@ -1,13 +1,15 @@
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Toast, ToastContainer } from 'react-bootstrap';
-import { copyRight, mySessionKey } from '../config';
+import { mySessionKey } from '../config';
 import { UserContext } from './UserProvider';
 import { HTTP_CUSTOM_EXCEPTION } from './MyCustomEvent';
-import MyNavbar from './MyNavbar';
 import { MessageContext } from './MessageProvider';
+import { MuConfigContext } from './MuConfigProvider';
+import MyNavbar from './MyNavbar';
 
 export default function Layout({ children }) {
+  const { muConfig } = useContext(MuConfigContext);
   const { notifyUserDataChange } = useContext(UserContext);
   const { message, updateMessage } = useContext(MessageContext);
   const navigate = useNavigate();
@@ -61,7 +63,7 @@ export default function Layout({ children }) {
           )}
           <div>{children}</div>
           <div className="footer text-muted py-2">
-            <p>{copyRight}</p>
+            <p>{muConfig.copyRight}</p>
           </div>
         </div>
       </main>

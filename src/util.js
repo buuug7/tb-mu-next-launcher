@@ -2,13 +2,6 @@
 
 import dayjs from 'dayjs';
 
-import {
-  DEFAULT_SERVER_KEY_NAME,
-  DEFAULT_SERVER_KEY_VALUE,
-  RESET_LIFE_PER_POINTS,
-  MASTER_RESET_LIFE_PER_POINTS,
-} from './config';
-
 /**
  * 验证电子邮箱
  * @param email
@@ -50,12 +43,12 @@ export function eraseCookie(name) {
 
 export function getDefaultServer(servers) {
   const defaultServer = servers.find(
-    (it) => String(it.key) === getCookie(DEFAULT_SERVER_KEY_NAME)
+    (it) => String(it.key) === getCookie('DEFAULT_SERVER_KEY')
   );
 
   if (!defaultServer) {
-    setCookie(DEFAULT_SERVER_KEY_NAME, DEFAULT_SERVER_KEY_VALUE);
-    return servers.find((it) => String(it.key) === DEFAULT_SERVER_KEY_VALUE);
+    setCookie('DEFAULT_SERVER_KEY', `1`);
+    return servers.find((it) => String(it.key) === '1');
   }
 
   return defaultServer;
@@ -126,10 +119,11 @@ export function getPointsPerLevel(classNum) {
   return pointsPerLevelArr[class2Index(classNum)];
 }
 
-export function getTotalPoints(character, defaultClassInfo = []) {
+export function getTotalPoints(character, muConfig = {}) {
   const cLevel = character['cLevel'];
   const resets = character['ResetCount'];
-  const defaultInfo = defaultClassInfo[class2Index(character['Class'])];
+  const defaultInfo =
+    muConfig?.defaultClassInfo[class2Index(character['Class'])];
 
   const Strength = defaultInfo['Strength'];
   const Dexterity = defaultInfo['Dexterity'];
@@ -139,11 +133,11 @@ export function getTotalPoints(character, defaultClassInfo = []) {
   const defaultPoints = Strength + Dexterity + Vitality + Energy + Leadership;
   const pointsPerLevel = getPointsPerLevel(character['Class']);
   const masterResetPoints =
-    MASTER_RESET_LIFE_PER_POINTS * character['MasterResetCount'];
+    muConfig.masterResetLifePerPoints * character['MasterResetCount'];
 
   return (
     cLevel * pointsPerLevel +
-    resets * RESET_LIFE_PER_POINTS +
+    resets * muConfig.resetLifePerPoints +
     defaultPoints +
     masterResetPoints
   );

@@ -9,7 +9,7 @@ import { MuConfigContext } from './MuConfigProvider';
 function CharacterRankCard({ item, index, onlineStatus }) {
   const { muConfig } = useContext(MuConfigContext);
   const roleName = classToName[item['Class']];
-  const totalPoints = getTotalPoints(item, muConfig?.defaultClassInfo);
+  const totalPoints = getTotalPoints(item, muConfig);
   return (
     <div>
       <div className="card-rank card shadow-sm">

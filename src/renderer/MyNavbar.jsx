@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import useUserLogout from './use-user-logout';
 import { UserContext } from './UserProvider';
-import { sitePrimaryTitle } from '../config';
 import { MuConfigContext } from './MuConfigProvider';
 
 export default function MyNavbar() {
@@ -15,7 +14,7 @@ export default function MyNavbar() {
   return (
     <Navbar variant="light" bg="light" expand="md" fixed="top">
       <Container>
-        <Navbar.Brand href="/">{sitePrimaryTitle}</Navbar.Brand>
+        <Navbar.Brand href="/">{muConfig.sitePrimaryTitle}</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav className="me-auto" navbarScroll>

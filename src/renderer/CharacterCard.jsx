@@ -21,16 +21,6 @@ import {
   isThirdEvolution,
   validateSinglePoints,
 } from '../util';
-import {
-  CAN_RESET_LIFE,
-  CUSTOM_TITLE_ENABLE,
-  RECYCLE_CHARACTER_YB,
-  RECYCLE_CHARACTER_LEVEL,
-  RESET_LIFT_MAX_COUNT,
-  RESET_LIFT_REQUIRE_LEVEL,
-  RECYCLE_CHARACTER_RESET_COUNT,
-  EnableRecycleCharacter,
-} from '../config';
 import CharacterAvatar from './CharacterAvatar';
 import Ext1Custom from './Ext1Custom';
 import CustomTitle from './CustomTitle';
@@ -59,7 +49,7 @@ export default function CharacterCard({ item, onRefresh }) {
   const [LevelUpPoint, setLevelUpPoint] = useState(item['LevelUpPoint']);
   const [showChangeNameModal, setShowChangeNameModal] = useState(false);
 
-  const totalPoints = getTotalPoints(item, muConfig?.defaultClassInfo || []);
+  const totalPoints = getTotalPoints(item, muConfig);
   const roleName = classToName[item['Class']];
 
   useEffect(() => {
@@ -168,55 +158,55 @@ export default function CharacterCard({ item, onRefresh }) {
       </ListGroup>
       <Card.Body style={{ padding: '0.5rem 1rem' }}>
         {muConfig.enableExt1 && <Ext1Custom character={item} />}
-        {CUSTOM_TITLE_ENABLE && <CustomTitle character={item} />}
+        {muConfig.enableCustomTitle && <CustomTitle character={item} />}
         <div className="characters-actions">
-          {CAN_RESET_LIFE && (
-            <Button
-              disabled={loading}
-              variant="outline-primary"
-              size="sm"
-              onClick={() => {
-                if (loading) {
+          <Button
+            disabled={loading || !muConfig.enableResetLife}
+            variant="outline-primary"
+            size="sm"
+            onClick={() => {
+              if (loading) {
+                return;
+              }
+
+              const resetLife = item['ResetLife'];
+              const cLevel = item['cLevel'];
+
+              if (resetLife >= muConfig.resetLifeMaxCount) {
+                updateMessage('你已经满转了');
+                return;
+              }
+
+              if (cLevel < muConfig.resetLifeRequireLevel) {
+                updateMessage(
+                  `当前角色等级不到 ${muConfig.resetLifeRequireLevel}`
+                );
+                return;
+              }
+
+              MySwal.confirm({
+                text: '你确定要转生吗?',
+              }).then((result) => {
+                if (!result.isConfirmed) {
                   return;
                 }
 
-                const resetLife = item['ResetLife'];
-                const cLevel = item['cLevel'];
-
-                if (resetLife >= RESET_LIFT_MAX_COUNT) {
-                  updateMessage('你已经满转了');
-                  return;
-                }
-
-                if (cLevel < RESET_LIFT_REQUIRE_LEVEL) {
-                  updateMessage(`当前角色等级不到 ${RESET_LIFT_REQUIRE_LEVEL}`);
-                  return;
-                }
-
-                MySwal.confirm({
-                  text: '你确定要转生吗?',
-                }).then((result) => {
-                  if (!result.isConfirmed) {
-                    return;
-                  }
-
-                  setLoading(true);
-                  resetLife({
-                    charName: item['Name'],
+                setLoading(true);
+                resetLife({
+                  charName: item['Name'],
+                })
+                  .then(() => {
+                    MySwal.message('成功转职');
+                    onRefresh();
                   })
-                    .then(() => {
-                      MySwal.message('成功转职');
-                      onRefresh();
-                    })
-                    .finally(() => {
-                      setLoading(false);
-                    });
-                });
-              }}
-            >
-              {loading ? 'Loading...' : '在线转生'}
-            </Button>
-          )}
+                  .finally(() => {
+                    setLoading(false);
+                  });
+              });
+            }}
+          >
+            {loading ? 'Loading...' : '在线转生'}
+          </Button>
           <Button
             disabled={!muConfig.enableResetPoints}
             variant="outline-primary"
@@ -292,7 +282,7 @@ export default function CharacterCard({ item, onRefresh }) {
           </Button>
           {isThirdEvolution(item['Class']) ? (
             <Button
-              disabled={loading}
+              disabled={loading || !muConfig.enableBackToSecondEvolution}
               variant="outline-primary"
               onClick={() => {
                 if (loading) {
@@ -330,7 +320,11 @@ export default function CharacterCard({ item, onRefresh }) {
             </Button>
           ) : (
             <Button
-              disabled={loading || isFirstEvolution(item['Class'])}
+              disabled={
+                loading ||
+                isFirstEvolution(item['Class']) ||
+                !muConfig.enableThirdEvolution
+              }
               variant="outline-primary"
               onClick={() => {
                 if (loading) {
@@ -409,74 +403,76 @@ export default function CharacterCard({ item, onRefresh }) {
           >
             {loading ? 'Loading...' : '自救'}
           </Button>
-          {EnableRecycleCharacter && (
-            <OverlayTrigger
-              key={1}
-              placement="top"
-              overlay={
-                <Popover id="popover-basic">
-                  <Popover.Body>
-                    需要<strong> {RECYCLE_CHARACTER_RESET_COUNT} </strong>
-                    次转生，角色等级
-                    <strong> {RECYCLE_CHARACTER_LEVEL} </strong>级, 回收将会获得{' '}
-                    <strong>{RECYCLE_CHARACTER_YB}</strong>{' '}
-                    元宝，元宝可以购买进阶宝石
-                  </Popover.Body>
-                </Popover>
-              }
-            >
-              <Button
-                variant="outline-primary"
-                onClick={() => {
-                  if (loading) {
+          <OverlayTrigger
+            key={1}
+            placement="top"
+            overlay={
+              <Popover id="popover-basic">
+                <Popover.Body>
+                  需要<strong> {muConfig.recycleCharacterResetCount} </strong>
+                  次转生，角色等级
+                  <strong> {muConfig.recycleCharacterNeedLevel} </strong>级,
+                  回收将会获得{' '}
+                  <strong>{muConfig.recycleCharacterGiveWcoin}</strong>{' '}
+                  元宝，元宝可以购买进阶宝石
+                </Popover.Body>
+              </Popover>
+            }
+          >
+            <Button
+              disabled={loading || !muConfig.enableRecycleCharacter}
+              variant="outline-primary"
+              onClick={() => {
+                if (loading) {
+                  return;
+                }
+
+                if (
+                  Number(item['ResetCount']) <
+                  muConfig.recycleCharacterResetCount
+                ) {
+                  updateMessage(
+                    `回收角色转生次数低于 ${muConfig.recycleCharacterResetCount} 次`
+                  );
+                  return;
+                }
+
+                if (
+                  Number(item['cLevel']) < muConfig.recycleCharacterNeedLevel
+                ) {
+                  updateMessage(
+                    `回收角色等级低于 ${muConfig.recycleCharacterNeedLevel} 级`
+                  );
+                  return;
+                }
+
+                MySwal.confirm({
+                  text: `回收角色需要 ${muConfig.recycleCharacterNeedLevel} 等级, 回收将获得 ${muConfig.recycleCharacterGiveWcoin} 元宝, 你确定要回收该角色吗？`,
+                }).then((result) => {
+                  if (!result.isConfirmed) {
                     return;
                   }
 
-                  if (
-                    Number(item['ResetCount']) < RECYCLE_CHARACTER_RESET_COUNT
-                  ) {
-                    updateMessage(
-                      `回收角色转生次数低于 ${RECYCLE_CHARACTER_RESET_COUNT} 次`
-                    );
-                    return;
-                  }
-
-                  if (Number(item['cLevel']) < RECYCLE_CHARACTER_LEVEL) {
-                    updateMessage(
-                      `回收角色等级低于 ${RECYCLE_CHARACTER_LEVEL} 级`
-                    );
-                    return;
-                  }
-
-                  MySwal.confirm({
-                    text: `回收角色需要 ${RECYCLE_CHARACTER_LEVEL} 等级, 回收将获得 ${RECYCLE_CHARACTER_YB} 元宝, 你确定要回收该角色吗？`,
-                  }).then((result) => {
-                    if (!result.isConfirmed) {
-                      return;
-                    }
-
-                    setLoading(true);
-                    recycleCharacter({
-                      charName: item['Name'],
+                  setLoading(true);
+                  recycleCharacter({
+                    charName: item['Name'],
+                  })
+                    .then(() => {
+                      MySwal.message(
+                        '成功回收该角色, 请查看你的元宝，元宝可以用来购买进阶宝石'
+                      );
+                      onRefresh();
                     })
-                      .then(() => {
-                        MySwal.message(
-                          '成功回收该角色, 请查看你的元宝，元宝可以用来购买进阶宝石'
-                        );
-                        onRefresh();
-                      })
-                      .finally(() => {
-                        setLoading(false);
-                      });
-                  });
-                }}
-                size="sm"
-              >
-                {loading ? 'Loading...' : '回收角色'}
-              </Button>
-            </OverlayTrigger>
-          )}
-
+                    .finally(() => {
+                      setLoading(false);
+                    });
+                });
+              }}
+              size="sm"
+            >
+              {loading ? 'Loading...' : '回收角色'}
+            </Button>
+          </OverlayTrigger>
           <Button
             disabled={loading}
             variant="outline-primary"
