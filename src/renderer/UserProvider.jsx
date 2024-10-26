@@ -30,9 +30,9 @@ export default function UserProvider({ children }) {
       return;
     }
 
-    getMyData().then(({ data }) => {
-      setUser(data);
-    });
+    getMyData(session)
+      .then(({ data }) => setUser(data))
+      .catch(errorHandler);
   };
 
   const value = {

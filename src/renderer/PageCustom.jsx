@@ -6,7 +6,7 @@ import ItemSocket from './ItemSocket';
 import AccessDenied from './AccessDenied';
 import { UserContext } from './UserProvider';
 
-export default function Custom() {
+export default function PageCustom() {
   const [key, setKey] = useState('高级镶嵌');
   const [muItems, setMuItems] = useState([]);
   const [warehouse, setWarehouse] = useState(null);

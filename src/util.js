@@ -122,8 +122,8 @@ export function getPointsPerLevel(classNum) {
 export function getTotalPoints(character, muConfig = {}) {
   const cLevel = character['cLevel'];
   const resets = character['ResetCount'];
-  const defaultInfo =
-    muConfig?.defaultClassInfo[class2Index(character['Class'])];
+  const defaultClassInfo = muConfig?.defaultClassInfo || [];
+  const defaultInfo = defaultClassInfo[class2Index(character['Class'])];
 
   const Strength = defaultInfo['Strength'];
   const Dexterity = defaultInfo['Dexterity'];

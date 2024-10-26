@@ -1,13 +1,53 @@
-import { useContext } from 'react';
+/* global electron */
+
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Alert } from 'react-bootstrap';
 import { MuConfigContext } from './MuConfigProvider';
 import Layout from './Layout';
 import bigThanks from './bigThanks';
+import {
+  EVENT_UPDATE_PROGRESS,
+  EVENT_UPDATE_FINISHED,
+  EVENT_CHECK_CLIENT_UPDATE,
+  EVENT_RUN_MU,
+} from '../config';
 
 import './PageIndex.scss';
 
 export default function PageIndex() {
+  const defaultMsg = '检测更新...';
   const { muConfig } = useContext(MuConfigContext);
+  const [updateInfo, setUpdateInfo] = useState({
+    msg: defaultMsg,
+    finished: true,
+  });
+  const [defaultServer, setDefaultServer] = useState(muConfig.servers?.[0]);
+
+  const updateClient = () => {
+    setUpdateInfo((preState) => ({
+      ...preState,
+      msg: defaultMsg,
+      finished: false,
+    }));
+
+    electron?.ipcRenderer.on(EVENT_UPDATE_PROGRESS, (payload) => {
+      console.log(`payload`, payload);
+      setUpdateInfo(payload);
+    });
+
+    electron?.ipcRenderer.once(EVENT_UPDATE_FINISHED, () => {
+      console.log(EVENT_UPDATE_FINISHED);
+      setUpdateInfo((preState) => ({
+        ...preState,
+        finished: true,
+      }));
+
+      electron?.ipcRenderer.sendMessage(EVENT_RUN_MU, []);
+    });
+
+    electron?.ipcRenderer.sendMessage(EVENT_CHECK_CLIENT_UPDATE, []);
+  };
 
   return (
     <Layout>
@@ -17,16 +57,23 @@ export default function PageIndex() {
           <h1 className="display-5 fw-bold">{muConfig.siteSecondaryTitle}</h1>
           <p className="fs-4">{muConfig.siteDescription}</p>
           <hr />
+          {!updateInfo.finished && (
+            <div className="my-2 py-2 px-0 text-left text-primary text-break">
+              {updateInfo.msg}
+            </div>
+          )}
           <div>
-            <Link to="/" className="btn btn-outline-primary">
+            <Link
+              to="/"
+              disabled={!updateInfo.finished}
+              className="btn btn-outline-primary"
+              onClick={updateClient}
+            >
               启动游戏
             </Link>
             <Link to="/register" className="btn btn-link ms-2">
               快速注册
             </Link>
-            <a href="/blog" className="btn btn-link ms-2">
-              更多设定
-            </a>
             <a
               href={muConfig.qqLink}
               className="btn btn-link ms-2"
@@ -35,6 +82,9 @@ export default function PageIndex() {
             >
               添加QQ群
             </a>
+            <Link to="/setting" className="btn btn-link ms-2">
+              更多设定
+            </Link>
           </div>
         </div>
       </div>

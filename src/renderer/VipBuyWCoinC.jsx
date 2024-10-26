@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-globals */
 
 import dayjs from 'dayjs';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
 import { getUserVipRemainingJF, getVipItem, humanNumber } from '../util';
 import { UserContext } from './UserProvider';
@@ -23,6 +23,11 @@ export default function VipBuyWCoinC() {
 
   const JF = user['WCoinP'];
   const YB = user['WCoinC'];
+
+  useEffect(() => {
+    notifyUserDataChange();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="VipBuy p-3 bg-white">

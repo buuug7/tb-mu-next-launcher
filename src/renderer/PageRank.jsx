@@ -51,10 +51,12 @@ export default function PageRank() {
   const errorHandler = useErrorHandler();
 
   useEffect(() => {
-    getUserOnlineStatus().then(({ data }) => {
-      setUserOnlineStatus(data);
-    });
-  }, []);
+    getUserOnlineStatus()
+      .then(({ data }) => {
+        setUserOnlineStatus(data);
+      })
+      .catch(errorHandler);
+  }, [errorHandler]);
 
   useEffect(() => {
     setLoading(true);

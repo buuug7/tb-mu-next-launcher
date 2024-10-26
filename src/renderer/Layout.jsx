@@ -21,7 +21,7 @@ export default function Layout({ children }) {
       const status = error?.response?.status;
       const requestURL = error?.config?.url;
 
-      if (status === 401 && requestURL?.includes('/mu/api/login')) {
+      if (status === 401 && !requestURL?.includes('/mu/api/login')) {
         window.localStorage.removeItem(mySessionKey);
         notifyUserDataChange({ clean: true });
         navigate('/login');

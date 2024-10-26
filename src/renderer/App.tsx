@@ -1,8 +1,6 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Setting from './Setting';
 import WebSite from './WebSite';
-
 import PageIndex from './PageIndex';
 import PageRegister from './PageRegister';
 import PageLogin from './PageLogin';
@@ -10,11 +8,13 @@ import PageAccount from './PageAccount';
 import PageRank from './PageRank';
 import PageVip from './PageVip';
 import PageCharacters from './PageCharacters';
-import Custom from './PageCustom';
-import './App.scss';
+import PageCustom from './PageCustom';
+import PageSetting from './PageSetting';
 import UserProvider from './UserProvider';
 import MuConfigProvider from './MuConfigProvider';
 import MessageProvider from './MessageProvider';
+
+import './App.scss';
 
 export default function App() {
   return (
@@ -30,8 +30,8 @@ export default function App() {
               <Route path="/rank" element={<PageRank />} />
               <Route path="/vip" element={<PageVip />} />
               <Route path="/characters" element={<PageCharacters />} />
-              <Route path="/custom" element={<Custom />} />
-              <Route path="/setting" element={<Setting />} />
+              <Route path="/custom" element={<PageCustom />} />
+              <Route path="/setting" element={<PageSetting />} />
               <Route path="/webpage" element={<WebSite />} />
             </Routes>
           </Router>

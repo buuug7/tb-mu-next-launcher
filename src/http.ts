@@ -10,9 +10,11 @@ const instance = axios.create({
 instance.interceptors.request.use(
   function (config) {
     // Do something before request is sent
-    config.headers.Authorization = `Bearer ${localStorage.getItem(
-      mySessionKey
-    )}`;
+    if (globalThis.window) {
+      const token = localStorage.getItem(mySessionKey);
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
     return config;
   },
   function (error) {
@@ -30,7 +32,10 @@ instance.interceptors.response.use(
   },
   function (error) {
     console.log(`error`, error);
-    fireHttpCustomException(error);
+
+    if (globalThis.window) {
+      fireHttpCustomException(error);
+    }
 
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
