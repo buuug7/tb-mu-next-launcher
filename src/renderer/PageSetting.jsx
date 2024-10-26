@@ -1,6 +1,9 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Form } from 'react-bootstrap';
 import {
   EVENT_GET_REGEDIT,
   EVENT_KILL_MAIN,
@@ -9,11 +12,10 @@ import {
   servers,
   showIpAndPortOption,
   USER_DATA_KEY,
-} from 'config';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+} from '../config';
 import Layout from './Layout';
 import meta from '../../release/app/package.json';
+import MySwal from './MySwal';
 
 const { electron } = window;
 
@@ -28,7 +30,6 @@ export default function PageSetting() {
   const [muFolder, setMuFolder] = useState('');
   const [ipAndPort, setIpAndPort] = useState('');
   const [server, setServer] = useState(servers[0]);
-  const [Message, setMessage] = useState('');
   const [userData, setUserData] = useState({});
 
   const onResolutionChange = (e) => {
@@ -76,33 +77,35 @@ export default function PageSetting() {
           <span className="text-secondary">登录器版本 v{meta.version}</span>
         </p>
         <hr className="border1" />
+
         <div className="">
-          <h5>服务器选择</h5>
-          <select
-            className="form-select"
-            value={server.key}
-            onChange={(e) => {
-              console.log(`e`, e.target.value);
-              const selectedServer =
-                servers.find((it) => it.key === e.target.value) || servers[0];
-              setServer(selectedServer);
+          <Form.Group>
+            <Form.Label>服务器选择</Form.Label>
+            <Form.Select
+              value={server.key}
+              onChange={(e) => {
+                console.log(`e`, e.target.value);
+                const selectedServer =
+                  servers.find((it) => it.key === e.target.value) || servers[0];
+                setServer(selectedServer);
 
-              // 每次选择后重置更新号
-              window.electron.store.set(USER_DATA_KEY, {
-                ...userData,
-                server: selectedServer,
-                [`version-${selectedServer.key}`]: 0,
-              });
+                // 每次选择后重置更新号
+                window.electron.store.set(USER_DATA_KEY, {
+                  ...userData,
+                  server: selectedServer,
+                  [`version-${selectedServer.key}`]: 0,
+                });
 
-              history(-1);
-            }}
-          >
-            {servers.map((it) => (
-              <option value={it.key} key={it.key}>
-                {it.name}
-              </option>
-            ))}
-          </select>
+                history(-1);
+              }}
+            >
+              {servers.map((it) => (
+                <option value={it.key} key={it.key}>
+                  {it.name}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
           <hr className="border1" />
           <h5>进程</h5>
           <div>
@@ -123,122 +126,100 @@ export default function PageSetting() {
           </div>
           <hr className="border1" />
 
-          <h5>账号</h5>
-          <div>
-            <input
+          <Form.Group>
+            <Form.Label>账号</Form.Label>
+            <Form.Control
               type="text"
-              className="form-control"
+              placeholder="游戏账号"
               value={ID}
               onChange={(e) => {
                 setID(e.target.value);
               }}
             />
-          </div>
+          </Form.Group>
+
           <hr className="border1" />
 
-          <h5>分辨率</h5>
-          <div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="Resolution"
-                value={1}
-                checked={Resolution === 1}
-                onChange={onResolutionChange}
-              />
-              <label className="form-check-label">800x600</label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="Resolution"
-                value={2}
-                checked={Resolution === 2}
-                onChange={onResolutionChange}
-              />
-              <label className="form-check-label">1024x768</label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="Resolution"
-                value={4}
-                checked={Resolution === 4}
-                onChange={onResolutionChange}
-              />
-              <label className="form-check-label" htmlFor="Resolution3">
-                1366x768
-              </label>
-            </div>
-          </div>
+          <Form.Group>
+            <Form.Label>分辨率</Form.Label>
+            <Form.Check
+              type="radio"
+              label="800x600"
+              name="Resolution"
+              value={1}
+              onChange={onResolutionChange}
+              checked={Resolution === 1}
+            />
+            <Form.Check
+              type="radio"
+              label="1024x768"
+              name="Resolution"
+              value={2}
+              onChange={onResolutionChange}
+              checked={Resolution === 2}
+            />
+            <Form.Check
+              type="radio"
+              label="1366x768"
+              name="Resolution"
+              value={3}
+              onChange={onResolutionChange}
+              checked={Resolution === 3}
+            />
+          </Form.Group>
+
           <hr className="border1" />
 
-          <h5>图像质量</h5>
-          <div>
-            <div className="form-check-inline">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ColorDepth"
-                value={0}
-                checked={ColorDepth === 0}
-                onChange={onColorDepthChange}
-              />
-              <label className="form-check-label">16bit</label>
-            </div>
-            <div className="form-check-inline">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="ColorDepth"
-                value={1}
-                checked={ColorDepth === 1}
-                onChange={onColorDepthChange}
-              />
-              <label className="form-check-label">32bit</label>
-            </div>
-          </div>
+          <Form.Group>
+            <Form.Label>图像质量</Form.Label>
+            <Form.Check
+              type="radio"
+              label="16bit"
+              name="ColorDepth"
+              value={0}
+              onChange={onColorDepthChange}
+              checked={ColorDepth === 0}
+            />
+            <Form.Check
+              type="radio"
+              label="32bit"
+              name="ColorDepth"
+              value={1}
+              onChange={onColorDepthChange}
+              checked={ColorDepth === 1}
+            />
+          </Form.Group>
+
           <hr className="border1" />
 
-          <h5>其他</h5>
-          <div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                checked={WindowMode === 1}
-                onChange={(e) => {
-                  setWindowMode(e.target.checked ? 1 : 0);
-                }}
-              />
-              <label className="form-check-label">窗口模式</label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                checked={MusicOnOff === 1}
-                onChange={(e) => {
-                  setMusicOnOff(e.target.checked ? 1 : 0);
-                }}
-              />
-              <label className="form-check-label">音效</label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                checked={SoundOnOff === 1}
-                onChange={(e) => {
-                  setSoundOnOff(e.target.checked ? 1 : 0);
-                }}
-              />
-              <label className="form-check-label">声音</label>
-            </div>
-          </div>
+          <Form.Group>
+            <Form.Label>其他</Form.Label>
+            <Form.Check
+              type="checkbox"
+              label="窗口模式"
+              checked={WindowMode === 1}
+              onChange={(e) => {
+                setWindowMode(e.target.checked ? 1 : 0);
+              }}
+            />
+            <Form.Check
+              type="checkbox"
+              label="音效"
+              checked={MusicOnOff === 1}
+              onChange={(e) => {
+                setMusicOnOff(e.target.checked ? 1 : 0);
+              }}
+            />
+            <Form.Check
+              type="checkbox"
+              label="声音"
+              checked={SoundOnOff === 1}
+              onChange={(e) => {
+                setSoundOnOff(e.target.checked ? 1 : 0);
+              }}
+            />
+          </Form.Group>
+
           <hr className="border1" />
 
           <h5>客户端路径</h5>
@@ -246,7 +227,7 @@ export default function PageSetting() {
             <div
               tabIndex={0}
               role="button"
-              className="mt-2 py-2 bg-light d-flex flex-column px-2 text-secondary"
+              className="mt-2 py-2 bg-light d-flex flex-column  text-secondary"
               onClick={() => {
                 electron.ipcRenderer.once(EVENT_SELECT_FOLDER, (data) => {
                   const folder = data.filePaths[0];
@@ -260,7 +241,7 @@ export default function PageSetting() {
                 electron.ipcRenderer.sendMessage(EVENT_SELECT_FOLDER, []);
               }}
             >
-              <div className="mb-2 text-primary">
+              <div className="mb-2 text-secondary">
                 请选择客户端文件夹中的 main.exe
               </div>
               <div className="mb-2 text-break">
@@ -288,8 +269,6 @@ export default function PageSetting() {
 
           <hr className="border1" />
 
-          {Message && <div className="alert alert-success">{Message}</div>}
-
           <div>
             <button
               type="submit"
@@ -316,7 +295,7 @@ export default function PageSetting() {
                   server,
                 });
 
-                setMessage('保存成功');
+                MySwal.message('保存成功');
               }}
             >
               保存
