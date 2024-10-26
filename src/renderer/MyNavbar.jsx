@@ -65,6 +65,9 @@ export default function MyNavbar() {
                   <Link to="/account" className="dropdown-item">
                     我的账号
                   </Link>
+                  <Link to="/setting" className="dropdown-item">
+                    更多设置
+                  </Link>
                   <NavDropdown.Divider />
                   <Link className="dropdown-item" onClick={logout}>
                     退出登录

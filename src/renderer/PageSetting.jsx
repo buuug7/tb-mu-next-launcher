@@ -2,13 +2,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import {
-  EVENT_CHECK_CLIENT_UPDATE,
   EVENT_GET_REGEDIT,
   EVENT_KILL_MAIN,
   EVENT_SELECT_FOLDER,
   EVENT_SET_REGEDIT,
-  EVENT_UPDATE_FINISHED,
-  EVENT_UPDATE_PROGRESS,
   servers,
   showIpAndPortOption,
   USER_DATA_KEY,
@@ -16,6 +13,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from './Layout';
+import meta from '../../release/app/package.json';
 
 const { electron } = window;
 
@@ -31,10 +29,6 @@ export default function PageSetting() {
   const [ipAndPort, setIpAndPort] = useState('');
   const [server, setServer] = useState(servers[0]);
   const [Message, setMessage] = useState('');
-  const [updateInfo, setUpdateInfo] = useState({
-    msg: '检测更新...',
-    finished: true,
-  });
   const [userData, setUserData] = useState({});
 
   const onResolutionChange = (e) => {
@@ -78,6 +72,9 @@ export default function PageSetting() {
     <Layout>
       <div className="setting-page container">
         <h4 className="text-left">应用设置</h4>
+        <p>
+          <span className="text-secondary">登录器版本 v{meta.version}</span>
+        </p>
         <hr className="border1" />
         <div className="">
           <h5>服务器选择</h5>
@@ -107,46 +104,6 @@ export default function PageSetting() {
             ))}
           </select>
           <hr className="border1" />
-
-          <h5>更新</h5>
-          {!updateInfo.finished && (
-            <div className="my-2 py-2  px-0 text-left text-primary text-break">
-              {updateInfo.msg}
-            </div>
-          )}
-          <div>
-            <a
-              role="button"
-              href="#"
-              onClick={() => {
-                setUpdateInfo((pre) => ({
-                  ...pre,
-                  finished: false,
-                }));
-
-                electron.ipcRenderer.on(EVENT_UPDATE_PROGRESS, (payload) => {
-                  console.log(`payload`, payload);
-                  setUpdateInfo(payload);
-                });
-
-                electron.ipcRenderer.once(EVENT_UPDATE_FINISHED, () => {
-                  alert('更新成功!');
-                  setUpdateInfo((pre) => ({
-                    ...pre,
-                    finished: true,
-                  }));
-                });
-
-                electron.ipcRenderer.sendMessage(EVENT_CHECK_CLIENT_UPDATE, [
-                  { forceUpdate: true },
-                ]);
-              }}
-            >
-              更新客户端
-            </a>
-          </div>
-          <hr className="border1" />
-
           <h5>进程</h5>
           <div>
             <a
@@ -336,7 +293,7 @@ export default function PageSetting() {
           <div>
             <button
               type="submit"
-              className="btn btn-primary me-2"
+              className="btn btn-outline-primary me-2"
               onClick={(e) => {
                 e.preventDefault();
                 const data = {
@@ -363,15 +320,6 @@ export default function PageSetting() {
               }}
             >
               保存
-            </button>
-            <button
-              type="submit"
-              className="btn btn-outline-primary me-2"
-              onClick={() => {
-                history(-1);
-              }}
-            >
-              返回
             </button>
           </div>
         </div>

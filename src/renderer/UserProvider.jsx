@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from 'react';
-import { getDefaultServer } from '../util';
 import { getMyData } from './api';
 import useMySession from './use-my-session';
 import useErrorHandler from './use-error-handle';
