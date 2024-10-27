@@ -106,27 +106,10 @@ export const resetLife = (data) => {
   return http.post(`/mu/api/users/characters/resetLife`, data);
 };
 
-/* OLD FILES */
-
-export const getUpgradeItems = () => {
-  return this.getSocketItem();
+export const getPost = (name) => {
+  return http.get(`/mu/api/posts/${name}`);
 };
 
-export const getItemStarList = () => {
-  const url = `/json/item-star.json`;
-  return http.get(url);
-};
-
-export const getSocketItem = () => {
-  const url = '/json/item-socket.json';
-  return http.get(url);
-};
-
-export const getRecycleItems = () => {
-  return http.get('/json/recycle-items.json');
-};
-
-export const getTubieExtendItemInfo = (itemSerial) => {
-  const url = `/api/users/getTubieExtendItem?itemSerial=${itemSerial}`;
-  return http.get(url);
+export const getPosts = () => {
+  return http.get(`mu/api/posts`);
 };

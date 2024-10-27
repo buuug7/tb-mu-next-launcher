@@ -10,6 +10,8 @@ import PageVip from './PageVip';
 import PageCharacters from './PageCharacters';
 import PageCustom from './PageCustom';
 import PageSetting from './PageSetting';
+import PageBlog from './PageBlog';
+import Post from './Post';
 import UserProvider from './UserProvider';
 import MuConfigProvider from './MuConfigProvider';
 import MessageProvider from './MessageProvider';
@@ -32,6 +34,10 @@ export default function App() {
               <Route path="/characters" element={<PageCharacters />} />
               <Route path="/custom" element={<PageCustom />} />
               <Route path="/setting" element={<PageSetting />} />
+              <Route path="/blog" element={<PageBlog />}>
+                <Route index element={<Post />} />
+                <Route path="/blog/:slug" element={<Post />} />
+              </Route>
               <Route path="/webpage" element={<WebSite />} />
             </Routes>
           </Router>

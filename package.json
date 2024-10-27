@@ -122,8 +122,13 @@
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.0",
+    "rehype-stringify": "^10.0.1",
+    "remark-gfm": "^4.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.1",
     "sweetalert2": "^11.14.4",
-    "sweetalert2-react-content": "^5.0.7"
+    "sweetalert2-react-content": "^5.0.7",
+    "unified": "^11.0.5"
   },
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",

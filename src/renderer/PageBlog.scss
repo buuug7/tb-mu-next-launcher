@@ -1,0 +1,40 @@
+@import url('./markdown.custom.scss');
+
+$menuWidth: 220px;
+
+.blogPost {
+  background-color: #fff;
+  padding: 1rem;
+  margin-top: 2rem;
+  position: relative;
+
+  padding-top: 3rem;
+
+  .blogMenu {
+    position: absolute;
+    left: 1rem;
+    top: 8px;
+    cursor: pointer;
+  }
+
+  .blogPostLeft {
+    // padding-right: $menuWidth + 5px;
+    // transition: 100ms;
+  }
+
+  .blogPostRight {
+    position: absolute;
+    right: 0;
+    top: 2rem;
+    width: $menuWidth;
+    margin-top: 15px;
+  }
+
+  .post .markdown > :first-child {
+    margin-top: 0;
+  }
+
+  .markdown table {
+    word-break: keep-all;
+  }
+}

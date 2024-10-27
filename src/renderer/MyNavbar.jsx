@@ -21,9 +21,9 @@ export default function MyNavbar() {
             <Link to="/" className="nav-link">
               首页
             </Link>
-            {/* <Link to="/blog" className="nav-link">
+            <Link to="/blog" className="nav-link">
               博客
-            </Link> */}
+            </Link>
             <Link to="/characters" className="nav-link">
               角色
             </Link>
