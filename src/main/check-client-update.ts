@@ -8,11 +8,10 @@ import {
   EVENT_CHECK_CLIENT_UPDATE,
   EVENT_UPDATE_FINISHED,
   EVENT_UPDATE_PROGRESS,
-  getBaseUrl,
   servers,
 } from '../config';
 
-export async function downloadByUrl(url: string, filename: string) {
+export async function downloadByUrl(url: string, filePath: string) {
   try {
     const response = await axios({
       url: encodeURI(url),
@@ -23,7 +22,7 @@ export async function downloadByUrl(url: string, filename: string) {
     const chunks: any[] = [];
 
     console.log(
-      `download: status=${response.status},url=${url},filename=${filename}`
+      `download: status=${response.status},url=${url},filePath=${filePath}`
     );
 
     return await new Promise((resolve, reject) => {
@@ -37,7 +36,7 @@ export async function downloadByUrl(url: string, filename: string) {
 
       response.data.on('end', () => {
         const buf = Buffer.concat(chunks);
-        const dirName = path.dirname(filename);
+        const dirName = path.dirname(filePath);
 
         if (!fs.existsSync(dirName)) {
           fs.mkdirSync(dirName, {
@@ -45,7 +44,7 @@ export async function downloadByUrl(url: string, filename: string) {
           });
         }
 
-        fs.writeFileSync(filename, buf);
+        fs.writeFileSync(filePath, buf);
         resolve('下载成功');
       });
     });
@@ -69,21 +68,18 @@ export async function downloadUpdatedFiles(
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const version = userData[`version-${defaultServer.key}`] || 0;
-  const updateUrl = `${getBaseUrl()}/api/check-client-update?server=${
-    defaultServer.key
-  }`;
+  const updateUrl = `mu/api/update/check?server=${defaultServer.key}`;
 
   try {
     // get updated items from server
     const response = await axios.get(updateUrl, {
       maxContentLength: Infinity,
     });
-    const { data } = response;
+    const { data }: { data: UpdateData } = response;
 
-    log.info(`update res: `, data);
+    log.info(`Update Response Data: `, data);
 
-    const needUpdate =
-      parseInt(data.version, 10) > parseInt(version, 10) || forceUpdate;
+    const needUpdate = data.version > parseInt(version, 10) || forceUpdate;
 
     const logUpdateInfo = {
       forceUpdate,
@@ -104,26 +100,20 @@ export async function downloadUpdatedFiles(
       return;
     }
 
-    let updateItems = data.items.map((item: UpdateItem) => {
+    const updateItems = data.items.map((filename) => {
       return {
-        ...item,
-        link: data.baseUrl + item.link,
-        filename: path.join(
-          muFolder,
-          item.link.replace(`/updates/${defaultServer.key}/`, '')
-        ),
-        baseFilename: item.link.replace(`/updates/${defaultServer.key}/`, ''),
+        link: data.baseUrl + '/' + filename,
+        filePath: path.join(muFolder, filename),
+        filename,
       };
     });
-
-    updateItems = updateItems.filter((it: UpdateItem) => it.update);
 
     if (updateItems.length > 0) {
       // 更新前杀死正在运行的 main.exe
       killMainProcess();
     }
 
-    log.info(`update updateItems: `, updateItems);
+    log.info(`updateItems`, updateItems);
     log.info(`begin download update files`);
 
     let updateCount = 0;
@@ -132,11 +122,13 @@ export async function downloadUpdatedFiles(
     for (const item of updateItems) {
       try {
         // eslint-disable-next-line no-await-in-loop
-        await downloadByUrl(item.link, item.filename);
+        await downloadByUrl(item.link, item.filePath);
         updateCount += 1;
 
         event.reply(EVENT_UPDATE_PROGRESS, {
-          msg: `[${updateCount}/${updateItems.length}]${item.baseFilename}`,
+          updateCount: updateCount,
+          total: updateItems.length,
+          currentFile: item.filename,
           finished: false,
         });
       } catch (err: any) {
