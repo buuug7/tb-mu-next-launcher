@@ -1,0 +1,38 @@
+.RankCardList {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  .card-body {
+    padding: 12px;
+  }
+
+  .card {
+    border-radius: 0;
+    border: none;
+  }
+
+  .CardRank .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px 8px;
+  }
+
+  .CardRank .stats-row .stat-item {
+    text-align: left;
+    font-size: 15px;
+  }
+
+  .CardRank .stats-row .stat-item h6 {
+    color: #777;
+  }
+
+  @media (max-width: 1200px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}

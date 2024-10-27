@@ -52,26 +52,30 @@ export default function CharacterRankList({ users, userOnlineStatus }) {
           {users.map((item, index) => (
             <tr key={item['Name']}>
               <td>
-                <IconRank />{' '}
-                <span
-                  style={{
-                    fontSize: '1.1rem',
-                    color: index < 3 ? '#ffffff' : 'var(--bs-gray-800)',
-                    backgroundColor: index < 3 ? 'var(--bs-purple)' : 'none',
-                  }}
-                >
-                  {String(index + 1).padStart(2, '0')}
-                </span>
+                <div className="d-flex justify-content-center align-items-center">
+                  <IconRank />
+                  <span
+                    style={{
+                      color: index < 3 ? '#ffffff' : 'var(--bs-gray-800)',
+                      backgroundColor: index < 3 ? 'var(--bs-purple)' : 'none',
+                    }}
+                    className="p-1"
+                  >
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                </div>
               </td>
               <td>
-                <CharacterAvatar
-                  roleName={classToName[item['Class']]}
-                  item={item}
-                  isRank
-                  width={32}
-                  height={32}
-                />{' '}
-                {item['Name']}
+                <div className="d-flex justify-content-start align-items-center">
+                  <CharacterAvatar
+                    roleName={classToName[item['Class']]}
+                    item={item}
+                    isRank
+                    width={32}
+                    height={32}
+                  />
+                  <span className="ms-2">{item['Name']}</span>
+                </div>
               </td>
               <td>
                 <OnlineStatus

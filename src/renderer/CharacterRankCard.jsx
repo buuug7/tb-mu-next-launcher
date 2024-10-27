@@ -2,9 +2,11 @@ import dayjs from 'dayjs';
 import { useContext } from 'react';
 import IconOnline from './icons/IconOnline';
 import IconRank from './icons/IconRank';
-import { classToName, getTotalPoints } from '../util';
 import CharacterAvatar from './CharacterAvatar';
+import { classToName, getTotalPoints } from '../util';
 import { MuConfigContext } from './MuConfigProvider';
+
+import './CharacterRankCard.scss';
 
 function CharacterRankCard({ item, index, onlineStatus }) {
   const { muConfig } = useContext(MuConfigContext);
@@ -12,7 +14,7 @@ function CharacterRankCard({ item, index, onlineStatus }) {
   const totalPoints = getTotalPoints(item, muConfig);
   return (
     <div>
-      <div className="card-rank card shadow-sm">
+      <div className="CardRank card shadow-sm">
         <div className="card-body">
           <div className="d-flex justify-content-start align-items-center">
             <div className="char-img me-1">
@@ -98,7 +100,7 @@ function CharacterRankCard({ item, index, onlineStatus }) {
 
 export default function CharacterRankCardList({ users, userOnlineStatus }) {
   return (
-    <div className="rank">
+    <div className="RankCardList">
       {users.map((item, index) => (
         <CharacterRankCard
           item={item}

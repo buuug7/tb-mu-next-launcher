@@ -1,54 +1,12 @@
-.rank {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.rank .card-body {
-  padding: 12px;
-}
-
-.rank .card {
-  border-radius: 0;
-  border: none;
-}
-
-@media (max-width: 1200px) {
-  .rank {
-    grid-template-columns: 1fr 1fr;
+.PageRank {
+  .RankBanner {
+    width: 100%;
+    height: 160px;
+    background: url('/assets/banner3.jpg') no-repeat center / cover;
+    margin-bottom: 1rem;
   }
-}
 
-@media (max-width: 768px) {
-  .rank {
-    grid-template-columns: 1fr;
+  table {
+    word-break: keep-all;
   }
-}
-
-.card-rank .stats-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 16px 8px;
-}
-
-.card-rank .stats-row .stat-item {
-  text-align: left;
-  font-size: 15px;
-}
-
-.card-rank .stats-row .stat-item h6 {
-  color: #777;
-}
-
-.rankTable {
-  max-width: 100%;
-  min-width: 1150px;
-}
-
-.RankBanner {
-  width: 100%;
-  height: 160px;
-  background: url('/assets/banner3.jpg') no-repeat center / cover;
-  margin-bottom: 1rem;
 }

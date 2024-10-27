@@ -82,89 +82,96 @@ export default function PageRank() {
 
   return (
     <Layout>
-      <div className="RankBanner" />
-      <h3 className="text-center mb-4">
-        <span>玩家排行榜</span>{' '}
-        <span className="text-muted">
-          <span>&lt;{onlineUserIds.length}</span> /{' '}
-          <span>{userOnlineStatus.length}&gt;</span>
-        </span>
-      </h3>
-      <div className="filter my-2 d-flex align-items-center justify-content-between">
-        <div>
-          {(muConfig?.rankOrderTypes || []).map((item) => (
-            <Button
-              variant={item.value === order.value ? 'outline-primary' : 'link'}
-              size="sm"
-              className="me-2"
-              key={item.value}
-              onClick={() => {
-                setPage(1);
-                setOrder(item);
-              }}
-            >
-              {item.name}
-            </Button>
-          ))}
-        </div>
-        <div>
+      <div className="PageRank">
+        <div className="RankBanner" />
+        <h3 className="text-center mb-4">
+          <span>玩家排行榜</span>{' '}
+          <span className="text-muted">
+            <span>&lt;{onlineUserIds.length}</span> /{' '}
+            <span>{userOnlineStatus.length}&gt;</span>
+          </span>
+        </h3>
+        <div className="filter my-2 d-flex align-items-center justify-content-between">
           <div>
-            <span
-              onClick={() => setListType('table')}
-              style={{
-                cursor: 'pointer',
-                padding: '4px',
-                color: listType === 'table' ? 'var(--bs-primary)' : '',
-              }}
-            >
-              <IconList />
-            </span>
-            <span
-              onClick={() => setListType('card')}
-              style={{
-                cursor: 'pointer',
-                padding: '4px',
-                color: listType === 'card' ? 'var(--bs-primary)' : '',
-              }}
-            >
-              <IconListGrid />
-            </span>
+            {(muConfig?.rankOrderTypes || []).map((item) => (
+              <Button
+                variant={
+                  item.value === order.value ? 'outline-primary' : 'link'
+                }
+                size="sm"
+                className="me-2"
+                key={item.value}
+                onClick={() => {
+                  setPage(1);
+                  setOrder(item);
+                }}
+              >
+                {item.name}
+              </Button>
+            ))}
+          </div>
+          <div>
+            <div>
+              <span
+                onClick={() => setListType('table')}
+                style={{
+                  cursor: 'pointer',
+                  padding: '4px',
+                  color: listType === 'table' ? 'var(--bs-primary)' : '',
+                }}
+              >
+                <IconList />
+              </span>
+              <span
+                onClick={() => setListType('card')}
+                style={{
+                  cursor: 'pointer',
+                  padding: '4px',
+                  color: listType === 'card' ? 'var(--bs-primary)' : '',
+                }}
+              >
+                <IconListGrid />
+              </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      {users.length <= 0 && (
-        <div className="rank">
-          <RankSkeleton />
-          <RankSkeleton />
-          <RankSkeleton />
-          <RankSkeleton />
-          <RankSkeleton />
-          <RankSkeleton />
-          <RankSkeleton />
-          <RankSkeleton />
+        {users.length <= 0 && (
+          <div className="rank">
+            <RankSkeleton />
+            <RankSkeleton />
+            <RankSkeleton />
+            <RankSkeleton />
+            <RankSkeleton />
+            <RankSkeleton />
+            <RankSkeleton />
+            <RankSkeleton />
+          </div>
+        )}
+
+        {listType === 'card' ? (
+          <CharacterRankCardList
+            users={users}
+            userOnlineStatus={userOnlineStatus}
+          />
+        ) : (
+          <CharacterRankList
+            users={users}
+            userOnlineStatus={userOnlineStatus}
+          />
+        )}
+
+        <div className="my-3 text-center">
+          <Button
+            disabled={loading}
+            variant="link"
+            onClick={() => {
+              setPage((pre) => pre + 1);
+            }}
+          >
+            {loading ? '加载中...' : '加载更多'}
+          </Button>
         </div>
-      )}
-
-      {listType === 'card' ? (
-        <CharacterRankCardList
-          users={users}
-          userOnlineStatus={userOnlineStatus}
-        />
-      ) : (
-        <CharacterRankList users={users} userOnlineStatus={userOnlineStatus} />
-      )}
-
-      <div className="my-3 text-center">
-        <Button
-          disabled={loading}
-          variant="link"
-          onClick={() => {
-            setPage((pre) => pre + 1);
-          }}
-        >
-          {loading ? '加载中...' : '加载更多'}
-        </Button>
       </div>
     </Layout>
   );
