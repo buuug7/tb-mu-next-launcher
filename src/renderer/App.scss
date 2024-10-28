@@ -2,12 +2,12 @@
 
 body {
   background-color: #faf8fb;
-  font-family: JetBrains Sans, Inter, system-ui, -apple-system,
-    BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Droid Sans,
-    Helvetica Neue, Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 24px;
+}
+
+#root {
+  max-width: 100%;
+  position: relative;
+  margin: 0 auto;
 }
 
 header nav {
@@ -26,12 +26,16 @@ header nav {
   z-index: 15;
   font-size: 12px;
 }
-/* old */
 
-#root {
-  max-width: 100%;
-  position: relative;
-  margin: 0 auto;
+.overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: #fff;
+  opacity: 0.6;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
 
 .flex-center {
@@ -42,66 +46,4 @@ header nav {
 
 .border1 {
   border-color: #d2b9b9;
-}
-
-.features {
-  margin: 10px 10px 15px 0;
-  font-size: 14px;
-}
-
-.index-page {
-  position: relative;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  height: 100vh;
-
-  .header {
-    background-size: cover;
-    width: 100%;
-    height: 150px;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-
-    background-image: url('/assets/banner4.jpg');
-    background-repeat: no-repeat;
-  }
-
-  .header h2 {
-    font-size: 20px;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    margin: 0;
-    padding: 5px 0;
-    text-shadow: 0px 1px 10px #fff;
-    color: #fff;
-  }
-
-  .footer {
-    position: absolute;
-    bottom: 4px;
-    text-align: center;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 4px 8px;
-    // font-size: 13px;
-  }
-
-  .body {
-    margin-top: 0.25rem;
-  }
-}
-
-.setting-page {
-  margin-top: 0.5rem;
-  margin-bottom: 1rem;
-
-  h5 {
-    font-size: 16px;
-  }
 }

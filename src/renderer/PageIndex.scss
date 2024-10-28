@@ -7,17 +7,6 @@
   background-position: center right;
 }
 
-.overlay {
-  position: absolute;
-  left: 0;
-  top: 0;
-  background: #fff;
-  opacity: 0.6;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-}
-
 .bg-jump .overlay {
   opacity: 0.8;
 }
@@ -30,6 +19,14 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 8px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .index-feature .box {
@@ -37,31 +34,23 @@
   z-index: 1;
   background-color: #fff;
   padding: 0.75rem;
-  /*color: #fff;*/
   background-image: url('/assets/iconBg.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center bottom;
-}
 
-.index-feature .box .overlay {
-  opacity: 0.95;
-  background: #fff;
-}
-
-.index-feature .box h5 {
-  text-align: center;
-}
-
-@media (max-width: 1200px) {
-  .index-feature {
-    grid-template-columns: 1fr 1fr;
+  .overlay {
+    opacity: 0.95;
+    background: #fff;
   }
-}
 
-@media (max-width: 768px) {
-  .index-feature {
-    grid-template-columns: 1fr;
+  h5 {
+    text-align: center;
+  }
+
+  ul {
+    padding-left: 1.5rem;
+    list-style-type: square;
   }
 }
 

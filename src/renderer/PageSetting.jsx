@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import {
@@ -9,13 +9,15 @@ import {
   EVENT_KILL_MAIN,
   EVENT_SELECT_FOLDER,
   EVENT_SET_REGEDIT,
-  servers,
   showIpAndPortOption,
   USER_DATA_KEY,
 } from '../config';
 import Layout from './Layout';
 import meta from '../../release/app/package.json';
 import MySwal from './MySwal';
+import { MuConfigContext } from './MuConfigProvider';
+
+import './PageSetting.scss';
 
 const { electron } = window;
 
@@ -29,8 +31,12 @@ export default function PageSetting() {
   const [ColorDepth, setColorDepth] = useState(1);
   const [muFolder, setMuFolder] = useState('');
   const [ipAndPort, setIpAndPort] = useState('');
-  const [server, setServer] = useState(servers[0]);
   const [userData, setUserData] = useState({});
+
+  const { muConfig } = useContext(MuConfigContext);
+
+  const servers = muConfig?.servers || [];
+  const [server, setServer] = useState(servers[0] || null);
 
   const onResolutionChange = (e) => {
     setResolution(Number(e.target.value));
@@ -71,7 +77,7 @@ export default function PageSetting() {
 
   return (
     <Layout>
-      <div className="setting-page container">
+      <div className="PageSetting container">
         <h4 className="text-left">应用设置</h4>
         <p>
           <span className="text-secondary">登录器版本 v{meta.version}</span>
@@ -99,7 +105,7 @@ export default function PageSetting() {
                 history(-1);
               }}
             >
-              {servers.map((it) => (
+              {(servers || []).map((it) => (
                 <option value={it.key} key={it.key}>
                   {it.name}
                 </option>

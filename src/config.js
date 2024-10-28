@@ -10,18 +10,6 @@ export const updateEveryLaunch = true;
 // 显示配置IP跟端口选项
 export const showIpAndPortOption = false;
 
-// 服务器,分区
-export const servers = [
-  {
-    name: '一区',
-    key: '1',
-  },
-  {
-    name: '二区',
-    key: '2',
-  },
-];
-
 export const EVENT_RUN_MU = 'EVENT_RUN_MU';
 export const EVENT_SELECT_FOLDER = 'EVENT_SELECT_FOLDER';
 export const EVENT_KILL_MAIN = 'EVENT_KILL_MAIN';

@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import useUserLogout from './use-user-logout';
 import { UserContext } from './UserProvider';
@@ -7,6 +7,7 @@ import { MuConfigContext } from './MuConfigProvider';
 
 export default function MyNavbar() {
   const { user } = useContext(UserContext);
+  const navigate = useNavigate();
   const { muConfig, defaultServer } = useContext(MuConfigContext);
   const logout = useUserLogout();
   const currentServer = defaultServer || muConfig?.servers?.[0] || [];
@@ -45,6 +46,7 @@ export default function MyNavbar() {
             <NavDropdown title={currentServer.name}>
               {(muConfig?.servers || []).map((item) => (
                 <NavDropdown.Item
+                  disabled
                   key={item.key}
                   onClick={() => {
                     // setCookie(DEFAULT_SERVER_KEY_NAME, item.key);
