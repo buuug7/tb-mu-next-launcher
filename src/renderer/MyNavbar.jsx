@@ -7,7 +7,6 @@ import { MuConfigContext } from './MuConfigProvider';
 
 export default function MyNavbar() {
   const { user } = useContext(UserContext);
-  const navigate = useNavigate();
   const { muConfig, defaultServer } = useContext(MuConfigContext);
   const logout = useUserLogout();
   const currentServer = defaultServer || muConfig?.servers?.[0] || [];

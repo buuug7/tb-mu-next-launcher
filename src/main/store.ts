@@ -1,15 +1,23 @@
 import Store from 'electron-store';
-import { USER_DATA_KEY } from '../config';
+import { USER_SETTING_KEY } from '../config';
 
 const store = new Store();
 
-export const getUserData = () => {
-  const userData = (store.get(USER_DATA_KEY) as UserData) || {};
-  return userData;
+export const getUserSetting = () => {
+  const userSetting = (store.get(USER_SETTING_KEY) as UserSetting) || {};
+  return userSetting;
 };
 
-export const setUserData = (value: any) => {
-  store.set(USER_DATA_KEY, value);
+export const setUserSetting = (value: any) => {
+  store.set(USER_SETTING_KEY, value);
+};
+
+export const setUserSettingKv = (key: string, value: any) => {
+  const userSetting = getUserSetting();
+  setUserSetting({
+    ...userSetting,
+    key: value,
+  });
 };
 
 export default store;

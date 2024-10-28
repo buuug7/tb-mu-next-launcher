@@ -21,7 +21,7 @@ export const EVENT_UPDATE_FINISHED = 'EVENT_UPDATE_FINISHED';
 export const EVENT_GET_REGEDIT = 'EVENT_GET_REGEDIT';
 export const EVENT_SET_REGEDIT = 'EVENT_SET_REGEDIT';
 
-export const USER_DATA_KEY = 'userData';
+export const USER_SETTING_KEY = 'userSetting';
 
 // 网站 base URL
 export function getBaseUrl() {
@@ -39,3 +39,4 @@ export function getBaseUrl() {
 export const newsUrl = `${getBaseUrl()}/json/news.json`;
 
 export const mySessionKey = 'MySessionKey';
+export const defaultServerKey = 'DefaultServer';

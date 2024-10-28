@@ -3,12 +3,11 @@ import log from 'electron-log';
 import fs from 'fs';
 import axios from '../http';
 import { killMainProcess, muDefaultFolder, _rootPath } from './util';
-import { getUserData, setUserData } from './store';
+import { getUserSetting, setUserSetting } from './store';
 import {
   EVENT_CHECK_CLIENT_UPDATE,
   EVENT_UPDATE_FINISHED,
   EVENT_UPDATE_PROGRESS,
-  servers,
 } from '../config';
 
 export async function downloadByUrl(url: string, filePath: string) {
@@ -59,15 +58,25 @@ export async function downloadByUrl(url: string, filePath: string) {
 
 export async function downloadUpdatedFiles(
   event: Electron.IpcMainEvent,
-  forceUpdate = false
+  forceUpdate = false,
+  servers: any[] = []
 ) {
-  const userData = getUserData();
-  const defaultServer = userData.server || servers[0];
-  const muFolder = userData.muFolder || muDefaultFolder;
+  const userSetting = getUserSetting();
+  const defaultServer = userSetting.server || servers?.[0];
+  const muFolder = userSetting.muFolder || muDefaultFolder;
+
+  if (!defaultServer) {
+    event.reply(EVENT_UPDATE_FINISHED, {
+      msg: `更新异常, 请稍后再试`,
+      finished: true,
+    });
+
+    return 0;
+  }
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const version = userData[`version-${defaultServer.key}`] || 0;
+  const version = userSetting[`version-${defaultServer.key}`] || 0;
   const updateUrl = `mu/api/update/check?server=${defaultServer.key}`;
 
   try {
@@ -97,7 +106,8 @@ export async function downloadUpdatedFiles(
         msg,
         finished: true,
       });
-      return;
+
+      return 0;
     }
 
     const updateItems = data.items.map((filename) => {
@@ -138,8 +148,8 @@ export async function downloadUpdatedFiles(
     }
 
     if (errorCount === 0) {
-      setUserData({
-        ...userData,
+      setUserSetting({
+        ...userSetting,
         [`version-${defaultServer.key}`]: data.version,
       });
     }
@@ -158,17 +168,21 @@ export async function downloadUpdatedFiles(
       finished: true,
     });
   }
+
+  return 1;
 }
 
 export async function run(event: Electron.IpcMainEvent, args: any[]) {
-  const userData = getUserData();
+  const userSetting = getUserSetting();
   let forceUpdate = false;
+  let servers: any[] = [];
 
   if (args.length > 0) {
+    servers = args[0].servers || {};
     forceUpdate = args[0].forceUpdate;
   }
 
-  const muFolder = userData.muFolder || muDefaultFolder;
+  const muFolder = userSetting.muFolder || muDefaultFolder;
 
   log.info(`muDefaultFolder: ${muDefaultFolder}`);
   log.info(`_rootPath: ${_rootPath}`);
@@ -178,5 +192,5 @@ export async function run(event: Electron.IpcMainEvent, args: any[]) {
     return;
   }
 
-  downloadUpdatedFiles(event, forceUpdate);
+  downloadUpdatedFiles(event, forceUpdate, servers);
 }

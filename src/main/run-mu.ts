@@ -2,15 +2,15 @@ import child from 'child_process';
 import { dialog } from 'electron';
 import { defaultIp, defaultPort } from '../config';
 import { muDefaultFolder } from './util';
-import { getUserData } from './store';
+import { getUserSetting } from './store';
 
 export default async function run() {
-  const userData = getUserData();
-  const muFolder = userData.muFolder || muDefaultFolder;
+  const userSetting = getUserSetting();
+  const muFolder = userSetting.muFolder || muDefaultFolder;
 
   let ipAndPortArr = [defaultIp, defaultPort];
-  if (userData.ipAndPort) {
-    ipAndPortArr = userData.ipAndPort.split(':');
+  if (userSetting.ipAndPort) {
+    ipAndPortArr = userSetting.ipAndPort.split(':');
   }
 
   if (!muFolder) {

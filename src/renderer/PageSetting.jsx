@@ -5,38 +5,40 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import {
-  EVENT_GET_REGEDIT,
   EVENT_KILL_MAIN,
   EVENT_SELECT_FOLDER,
   EVENT_SET_REGEDIT,
   showIpAndPortOption,
-  USER_DATA_KEY,
 } from '../config';
 import Layout from './Layout';
 import meta from '../../release/app/package.json';
 import MySwal from './MySwal';
 import { MuConfigContext } from './MuConfigProvider';
 
+import useUserSetting, { updateUserSetting } from './use-user-setting';
+import useRegeditSetting from './use-regedit-setting';
+
 import './PageSetting.scss';
+import useServer from './use-server';
 
 const { electron } = window;
 
 export default function PageSetting() {
-  const history = useNavigate();
+  const { muConfig } = useContext(MuConfigContext);
+
   const [ID, setID] = useState('');
   const [Resolution, setResolution] = useState(1);
   const [MusicOnOff, setMusicOnOff] = useState(1);
   const [SoundOnOff, setSoundOnOff] = useState(1);
   const [WindowMode, setWindowMode] = useState(1);
   const [ColorDepth, setColorDepth] = useState(1);
+
   const [muFolder, setMuFolder] = useState('');
   const [ipAndPort, setIpAndPort] = useState('');
-  const [userData, setUserData] = useState({});
 
-  const { muConfig } = useContext(MuConfigContext);
-
-  const servers = muConfig?.servers || [];
-  const [server, setServer] = useState(servers[0] || null);
+  const userSetting = useUserSetting();
+  const regeditSetting = useRegeditSetting();
+  const { servers, currentServer, changeServer } = useServer();
 
   const onResolutionChange = (e) => {
     setResolution(Number(e.target.value));
@@ -47,33 +49,28 @@ export default function PageSetting() {
   };
 
   useEffect(() => {
-    electron.ipcRenderer.once(EVENT_GET_REGEDIT, (data) => {
-      console.log(EVENT_GET_REGEDIT, data);
-      setID(data.ID.value);
-      setResolution(data.Resolution.value);
-      setMusicOnOff(data.MusicOnOff.value);
-      setSoundOnOff(data.SoundOnOff.value);
-      setWindowMode(data.WindowMode.value);
-      setColorDepth(data.ColorDepth.value);
-    });
-
-    electron.ipcRenderer.sendMessage(EVENT_GET_REGEDIT, []);
-
-    const newUserData = window.electron.store.get(USER_DATA_KEY) || {};
-    setUserData(newUserData);
-
-    if (newUserData.muFolder) {
-      setMuFolder(newUserData.muFolder);
+    if (regeditSetting.ID) {
+      setID(regeditSetting.ID);
     }
 
-    if (newUserData.ipAndPort) {
-      setIpAndPort(newUserData.ipAndPort);
+    if (regeditSetting) {
+      setResolution(regeditSetting.Resolution);
+      setMusicOnOff(regeditSetting.MusicOnOff);
+      setSoundOnOff(regeditSetting.SoundOnOff);
+      setWindowMode(regeditSetting.WindowMode);
+      setColorDepth(regeditSetting.ColorDepth);
     }
 
-    if (newUserData.server) {
-      setServer(newUserData.server);
+    if (userSetting.muFolder) {
+      setMuFolder(userSetting.muFolder);
     }
-  }, []);
+
+    if (userSetting.ipAndPort) {
+      setIpAndPort(userSetting.ipAndPort);
+    }
+  }, [userSetting, regeditSetting]);
+
+  console.log(`Resolution`, Resolution);
 
   return (
     <Layout>
@@ -88,21 +85,9 @@ export default function PageSetting() {
           <Form.Group>
             <Form.Label>服务器选择</Form.Label>
             <Form.Select
-              value={server.key}
+              value={currentServer.key}
               onChange={(e) => {
-                console.log(`e`, e.target.value);
-                const selectedServer =
-                  servers.find((it) => it.key === e.target.value) || servers[0];
-                setServer(selectedServer);
-
-                // 每次选择后重置更新号
-                window.electron.store.set(USER_DATA_KEY, {
-                  ...userData,
-                  server: selectedServer,
-                  [`version-${selectedServer.key}`]: 0,
-                });
-
-                history(-1);
+                changeServer(e.target.value);
               }}
             >
               {(servers || []).map((it) => (
@@ -119,12 +104,15 @@ export default function PageSetting() {
               role="button"
               href="#"
               onClick={() => {
-                const isConfirm =
-                  window.confirm('确定要杀死所有 MAIN 进程吗？');
-                if (isConfirm) {
+                MySwal.confirm({
+                  text: '确定要杀死所有 MAIN 进程吗？',
+                }).then((result) => {
+                  if (!result.isConfirmed) {
+                    return;
+                  }
                   console.log(`begin kill all main.exe process`);
                   electron.ipcRenderer.sendMessage(EVENT_KILL_MAIN, []);
-                }
+                });
               }}
             >
               杀死所有 MAIN.EXE 进程
@@ -238,7 +226,7 @@ export default function PageSetting() {
                 electron.ipcRenderer.once(EVENT_SELECT_FOLDER, (data) => {
                   const folder = data.filePaths[0];
                   if (!folder.endsWith('main.exe')) {
-                    alert(`注意: 请选择客户端文件夹中的 main.exe`);
+                    MySwal.message(`注意: 请选择客户端文件夹中的 main.exe`);
                     return;
                   }
                   setMuFolder(folder);
@@ -291,14 +279,15 @@ export default function PageSetting() {
                 };
 
                 electron.ipcRenderer.sendMessage(EVENT_SET_REGEDIT, [data]);
-                window.electron.store.set(USER_DATA_KEY, {
-                  ...userData,
+
+                updateUserSetting({
+                  ...userSetting,
                   muFolder: muFolder?.toLowerCase().endsWith('.exe')
                     ? muFolder.slice(0, -9)
                     : muFolder,
                   ipAndPort,
                   regedit: data,
-                  server,
+                  server: currentServer,
                 });
 
                 MySwal.message('保存成功');

@@ -1,4 +1,4 @@
-type UserData = {
+type UserSetting = {
   muFolder?: string;
   ipAndPort?: string;
   version?: number;

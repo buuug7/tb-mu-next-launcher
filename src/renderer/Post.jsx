@@ -23,7 +23,7 @@ function PostSkeleton() {
   );
 }
 
-export default function Post(props) {
+export default function Post() {
   const { slug } = useParams();
   const [post, setPost] = useState('');
   const [loading, setLoading] = useState(false);

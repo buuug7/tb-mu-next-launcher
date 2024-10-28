@@ -1,13 +1,18 @@
+import { forwardRef, useContext, useImperativeHandle, useState } from 'react';
+import { MuConfigContext } from './MuConfigProvider';
 import {
   EVENT_UPDATE_PROGRESS,
   EVENT_UPDATE_FINISHED,
   EVENT_CHECK_CLIENT_UPDATE,
-} from 'config';
-import { forwardRef, useImperativeHandle, useState } from 'react';
+} from '../config';
 
 const { electron } = window;
 
-function checkClientUpdate({ onProgress = () => {}, force = false }) {
+function checkClientUpdate({
+  onProgress = () => {},
+  force = false,
+  servers = [],
+}) {
   return new Promise((resolve, reject) => {
     electron.ipcRenderer.on(EVENT_UPDATE_PROGRESS, (payload) => {
       console.log(EVENT_UPDATE_PROGRESS, payload);
@@ -22,12 +27,14 @@ function checkClientUpdate({ onProgress = () => {}, force = false }) {
     electron.ipcRenderer.sendMessage(EVENT_CHECK_CLIENT_UPDATE, [
       {
         forceUpdate: force,
+        servers,
       },
     ]);
   });
 }
 
 function CheckClient(props, ref) {
+  const { muConfig } = useContext(MuConfigContext);
   const [progress, setProgress] = useState(null);
 
   useImperativeHandle(
@@ -37,6 +44,7 @@ function CheckClient(props, ref) {
         checkUpdate(force) {
           return checkClientUpdate({
             onProgress: setProgress,
+            servers: muConfig?.servers || [],
             force,
           }).then(() => {
             setProgress(null);
@@ -44,7 +52,7 @@ function CheckClient(props, ref) {
         },
       };
     },
-    []
+    [muConfig]
   );
 
   return (
