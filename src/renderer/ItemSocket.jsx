@@ -228,9 +228,9 @@ export default function ItemSocket({ muItems }) {
                         return;
                       }
 
-                      MySwal.confirm({
-                        text: `镶嵌要收取额外的 ${muConfig.socketNeedWcoin} 积分, 你同意吗?`,
-                      }).then((result) => {
+                      MySwal.confirm(
+                        `镶嵌要收取额外的 ${muConfig.socketNeedWcoin} 积分, 你同意吗?`
+                      ).then((result) => {
                         if (!result.isConfirmed) {
                           return;
                         }

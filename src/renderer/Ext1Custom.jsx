@@ -124,9 +124,9 @@ export default function Ext1Custom({ character }) {
                 return;
               }
 
-              MySwal.confirm({
-                text: `你当前的 ${type.name} 为 ${currentValue}%, 提升之后为 ${totalProb}%, 提升需要积分 ${costJf}, 你同意吗? `,
-              }).then((result) => {
+              MySwal.confirm(
+                `你当前的 ${type.name} 为 ${currentValue}%, 提升之后为 ${totalProb}%, 提升需要积分 ${costJf}, 你同意吗? `
+              ).then((result) => {
                 if (!result.isConfirmed) {
                   return;
                 }
@@ -155,9 +155,9 @@ export default function Ext1Custom({ character }) {
             size="sm"
             variant="link"
             onClick={() => {
-              MySwal.confirm({
-                text: `重置**${type.name}**到初始状态, 花费的积分不会退还, 你同意吗? `,
-              }).then((result) => {
+              MySwal.confirm(
+                `重置**${type.name}**到初始状态, 花费的积分不会退还, 你同意吗? `
+              ).then((result) => {
                 if (!result.isConfirmed) {
                   return;
                 }

@@ -184,9 +184,7 @@ export default function CharacterCard({ item, onRefresh }) {
                 return;
               }
 
-              MySwal.confirm({
-                text: '你确定要转生吗?',
-              }).then((result) => {
+              MySwal.confirm('你确定要转生吗?').then((result) => {
                 if (!result.isConfirmed) {
                   return;
                 }
@@ -216,9 +214,7 @@ export default function CharacterCard({ item, onRefresh }) {
                 return;
               }
 
-              MySwal.confirm({
-                text: `你确定要洗点吗？`,
-              }).then((result) => {
+              MySwal.confirm(`你确定要洗点吗？`).then((result) => {
                 if (!result.isConfirmed) {
                   return;
                 }
@@ -253,9 +249,7 @@ export default function CharacterCard({ item, onRefresh }) {
                 return;
               }
 
-              MySwal.confirm({
-                text: '你确定要加点吗？',
-              }).then((result) => {
+              MySwal.confirm('你确定要加点吗？').then((result) => {
                 if (!result.isConfirmed) {
                   return;
                 }
@@ -294,9 +288,9 @@ export default function CharacterCard({ item, onRefresh }) {
                   return;
                 }
 
-                MySwal.confirm({
-                  text: '你确定要恢复到二转吗? 恢复二转请取下三代翅膀,不然会丢失',
-                }).then((result) => {
+                MySwal.confirm(
+                  '你确定要恢复到二转吗? 恢复二转请取下三代翅膀,不然会丢失'
+                ).then((result) => {
                   if (!result.isConfirmed) {
                     return;
                   }
@@ -336,9 +330,7 @@ export default function CharacterCard({ item, onRefresh }) {
                   return;
                 }
 
-                MySwal.confirm({
-                  text: '确定要三次转职?',
-                }).then((result) => {
+                MySwal.confirm('确定要三次转职?').then((result) => {
                   if (!result.isConfirmed) {
                     return;
                   }
@@ -378,9 +370,7 @@ export default function CharacterCard({ item, onRefresh }) {
                 return;
               }
 
-              MySwal.confirm({
-                text: '你确定要进行自救吗？',
-              }).then((result) => {
+              MySwal.confirm('你确定要进行自救吗？').then((result) => {
                 if (!result.isConfirmed) {
                   return;
                 }
@@ -446,9 +436,9 @@ export default function CharacterCard({ item, onRefresh }) {
                   return;
                 }
 
-                MySwal.confirm({
-                  text: `回收角色需要 ${muConfig.recycleCharacterNeedLevel} 等级, 回收将获得 ${muConfig.recycleCharacterGiveWcoin} 元宝, 你确定要回收该角色吗？`,
-                }).then((result) => {
+                MySwal.confirm(
+                  `回收角色需要 ${muConfig.recycleCharacterNeedLevel} 等级, 回收将获得 ${muConfig.recycleCharacterGiveWcoin} 元宝, 你确定要回收该角色吗？`
+                ).then((result) => {
                   if (!result.isConfirmed) {
                     return;
                   }
@@ -481,25 +471,25 @@ export default function CharacterCard({ item, onRefresh }) {
                 return;
               }
 
-              MySwal.confirm({
-                text: '删除的角色无法恢复, 你确定要删除该角色吗？',
-              }).then((result) => {
-                if (!result.isConfirmed) {
-                  return;
-                }
+              MySwal.confirm('删除的角色无法恢复, 你确定要删除该角色吗？').then(
+                (result) => {
+                  if (!result.isConfirmed) {
+                    return;
+                  }
 
-                setLoading(true);
-                deleteCharacter({
-                  charName: item.Name,
-                })
-                  .then(() => {
-                    MySwal.message('成功删除角色');
-                    onRefresh();
+                  setLoading(true);
+                  deleteCharacter({
+                    charName: item.Name,
                   })
-                  .finally(() => {
-                    setLoading(false);
-                  });
-              });
+                    .then(() => {
+                      MySwal.message('成功删除角色');
+                      onRefresh();
+                    })
+                    .finally(() => {
+                      setLoading(false);
+                    });
+                }
+              );
             }}
             size="sm"
           >

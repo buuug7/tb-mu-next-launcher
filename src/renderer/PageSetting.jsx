@@ -104,15 +104,15 @@ export default function PageSetting() {
               role="button"
               href="#"
               onClick={() => {
-                MySwal.confirm({
-                  text: '确定要杀死所有 MAIN 进程吗？',
-                }).then((result) => {
-                  if (!result.isConfirmed) {
-                    return;
+                MySwal.confirm('确定要杀死所有 MAIN 进程吗？').then(
+                  (result) => {
+                    if (!result.isConfirmed) {
+                      return;
+                    }
+                    console.log(`begin kill all main.exe process`);
+                    electron.ipcRenderer.sendMessage(EVENT_KILL_MAIN, []);
                   }
-                  console.log(`begin kill all main.exe process`);
-                  electron.ipcRenderer.sendMessage(EVENT_KILL_MAIN, []);
-                });
+                );
               }}
             >
               杀死所有 MAIN.EXE 进程

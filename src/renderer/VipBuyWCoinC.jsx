@@ -157,9 +157,9 @@ export default function VipBuyWCoinC() {
               return;
             }
 
-            MySwal.confirm({
-              text: `你正在购买 ${vip.name}, 购买方式为 ${buyType.name}, 需要 ${cost} 元宝, 你同意吗?`,
-            }).then((result) => {
+            MySwal.confirm(
+              `你正在购买 ${vip.name}, 购买方式为 ${buyType.name}, 需要 ${cost} 元宝, 你同意吗?`
+            ).then((result) => {
               if (!result.isConfirmed) {
                 return;
               }
@@ -194,14 +194,14 @@ export default function VipBuyWCoinC() {
               return;
             }
 
-            MySwal.confirm({
-              text: `你当前的会员是 ${
+            MySwal.confirm(
+              `你当前的会员是 ${
                 vipItem.name
               }, 退订会员将会返还剩余时间一半的元宝, 退还 ${getUserVipRemainingJF(
                 user,
                 muConfig?.vips
-              )} 元宝, 你同意吗?`,
-            }).then((result) => {
+              )} 元宝, 你同意吗?`
+            ).then((result) => {
               if (!result.isConfirmed) {
                 return;
               }

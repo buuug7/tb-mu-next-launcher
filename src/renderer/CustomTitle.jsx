@@ -147,9 +147,9 @@ export default function CustomTitle({ character }) {
                   return;
                 }
 
-                MySwal.confirm({
-                  text: `自定义称号需要收取额外的 ${muConfig.customTitleNeedWcoin} 积分, 你同意吗?`,
-                }).then((result) => {
+                MySwal.confirm(
+                  `自定义称号需要收取额外的 ${muConfig.customTitleNeedWcoin} 积分, 你同意吗?`
+                ).then((result) => {
                   if (!result.isConfirmed) {
                     return;
                   }

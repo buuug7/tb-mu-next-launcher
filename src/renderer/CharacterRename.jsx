@@ -79,9 +79,9 @@ export default function CharacterRename({
                 return;
               }
 
-              MySwal.confirm({
-                text: `在线改名要收取额外的 ${muConfig.changeNameNeedWcoin} 积分, 你同意吗?`,
-              }).then((result) => {
+              MySwal.confirm(
+                `在线改名要收取额外的 ${muConfig.changeNameNeedWcoin} 积分, 你同意吗?`
+              ).then((result) => {
                 if (!result.isConfirmed) {
                   return;
                 }
