@@ -4,12 +4,13 @@ import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import useUserLogout from './use-user-logout';
 import { UserContext } from './UserProvider';
 import { MuConfigContext } from './MuConfigProvider';
+import useServer from './use-server';
 
 export default function MyNavbar() {
+  const logout = useUserLogout();
   const { user } = useContext(UserContext);
   const { muConfig, defaultServer } = useContext(MuConfigContext);
-  const logout = useUserLogout();
-  const currentServer = defaultServer || muConfig?.servers?.[0] || [];
+  const { currentServer, servers, changeServer } = useServer();
 
   return (
     <Navbar variant="light" bg="light" expand="md" fixed="top">
@@ -42,15 +43,11 @@ export default function MyNavbar() {
           </Nav>
 
           <Nav>
-            <NavDropdown title={currentServer.name}>
-              {(muConfig?.servers || []).map((item) => (
+            <NavDropdown title={currentServer?.name}>
+              {(servers || []).map((item) => (
                 <NavDropdown.Item
-                  disabled
                   key={item.key}
-                  onClick={() => {
-                    // setCookie(DEFAULT_SERVER_KEY_NAME, item.key);
-                    // signOut({ callbackUrl: '/' });
-                  }}
+                  onClick={() => changeServer(item.key)}
                 >
                   {item.name}
                 </NavDropdown.Item>

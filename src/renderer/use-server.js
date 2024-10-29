@@ -19,7 +19,7 @@ export default function useServer() {
     if (userSetting?.server) {
       setCurrentServer(userSetting.server);
     }
-  }, [userSetting]);
+  }, [userSetting, muConfig]);
 
   return {
     currentServer,
@@ -37,8 +37,9 @@ export default function useServer() {
       });
 
       MySwal.message(`服务器已经切换，请重新登录`);
-
       logout();
+
+      window.location.reload();
     },
   };
 }
