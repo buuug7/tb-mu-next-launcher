@@ -14,22 +14,30 @@ function checkClientUpdate({
   servers = [],
 }) {
   return new Promise((resolve, reject) => {
-    electron.ipcRenderer.on(EVENT_UPDATE_PROGRESS, (payload) => {
-      console.log(EVENT_UPDATE_PROGRESS, payload);
-      onProgress(payload);
-    });
+    try {
+      const unsubscribe = electron.ipcRenderer.on(
+        EVENT_UPDATE_PROGRESS,
+        (payload) => {
+          console.log(EVENT_UPDATE_PROGRESS, payload);
+          onProgress(payload);
+        }
+      );
 
-    electron.ipcRenderer.once(EVENT_UPDATE_FINISHED, () => {
-      console.log(EVENT_UPDATE_FINISHED);
-      resolve();
-    });
+      electron.ipcRenderer.once(EVENT_UPDATE_FINISHED, () => {
+        console.log(EVENT_UPDATE_FINISHED);
+        resolve(unsubscribe);
+      });
 
-    electron.ipcRenderer.sendMessage(EVENT_CHECK_CLIENT_UPDATE, [
-      {
-        forceUpdate: force,
-        servers,
-      },
-    ]);
+      electron.ipcRenderer.sendMessage(EVENT_CHECK_CLIENT_UPDATE, [
+        {
+          forceUpdate: force,
+          servers,
+        },
+      ]);
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
   });
 }
 
@@ -46,9 +54,14 @@ function CheckClient(props, ref) {
             onProgress: setProgress,
             servers: muConfig?.servers || [],
             force,
-          }).then(() => {
-            setProgress(null);
-          });
+          })
+            .then((unsubscribe) => {
+              setProgress(null);
+              unsubscribe();
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         },
       };
     },

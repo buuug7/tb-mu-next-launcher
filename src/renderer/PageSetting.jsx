@@ -2,14 +2,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
-import {
-  EVENT_KILL_MAIN,
-  EVENT_SELECT_FOLDER,
-  EVENT_SET_REGEDIT,
-  showIpAndPortOption,
-} from '../config';
+import { showIpAndPortOption } from '../config';
 import Layout from './Layout';
 import meta from '../../release/app/package.json';
 import MySwal from './MySwal';
@@ -110,7 +104,7 @@ export default function PageSetting() {
                       return;
                     }
                     console.log(`begin kill all main.exe process`);
-                    electron.ipcRenderer.sendMessage(EVENT_KILL_MAIN, []);
+                    electron.ipcRenderer.invoke('killMainProcess');
                   }
                 );
               }}
@@ -223,7 +217,7 @@ export default function PageSetting() {
               role="button"
               className="mt-2 py-2 bg-light d-flex flex-column  text-secondary"
               onClick={() => {
-                electron.ipcRenderer.once(EVENT_SELECT_FOLDER, (data) => {
+                electron.ipcRenderer.invoke('selectFolder').then((data) => {
                   const folder = data.filePaths[0];
                   if (!folder.endsWith('main.exe')) {
                     MySwal.message(`注意: 请选择客户端文件夹中的 main.exe`);
@@ -231,8 +225,6 @@ export default function PageSetting() {
                   }
                   setMuFolder(folder);
                 });
-
-                electron.ipcRenderer.sendMessage(EVENT_SELECT_FOLDER, []);
               }}
             >
               <div className="mb-2 text-secondary">
@@ -278,7 +270,7 @@ export default function PageSetting() {
                   ColorDepth,
                 };
 
-                electron.ipcRenderer.sendMessage(EVENT_SET_REGEDIT, [data]);
+                electron.ipcRenderer.invoke('setMuRegedit', data);
 
                 updateUserSetting({
                   ...userSetting,

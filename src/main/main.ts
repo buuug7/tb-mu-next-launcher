@@ -26,15 +26,14 @@ import { run as runClientCheck } from './check-client-update';
 import runMu from './run-mu';
 import {
   EVENT_CHECK_CLIENT_UPDATE,
-  EVENT_GET_REGEDIT,
-  EVENT_KILL_MAIN,
-  EVENT_RUN_MU,
-  EVENT_SELECT_FOLDER,
-  EVENT_SET_REGEDIT,
+  EVENT_ELECTRON_STORE_CHANGE_SUBSCRIBE,
+  EVENT_ELECTRON_STORE_CHANGE_UNSUBSCRIBE,
 } from '../config';
 import { getRegedit, setRegedit } from './regedit';
-import store from './store';
 import { handleMyResourceProtocol, myResourceSchema } from './custom-protocol';
+import store, { getUserSetting, someStoreSubscribe } from '../store';
+
+log.initialize();
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -69,10 +68,6 @@ app.commandLine.appendSwitch('--no-sandbox');
 
 let mainWindow: BrowserWindow | null = null;
 
-ipcMain.on('resizeWindow', async (event, value) => {
-  mainWindow?.setSize(value.width, value.height);
-});
-
 ipcMain.on('electron-store-get', async (event, value) => {
   event.returnValue = store.get(value);
 });
@@ -81,7 +76,26 @@ ipcMain.on('electron-store-set', async (event, key, value) => {
   store.set(key, value);
 });
 
-ipcMain.on(EVENT_RUN_MU, async () => {
+ipcMain.on(EVENT_ELECTRON_STORE_CHANGE_SUBSCRIBE, async (event) => {
+  const unsubscribe = store.onDidAnyChange(() => {
+    event.reply(EVENT_ELECTRON_STORE_CHANGE_SUBSCRIBE, getUserSetting());
+  });
+  someStoreSubscribe.onDidAnyChangeSubscribe.push(unsubscribe);
+});
+
+ipcMain.on(EVENT_ELECTRON_STORE_CHANGE_UNSUBSCRIBE, async (event) => {
+  someStoreSubscribe.onDidAnyChangeSubscribe.forEach((unsubscribe) => {
+    unsubscribe?.();
+  });
+
+  someStoreSubscribe.onDidAnyChangeSubscribe = [];
+});
+
+ipcMain.on('resizeWindow', async (event, value) => {
+  mainWindow?.setSize(value.width, value.height);
+});
+
+ipcMain.handle('runMu', async () => {
   runMu();
 });
 
@@ -89,39 +103,24 @@ ipcMain.on(EVENT_CHECK_CLIENT_UPDATE, async (event, args) => {
   runClientCheck(event, args);
 });
 
-ipcMain.on(EVENT_KILL_MAIN, async (event) => {
+ipcMain.handle('killMainProcess', async () => {
   killMainProcess();
 });
 
-ipcMain.on(EVENT_GET_REGEDIT, async (event) => {
-  getRegedit()
-    .then((result: any) => {
-      event.reply(
-        EVENT_GET_REGEDIT,
-        result['HKCU\\Software\\Webzen\\Mu\\Config'].values
-      );
-    })
-    .catch((err: any) => {
-      console.log(err);
-    });
+ipcMain.handle('getMuRegedit', async () => {
+  return getRegedit();
 });
 
-ipcMain.on(EVENT_SET_REGEDIT, async (event, args) => {
-  setRegedit(args[0])
-    .then(() => {
-      event.reply(EVENT_SET_REGEDIT, '');
-    })
-    .catch((err: any) => {
-      console.log(err);
-    });
+ipcMain.handle('setMuRegedit', async (event, args) => {
+  setRegedit(args[0]);
 });
 
-ipcMain.on(EVENT_SELECT_FOLDER, async (event) => {
+ipcMain.handle('selectFolder', async (event) => {
   const folders = await dialog.showOpenDialog({
     properties: ['openFile'],
   });
 
-  event.reply(EVENT_SELECT_FOLDER, folders);
+  return folders;
 });
 
 ipcMain.on('ipc-example', async (event, arg) => {

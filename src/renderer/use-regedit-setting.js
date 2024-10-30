@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { EVENT_GET_REGEDIT } from '../config';
 
 const { electron } = window;
 
@@ -7,17 +6,20 @@ export default function useRegeditSetting() {
   const [regeditSetting, setRegeditSetting] = useState({});
 
   useEffect(() => {
-    electron.ipcRenderer.sendMessage(EVENT_GET_REGEDIT, []);
+    electron.ipcRenderer.invoke('getMuRegedit').then((data) => {
+      const results = data['HKCU\\Software\\Webzen\\Mu\\Config']?.values;
 
-    electron.ipcRenderer.once(EVENT_GET_REGEDIT, (data) => {
-      console.log(EVENT_GET_REGEDIT, data);
+      if (!results) {
+        return;
+      }
+
       setRegeditSetting({
-        ID: data.ID.value,
-        Resolution: data.Resolution.value,
-        MusicOnOff: data.MusicOnOff.value,
-        SoundOnOff: data.SoundOnOff.value,
-        WindowMode: data.WindowMode.value,
-        ColorDepth: data.ColorDepth.value,
+        ID: results.ID.value,
+        Resolution: results.Resolution.value,
+        MusicOnOff: results.MusicOnOff.value,
+        SoundOnOff: results.SoundOnOff.value,
+        WindowMode: results.WindowMode.value,
+        ColorDepth: results.ColorDepth.value,
       });
     });
   }, []);

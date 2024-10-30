@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import useUserLogout from './use-user-logout';
 import { UserContext } from './UserProvider';
@@ -9,7 +9,7 @@ import useServer from './use-server';
 export default function MyNavbar() {
   const logout = useUserLogout();
   const { user } = useContext(UserContext);
-  const { muConfig, defaultServer } = useContext(MuConfigContext);
+  const { muConfig } = useContext(MuConfigContext);
   const { currentServer, servers, changeServer } = useServer();
 
   return (

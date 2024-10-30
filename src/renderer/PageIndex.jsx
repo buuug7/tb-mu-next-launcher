@@ -4,7 +4,6 @@ import { Button } from 'react-bootstrap';
 import { MuConfigContext } from './MuConfigProvider';
 import Layout from './Layout';
 import CheckClient from './CheckClient';
-import { EVENT_RUN_MU } from '../config';
 
 import './PageIndex.scss';
 
@@ -33,7 +32,7 @@ export default function PageIndex() {
               onClick={() => {
                 setLoading(true);
                 myRef.current.checkUpdate().then(() => {
-                  electron.ipcRenderer.sendMessage(EVENT_RUN_MU, []);
+                  electron.ipcRenderer.invoke('runMu');
                   setLoading(false);
                 });
               }}

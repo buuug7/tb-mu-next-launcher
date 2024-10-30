@@ -39,7 +39,7 @@ export default function useServer() {
       MySwal.message(`服务器已经切换，请重新登录`);
       logout();
 
-      window.location.reload();
+      // window.location.reload();
     },
   };
 }

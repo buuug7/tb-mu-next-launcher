@@ -3,7 +3,7 @@ import log from 'electron-log';
 import fs from 'fs';
 import axios from '../http';
 import { killMainProcess, muDefaultFolder, _rootPath } from './util';
-import { getUserSetting, setUserSetting } from './store';
+import { getUserSetting, setUserSetting } from '../store';
 import {
   EVENT_CHECK_CLIENT_UPDATE,
   EVENT_UPDATE_FINISHED,

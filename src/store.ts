@@ -1,7 +1,9 @@
 import Store from 'electron-store';
-import { USER_SETTING_KEY } from '../config';
+import { USER_SETTING_KEY } from './config';
 
-const store = new Store();
+const store = new Store({
+  watch: true,
+});
 
 export const getUserSetting = () => {
   const userSetting = (store.get(USER_SETTING_KEY) as UserSetting) || {};
@@ -12,12 +14,9 @@ export const setUserSetting = (value: any) => {
   store.set(USER_SETTING_KEY, value);
 };
 
-export const setUserSettingKv = (key: string, value: any) => {
-  const userSetting = getUserSetting();
-  setUserSetting({
-    ...userSetting,
-    key: value,
-  });
+// 杂项
+export const someStoreSubscribe: { onDidAnyChangeSubscribe: any[] } = {
+  onDidAnyChangeSubscribe: [],
 };
 
 export default store;

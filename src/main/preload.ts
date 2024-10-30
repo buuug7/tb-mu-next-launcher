@@ -1,4 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  EVENT_ELECTRON_STORE_CHANGE_SUBSCRIBE,
+  EVENT_ELECTRON_STORE_CHANGE_UNSUBSCRIBE,
+} from 'config';
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 export type Channels = 'ipc-example' | string;
@@ -21,8 +25,8 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
 
-    checkClientUpdate() {
-      ipcRenderer.send('CHECK_CLIENT_UPDATE');
+    invoke(channel: Channels, ...arg: any[]) {
+      return ipcRenderer.invoke(channel, arg);
     },
   },
 
@@ -32,6 +36,13 @@ contextBridge.exposeInMainWorld('electron', {
     },
     set(key: string, value: any) {
       ipcRenderer.send('electron-store-set', key, value);
+    },
+    watchStoreChange() {
+      ipcRenderer.send(EVENT_ELECTRON_STORE_CHANGE_SUBSCRIBE);
+
+      return () => {
+        ipcRenderer.send(EVENT_ELECTRON_STORE_CHANGE_UNSUBSCRIBE);
+      };
     },
   },
 });

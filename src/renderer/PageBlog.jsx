@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { getPosts } from './api';
 import Layout from './Layout';
-import Post from './Post';
 
 import './PageBlog.scss';
 import './markdown.custom.scss';
