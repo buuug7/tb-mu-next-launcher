@@ -506,3 +506,7 @@ export function validateSinglePoints(num) {
 
   return num;
 }
+
+export function delay(time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}

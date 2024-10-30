@@ -20,7 +20,7 @@ function confirm(text) {
 function message(text) {
   return MySwal.fire({
     position: 'bottom',
-    icon: 'info',
+    // icon: 'info',
     text,
     showConfirmButton: false,
     timer: 1500,

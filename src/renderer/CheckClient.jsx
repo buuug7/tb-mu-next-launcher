@@ -5,6 +5,7 @@ import {
   EVENT_UPDATE_FINISHED,
   EVENT_CHECK_CLIENT_UPDATE,
 } from '../config';
+import MySwal from './MySwal';
 
 const { electron } = window;
 
@@ -58,6 +59,10 @@ function CheckClient(props, ref) {
             .then((unsubscribe) => {
               setProgress(null);
               unsubscribe();
+
+              if (force) {
+                MySwal.message(`更新完成`);
+              }
             })
             .catch((err) => {
               console.log(err);

@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import { MuConfigContext } from './MuConfigProvider';
 import Layout from './Layout';
 import CheckClient from './CheckClient';
+import { delay } from '../util';
 
 import './PageIndex.scss';
 
@@ -33,7 +34,9 @@ export default function PageIndex() {
                 setLoading(true);
                 myRef.current.checkUpdate().then(() => {
                   electron.ipcRenderer.invoke('runMu');
-                  setLoading(false);
+                  delay(5000).then(() => {
+                    setLoading(false);
+                  });
                 });
               }}
             >

@@ -1,8 +1,9 @@
 import path from 'path';
 import log from 'electron-log';
 import fs from 'fs';
+import { dialog } from 'electron';
 import axios from '../http';
-import { killMainProcess, muDefaultFolder, _rootPath } from './util';
+import { killMainProcess, muDefaultFolder, _rootPath, delay } from './util';
 import { getUserSetting, setUserSetting } from '../store';
 import {
   EVENT_CHECK_CLIENT_UPDATE,
@@ -43,7 +44,12 @@ export async function downloadByUrl(url: string, filePath: string) {
           });
         }
 
-        fs.writeFileSync(filePath, buf);
+        try {
+          fs.writeFileSync(filePath, buf);
+        } catch (error: any) {
+          dialog.showErrorBox('错误', error.message);
+        }
+
         resolve('下载成功');
       });
     });
@@ -120,7 +126,8 @@ export async function downloadUpdatedFiles(
 
     if (updateItems.length > 0) {
       // 更新前杀死正在运行的 main.exe
-      killMainProcess();
+      await killMainProcess();
+      await delay(3000);
     }
 
     log.info(`updateItems`, updateItems);
