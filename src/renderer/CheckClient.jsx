@@ -61,7 +61,7 @@ function CheckClient(props, ref) {
               unsubscribe();
 
               if (force) {
-                MySwal.message(`更新完成`);
+                MySwal.alert(`更新完成`);
               }
             })
             .catch((err) => {

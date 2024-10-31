@@ -220,7 +220,10 @@ export default function PageSetting() {
                 electron.ipcRenderer.invoke('selectFolder').then((data) => {
                   const folder = data.filePaths[0];
                   if (!folder.endsWith('main.exe')) {
-                    MySwal.message(`注意: 请选择客户端文件夹中的 main.exe`);
+                    MySwal.alert(
+                      `注意: 请选择客户端文件夹中的 main.exe`,
+                      'error'
+                    );
                     return;
                   }
                   setMuFolder(folder);
@@ -282,7 +285,7 @@ export default function PageSetting() {
                   server: currentServer,
                 });
 
-                MySwal.message('保存成功');
+                MySwal.alert('保存成功');
               }}
             >
               保存

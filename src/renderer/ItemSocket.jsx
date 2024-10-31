@@ -244,7 +244,7 @@ export default function ItemSocket({ muItems }) {
                           socket5,
                         })
                           .then(() => {
-                            MySwal.message('成功镶嵌!');
+                            MySwal.alert('成功镶嵌!');
                           })
                           .catch(errorHandler)
                           .finally(() => setLoading(false));

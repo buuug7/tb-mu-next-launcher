@@ -117,7 +117,9 @@ export default function PageRegister() {
               password,
             })
               .then(() => {
-                MySwal.message(`注册成功`);
+                MySwal.alert(
+                  `注册成功, 请牢记你的账号密码 ${username} / ${password}`
+                );
                 navigate('/login');
               })
               .catch(errorHandler)

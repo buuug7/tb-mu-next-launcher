@@ -36,7 +36,7 @@ export default function useServer() {
         [`version-${selectedServer.key}`]: 0,
       });
 
-      MySwal.message(`服务器已经切换，请重新登录`);
+      MySwal.alert(`服务器已经切换，请重新登录`);
       logout();
 
       // window.location.reload();

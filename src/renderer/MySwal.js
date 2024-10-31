@@ -3,17 +3,21 @@ import withReactContent from 'sweetalert2-react-content';
 
 const MySwal = withReactContent(Swal);
 
+const customClass = {
+  confirmButton: 'btn btn-primary',
+  cancelButton: 'btn btn-outline-primary',
+};
+
 function confirm(text) {
   return MySwal.fire({
     title: '',
     text: text,
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    width: '18em',
+    width: '20em',
+    customClass,
   });
 }
 
@@ -23,11 +27,27 @@ function message(text) {
     // icon: 'info',
     text,
     showConfirmButton: false,
-    timer: 1500,
+    timer: 2000,
+    customClass,
+  });
+}
+
+function alert(text, icon = 'success') {
+  return MySwal.fire({
+    title: '',
+    text,
+    icon,
+    confirmButtonText: '确定',
+    width: '20em',
+    customClass: {
+      ...customClass,
+      // confirmButton: 'btn btn-outline-primary',
+    },
   });
 }
 
 export default {
   confirm,
   message,
+  alert,
 };

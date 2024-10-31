@@ -194,7 +194,7 @@ export default function CharacterCard({ item, onRefresh }) {
                   charName: item['Name'],
                 })
                   .then(() => {
-                    MySwal.message('成功转职');
+                    MySwal.alert('成功转职');
                     onRefresh();
                   })
                   .finally(() => {
@@ -224,7 +224,7 @@ export default function CharacterCard({ item, onRefresh }) {
                   charName: item['Name'],
                 })
                   .then(() => {
-                    MySwal.message('洗点成功');
+                    MySwal.alert('洗点成功');
                     onRefresh();
                   })
                   .finally(() => {
@@ -263,7 +263,7 @@ export default function CharacterCard({ item, onRefresh }) {
                   Energy: Energy,
                 })
                   .then(() => {
-                    MySwal.message('加点成功');
+                    MySwal.alert('加点成功');
                     onRefresh();
                   })
                   .finally(() => {
@@ -300,7 +300,7 @@ export default function CharacterCard({ item, onRefresh }) {
                     charName: item['Name'],
                   })
                     .then(() => {
-                      MySwal.message('成功恢复到二转');
+                      MySwal.alert('成功恢复到二转');
                       onRefresh();
                     })
                     .finally(() => {
@@ -339,7 +339,7 @@ export default function CharacterCard({ item, onRefresh }) {
                     charName: item['Name'],
                   })
                     .then(() => {
-                      MySwal.message('成功三次转职');
+                      MySwal.alert('成功三次转职');
                       onRefresh();
                     })
                     .finally(() => {
@@ -381,7 +381,7 @@ export default function CharacterCard({ item, onRefresh }) {
                   charName: item['Name'],
                 })
                   .then(() => {
-                    MySwal.message('成功自救');
+                    MySwal.alert('成功自救');
                     onRefresh();
                   })
                   .finally(() => {
@@ -482,7 +482,7 @@ export default function CharacterCard({ item, onRefresh }) {
                     charName: item.Name,
                   })
                     .then(() => {
-                      MySwal.message('成功删除角色');
+                      MySwal.alert('成功删除角色');
                       onRefresh();
                     })
                     .finally(() => {

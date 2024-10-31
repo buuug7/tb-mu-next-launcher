@@ -171,7 +171,7 @@ export default function VipBuyWCoinC() {
                 days: buyType.days,
               })
                 .then(() => {
-                  MySwal.message('购买成功会员');
+                  MySwal.alert('购买成功会员');
                   notifyUserDataChange();
                 })
                 .catch(errorHandler)
@@ -209,7 +209,7 @@ export default function VipBuyWCoinC() {
               setLoading(true);
               cancelVip()
                 .then(() => {
-                  MySwal.message('退订会员成功');
+                  MySwal.alert('退订会员成功');
                   notifyUserDataChange();
                 })
                 .catch(errorHandler)

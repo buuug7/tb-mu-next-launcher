@@ -138,7 +138,7 @@ export default function Ext1Custom({ character }) {
                   typeKey: type.key,
                 })
                   .then(() => {
-                    MySwal.message(`升级成功!`);
+                    MySwal.alert(`升级成功!`);
                     notifyUserDataChange();
                     resetInitial();
                   })
@@ -168,9 +168,9 @@ export default function Ext1Custom({ character }) {
                   typeKey: type.key,
                 })
                   .then(() => {
-                    MySwal.message(`重置成功!`);
                     notifyUserDataChange();
                     resetInitial();
+                    MySwal.alert(`重置成功!`);
                   })
                   .catch(errorHandler)
                   .finally(() => setLoading(false));
