@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getBaseUrl, mySessionKey } from './config';
+import { defaultServerKey, getBaseUrl, mySessionKey } from './config';
 import { fireHttpCustomException } from './renderer/MyCustomEvent';
 
 const instance = axios.create({
@@ -13,6 +13,8 @@ instance.interceptors.request.use(
     if (globalThis.window) {
       const token = localStorage.getItem(mySessionKey);
       config.headers.Authorization = `Bearer ${token}`;
+      config.headers['x-default-server'] =
+        localStorage.getItem(defaultServerKey);
     }
 
     return config;

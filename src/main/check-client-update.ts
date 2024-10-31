@@ -2,7 +2,7 @@ import path from 'path';
 import log from 'electron-log';
 import fs from 'fs';
 import { dialog } from 'electron';
-import axios from '../http';
+import http from '../http';
 import { killMainProcess, muDefaultFolder, _rootPath, delay } from './util';
 import { getUserSetting, setUserSetting } from '../store';
 import {
@@ -13,7 +13,7 @@ import {
 
 export async function downloadByUrl(url: string, filePath: string) {
   try {
-    const response = await axios({
+    const response = await http({
       url: encodeURI(url),
       method: 'get',
       responseType: 'stream',
@@ -87,7 +87,7 @@ export async function downloadUpdatedFiles(
 
   try {
     // get updated items from server
-    const response = await axios.get(updateUrl, {
+    const response = await http.get(updateUrl, {
       maxContentLength: Infinity,
     });
     const { data }: { data: UpdateData } = response;
