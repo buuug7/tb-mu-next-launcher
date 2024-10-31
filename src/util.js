@@ -59,32 +59,95 @@ export function getVipItem(user, vips = []) {
   return vips.find((it) => it.id === user.AccountLevel);
 }
 
-export const classToName = {
-  0: '法师',
-  1: '魔导士',
-  2: '神导师',
+/**
+ *
+ * @param {*} charClass
+ * @returns {{name: string, icon: string}}
+ */
+export function getMetaByCharClass(charClass) {
+  const result = {};
+  switch (charClass) {
+    case 0:
+      result['name'] = '法师';
+      result['icon'] = 'dw';
+      break;
+    case 1:
+      result['name'] = '魔导士';
+      result['icon'] = 'dw';
+      break;
+    case 2:
+      result['name'] = '神导师';
+      result['icon'] = 'dw';
+      break;
+    case 16:
+      result['name'] = '剑士';
+      result['icon'] = 'dk';
+      break;
+    case 17:
+      result['name'] = '骑士';
+      result['icon'] = 'dk';
+      break;
+    case 18:
+      result['name'] = '神骑士';
+      result['icon'] = 'dk';
+      break;
+    case 32:
+      result['name'] = '弓箭手';
+      result['icon'] = 'elf';
+      break;
+    case 33:
+      result['name'] = '圣射手';
+      result['icon'] = 'elf';
+      break;
+    case 34:
+      result['name'] = '神射手';
+      result['icon'] = 'elf';
+      break;
+    case 48:
+      result['name'] = '魔剑士';
+      result['icon'] = 'mg';
+      break;
+    case 50:
+      result['name'] = '剑圣';
+      result['icon'] = 'mg';
+      break;
+    case 64:
+      result['name'] = '圣导师';
+      result['icon'] = 'dl';
+      break;
+    case 66:
+      result['name'] = '祭师';
+      result['icon'] = 'dl';
+      break;
+    case 80:
+      result['name'] = '召唤师';
+      result['icon'] = 'sum';
+      break;
+    case 81:
+      result['name'] = '圣巫师';
+      result['icon'] = 'sum';
+      break;
+    case 82:
+      result['name'] = '神巫师';
+      result['icon'] = 'sum';
+      break;
+    case 96:
+      result['name'] = '格斗家';
+      result['icon'] = 'rf';
+      break;
+    case 98:
+      result['name'] = '格斗大师';
+      result['icon'] = 'rf';
+      break;
 
-  16: '剑士',
-  17: '骑士',
-  18: '神骑士',
+    default:
+      result['name'] = '未知';
+      result['icon'] = 'unknown';
+      break;
+  }
 
-  32: '弓箭手',
-  33: '圣射手',
-  34: '神射手',
-
-  48: '魔剑士',
-  50: '剑圣',
-
-  64: '圣导师',
-  66: '祭师',
-
-  80: '召唤师',
-  81: '圣巫师',
-  82: '神巫师',
-
-  96: '格斗家',
-  98: '格斗大师',
-};
+  return result;
+}
 
 export function class2Index(classNum) {
   const dic = {
@@ -191,44 +254,6 @@ export function replaceAt2(str, index, replacement) {
     replacement +
     str.substring(index + replacement.length)
   );
-}
-
-export function getCharacterAbbr(code) {
-  let cName = '';
-  switch (code) {
-    case 0:
-    case 1:
-    case 2:
-      cName = 'dw';
-      break;
-    case 16:
-    case 17:
-    case 18:
-      cName = 'dk';
-      break;
-    case 32:
-    case 33:
-    case 34:
-      cName = 'elf';
-      break;
-    case 48:
-    case 50:
-      cName = 'mg';
-      break;
-    case 64:
-    case 66:
-      cName = 'dl';
-      break;
-    case 80:
-    case 81:
-    case 82:
-      cName = 'sum';
-      break;
-    default:
-      cName = 'elf';
-  }
-
-  return cName;
 }
 
 export function isChinese(str) {

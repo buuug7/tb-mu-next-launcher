@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { useContext } from 'react';
 import { Table } from 'react-bootstrap';
 import IconRank from './icons/IconRank';
-import { classToName, getTotalPoints } from '../util';
+import { getTotalPoints } from '../util';
 import CharacterAvatar from './CharacterAvatar';
 import { MuConfigContext } from './MuConfigProvider';
 
@@ -67,13 +67,7 @@ export default function CharacterRankList({ users, userOnlineStatus }) {
               </td>
               <td>
                 <div className="d-flex justify-content-start align-items-center">
-                  <CharacterAvatar
-                    roleName={classToName[item['Class']]}
-                    item={item}
-                    isRank
-                    width={32}
-                    height={32}
-                  />
+                  <CharacterAvatar item={item} isRank width={32} height={32} />
                   <span className="ms-2">{item['Name']}</span>
                 </div>
               </td>

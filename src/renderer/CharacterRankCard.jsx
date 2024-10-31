@@ -3,14 +3,14 @@ import { useContext } from 'react';
 import IconOnline from './icons/IconOnline';
 import IconRank from './icons/IconRank';
 import CharacterAvatar from './CharacterAvatar';
-import { classToName, getTotalPoints } from '../util';
+import { getMetaByCharClass, getTotalPoints } from '../util';
 import { MuConfigContext } from './MuConfigProvider';
 
 import './CharacterRankCard.scss';
 
 function CharacterRankCard({ item, index, onlineStatus }) {
   const { muConfig } = useContext(MuConfigContext);
-  const roleName = classToName[item['Class']];
+  const charMeta = getMetaByCharClass(item['Class']);
   const totalPoints = getTotalPoints(item, muConfig);
   return (
     <div>
@@ -18,7 +18,7 @@ function CharacterRankCard({ item, index, onlineStatus }) {
         <div className="card-body">
           <div className="d-flex justify-content-start align-items-center">
             <div className="char-img me-1">
-              <CharacterAvatar roleName={roleName} item={item} isRank />
+              <CharacterAvatar item={item} isRank />
             </div>
 
             <div className="d-flex flex-column justify-content-start">
@@ -43,7 +43,7 @@ function CharacterRankCard({ item, index, onlineStatus }) {
           <div className="d-flex no-block align-items-center">
             <span>
               <h5>
-                {roleName}{' '}
+                {charMeta?.name}{' '}
                 <IconOnline online={onlineStatus?.ConnectStat === 1} />
               </h5>
               <small title="最后活动时间">

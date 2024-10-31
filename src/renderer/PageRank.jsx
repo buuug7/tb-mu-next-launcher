@@ -137,7 +137,7 @@ export default function PageRank() {
         </div>
 
         {users.length <= 0 && (
-          <div className="rank">
+          <div className="rankSkeleton">
             <RankSkeleton />
             <RankSkeleton />
             <RankSkeleton />

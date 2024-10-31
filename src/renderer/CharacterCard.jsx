@@ -13,8 +13,7 @@ import {
   Badge,
 } from 'react-bootstrap';
 import {
-  classToName,
-  getCharacterAbbr,
+  getMetaByCharClass,
   getTotalPoints,
   isFirstEvolution,
   isSecondEvolution,
@@ -50,7 +49,7 @@ export default function CharacterCard({ item, onRefresh }) {
   const [showChangeNameModal, setShowChangeNameModal] = useState(false);
 
   const totalPoints = getTotalPoints(item, muConfig);
-  const roleName = classToName[item['Class']];
+  const charMeta = getMetaByCharClass(item['Class']);
 
   useEffect(() => {
     setStrength(item.Strength);
@@ -59,33 +58,27 @@ export default function CharacterCard({ item, onRefresh }) {
     setEnergy(item.Vitality);
   }, [item]);
 
-  const abbr = getCharacterAbbr(item['Class']);
-
   return (
     <Card
       style={{ width: '100%', border: 'none', borderRadius: 0 }}
-      className={`rank-card ${abbr} shadow-sm`}
+      className={`rank-card ${charMeta?.icon} shadow-sm`}
     >
       <Card.Header className="bg-light">
         <div className="c-header">
-          <CharacterAvatar roleName={roleName} />
+          <CharacterAvatar item={item} />
           <div className="name-role">
             <h5>{item['Name']}</h5>
-            <div>{roleName}</div>
+            <div>{charMeta?.name}</div>
           </div>
         </div>
       </Card.Header>
       <Card.Body className="">
         <Alert className="mb-0 py-2 px-2">
-          <Badge bg="primary" pill>
-            转生次数 {item['ResetCount']}
-          </Badge>
-          <Badge bg="primary" pill>
-            普通等级 {item['cLevel']}
-          </Badge>
-          <Badge bg="primary" pill>
-            大师等级 {item['MasterLevel']}
-          </Badge>
+          <div className="fs-6 fw-light">
+            转生次数 {item['ResetCount']} / 普通等级 {item['cLevel']} / 大师等级{' '}
+            {item['MasterLevel']} / 总共点数 {getTotalPoints(item, muConfig)} /
+            杀怪数量 {item['killMonster']} /
+          </div>
         </Alert>
       </Card.Body>
 
