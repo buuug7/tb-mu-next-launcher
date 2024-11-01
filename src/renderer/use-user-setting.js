@@ -14,7 +14,7 @@ export default function useUserSetting() {
   const [userSetting, setUserSetting] = useState({});
 
   useEffect(() => {
-    setUserSetting(electron.store.get(USER_SETTING_KEY));
+    setUserSetting(electron.store.get(USER_SETTING_KEY) || {});
 
     const unsubscribe1 = electron.store.watchStoreChange();
     const unsubscribe2 = electron.ipcRenderer.on(

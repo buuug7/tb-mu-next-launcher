@@ -6,14 +6,13 @@ import { Form } from 'react-bootstrap';
 import { showIpAndPortOption } from '../config';
 import Layout from './Layout';
 import meta from '../../release/app/package.json';
-import MySwal from './MySwal';
 import { MuConfigContext } from './MuConfigProvider';
-
 import useUserSetting, { updateUserSetting } from './use-user-setting';
 import useRegeditSetting from './use-regedit-setting';
+import useServer from './use-server';
+import MySwal from './MySwal';
 
 import './PageSetting.scss';
-import useServer from './use-server';
 
 const { electron } = window;
 
@@ -55,11 +54,11 @@ export default function PageSetting() {
       setColorDepth(regeditSetting.ColorDepth);
     }
 
-    if (userSetting.muFolder) {
+    if (userSetting?.muFolder) {
       setMuFolder(userSetting.muFolder);
     }
 
-    if (userSetting.ipAndPort) {
+    if (userSetting?.ipAndPort) {
       setIpAndPort(userSetting.ipAndPort);
     }
   }, [userSetting, regeditSetting]);

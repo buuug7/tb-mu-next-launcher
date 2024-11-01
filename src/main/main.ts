@@ -19,7 +19,7 @@ import {
   protocol,
 } from 'electron';
 import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
+import log from 'electron-log/main';
 import MenuBuilder from './menu';
 import { killMainProcess, resolveHtmlPath } from './util';
 import { run as runClientCheck } from './check-client-update';
@@ -183,6 +183,7 @@ const createWindow = async () => {
       webSecurity: false,
       sandbox: false,
       webviewTag: true,
+      // devTools: true,
     },
   });
 
@@ -196,6 +197,7 @@ const createWindow = async () => {
       mainWindow.minimize();
     } else {
       mainWindow.show();
+      // mainWindow.webContents.openDevTools();
     }
   });
 
