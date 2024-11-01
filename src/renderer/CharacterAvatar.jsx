@@ -1,3 +1,4 @@
+import { getBaseUrl } from 'config';
 import { getMetaByCharClass } from '../util';
 
 export default function CharacterAvatar({
@@ -8,20 +9,18 @@ export default function CharacterAvatar({
 }) {
   const baseDir = '/asserts/character-avatar';
   const charMeta = getMetaByCharClass(item['Class']);
-  let fileName = `${baseDir}/${charMeta.icon}.png`;
+  let fileName = `my-res://${baseDir}/${charMeta.icon}.png`;
 
-  if (isRank) {
-    const titleIndex = item.customTitleIndex;
-    fileName = titleIndex
-      ? `/assets/custom-title/${titleIndex.toString().padStart(3, '0')}.jpg`
-      : fileName;
+  const titleIndex = item.customTitleIndex;
+  if (isRank && titleIndex) {
+    fileName = `${getBaseUrl()}/custom-title/${titleIndex
+      .toString()
+      .padStart(3, '0')}.jpg`;
   }
-
-  const imgSrc = `my-res://${fileName}`;
 
   return (
     <img
-      src={imgSrc}
+      src={fileName}
       width={width}
       height={height}
       alt={charMeta.name}
