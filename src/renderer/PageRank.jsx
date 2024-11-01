@@ -80,6 +80,36 @@ export default function PageRank() {
     .filter((it) => it.ConnectStat === 1)
     .map((it) => it['memb___id']);
 
+  const RenderList = () => {
+    if (users.length <= 0) {
+      return (
+        <div className="rankSkeleton">
+          <RankSkeleton />
+          <RankSkeleton />
+          <RankSkeleton />
+          <RankSkeleton />
+          <RankSkeleton />
+          <RankSkeleton />
+          <RankSkeleton />
+          <RankSkeleton />
+        </div>
+      );
+    }
+
+    if (listType === 'table') {
+      return (
+        <CharacterRankList users={users} userOnlineStatus={userOnlineStatus} />
+      );
+    }
+
+    return (
+      <CharacterRankCardList
+        users={users}
+        userOnlineStatus={userOnlineStatus}
+      />
+    );
+  };
+
   return (
     <Layout>
       <div className="PageRank">
@@ -136,42 +166,21 @@ export default function PageRank() {
           </div>
         </div>
 
-        {users.length <= 0 && (
-          <div className="rankSkeleton">
-            <RankSkeleton />
-            <RankSkeleton />
-            <RankSkeleton />
-            <RankSkeleton />
-            <RankSkeleton />
-            <RankSkeleton />
-            <RankSkeleton />
-            <RankSkeleton />
+        {RenderList()}
+
+        {users.length > 0 && (
+          <div className="my-3 text-center">
+            <Button
+              disabled={loading}
+              variant="link"
+              onClick={() => {
+                setPage((pre) => pre + 1);
+              }}
+            >
+              {loading ? '加载中...' : '加载更多'}
+            </Button>
           </div>
         )}
-
-        {listType === 'card' ? (
-          <CharacterRankCardList
-            users={users}
-            userOnlineStatus={userOnlineStatus}
-          />
-        ) : (
-          <CharacterRankList
-            users={users}
-            userOnlineStatus={userOnlineStatus}
-          />
-        )}
-
-        <div className="my-3 text-center">
-          <Button
-            disabled={loading}
-            variant="link"
-            onClick={() => {
-              setPage((pre) => pre + 1);
-            }}
-          >
-            {loading ? '加载中...' : '加载更多'}
-          </Button>
-        </div>
       </div>
     </Layout>
   );
