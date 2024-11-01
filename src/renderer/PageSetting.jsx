@@ -79,7 +79,7 @@ export default function PageSetting() {
           <Form.Group>
             <Form.Label>服务器选择</Form.Label>
             <Form.Select
-              value={currentServer.key}
+              value={currentServer?.key}
               onChange={(e) => {
                 changeServer(e.target.value);
               }}

@@ -1,9 +1,7 @@
-import { useCallback, useContext } from 'react';
-import { MessageContext } from './MessageProvider';
+import { useCallback } from 'react';
+import MySwal from './MySwal';
 
 export default function useErrorHandler() {
-  const { updateMessage } = useContext(MessageContext);
-
   function callback(err) {
     console.log(`err`, err);
 
@@ -16,9 +14,8 @@ export default function useErrorHandler() {
         errMsg = err?.response?.data?.message;
         break;
     }
-
-    updateMessage(errMsg);
+    MySwal.alert(errMsg, 'error');
   }
 
-  return useCallback(callback, [updateMessage]);
+  return useCallback(callback, []);
 }

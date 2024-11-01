@@ -9,6 +9,7 @@ import { UserContext } from './UserProvider';
 import { MessageContext } from './MessageProvider';
 import { MuConfigContext } from './MuConfigProvider';
 import { getBaseUrl } from '../config';
+import useErrorHandler from './use-error-handle';
 import MySwal from './MySwal';
 
 export default function CustomTitle({ character }) {
@@ -23,6 +24,7 @@ export default function CustomTitle({ character }) {
   );
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const errorhandler = useErrorHandler();
 
   const [titles, setTitles] = useState([]);
 
@@ -165,10 +167,11 @@ export default function CustomTitle({ character }) {
                   })
                     .then(({ data }) => {
                       console.log(data);
-                      updateMessage('成功修改称号');
+                      MySwal.alert('成功修改称号');
                       setShowModal(false);
                       notifyUserDataChange();
                     })
+                    .catch(errorhandler)
                     .finally(() => {
                       setLoading(false);
                     });

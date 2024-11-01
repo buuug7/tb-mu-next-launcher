@@ -457,7 +457,7 @@ export default function CharacterCard({ item, onRefresh }) {
             </Button>
           </OverlayTrigger>
           <Button
-            disabled={loading}
+            disabled={loading || !muConfig.enableDeleteCharacter}
             variant="outline-primary"
             onClick={() => {
               if (loading) {
