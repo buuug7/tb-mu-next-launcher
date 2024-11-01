@@ -7,8 +7,9 @@ import { customTitle, getSomeJson } from './api';
 import { checkName, checkNameLength, groupBy } from '../util';
 import { UserContext } from './UserProvider';
 import { MessageContext } from './MessageProvider';
-import MySwal from './MySwal';
 import { MuConfigContext } from './MuConfigProvider';
+import { getBaseUrl } from '../config';
+import MySwal from './MySwal';
 
 export default function CustomTitle({ character }) {
   const { muConfig } = useContext(MuConfigContext);
@@ -95,7 +96,7 @@ export default function CustomTitle({ character }) {
                     >
                       <img
                         placeholder="blur"
-                        src={`my-res://assets/` + item.url}
+                        src={getBaseUrl() + item.url}
                         width={85}
                         height={85}
                         alt={item.titleIndex}
