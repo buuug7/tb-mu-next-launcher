@@ -52,7 +52,7 @@ export default function CustomTitle({ character }) {
             <img
               placeholder="blur"
               src={
-                'my-res://asserts' +
+                getBaseUrl() +
                 (titles.find(
                   (it) => it.titleIndex === character.customTitleIndex
                 )?.url || '/custom-title/placeholder.png')

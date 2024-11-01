@@ -6,10 +6,11 @@ import { Alert, Button, Form } from 'react-bootstrap';
 import { getUserVipRemainingJF, getVipItem, humanNumber } from '../util';
 import { UserContext } from './UserProvider';
 import { buyVip, cancelVip } from './api';
-import MySwal from './MySwal';
 import { MuConfigContext } from './MuConfigProvider';
-import useErrorHandler from './use-error-handle';
 import { MessageContext } from './MessageProvider';
+import { getBaseUrl } from '../config';
+import useErrorHandler from './use-error-handle';
+import MySwal from './MySwal';
 
 export default function VipBuyWCoinC() {
   const { muConfig } = useContext(MuConfigContext);
@@ -52,7 +53,7 @@ export default function VipBuyWCoinC() {
             {item.id === vip.id && <div className="ribbon">{item.name}</div>}
             <div className="text-center">
               <img
-                src={`my-res://asserts/vips/${item.id}.jpg`}
+                src={`${getBaseUrl()}/vips/${item.id}.jpg`}
                 width="100"
                 height="100"
                 alt={`vipsIcons-${item.id}`}
