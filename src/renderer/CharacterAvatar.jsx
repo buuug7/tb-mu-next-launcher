@@ -7,9 +7,9 @@ export default function CharacterAvatar({
   width = 75,
   height = 75,
 }) {
-  const baseDir = '/asserts/character-avatar';
+  const baseDir = '/asserts/icon2';
   const charMeta = getMetaByCharClass(item['Class']);
-  let fileName = `my-res://${baseDir}/${charMeta.icon}.png`;
+  let fileName = `my-res://${baseDir}/${charMeta.icon}.jpg`;
 
   const titleIndex = item.customTitleIndex;
   if (isRank && titleIndex) {

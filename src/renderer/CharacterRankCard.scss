@@ -35,4 +35,28 @@
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
+
+  .with-bg {
+    position: relative;
+    z-index: 1;
+    min-height: 99px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    // background-image: url(/assets/iconBg.png);
+
+    .overlay {
+      opacity: 0.05;
+      background: #fff;
+    }
+
+    .options,
+    .title {
+      color: #fff;
+    }
+
+    .charImg {
+      // display: none;
+    }
+  }
 }

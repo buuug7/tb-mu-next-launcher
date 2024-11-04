@@ -10,6 +10,11 @@ import IconDoubleUp from './icons/IconDoubleUp';
 
 import './CharacterRankCard.scss';
 
+const sliceCharName = (name) => {
+  const len = name.length;
+  return len > 6 ? name.slice(0, 6) + '...' : name;
+};
+
 function CharacterRankCard({ item, index, onlineStatus }) {
   const [showExtra, setShowExtra] = useState(false);
   const { muConfig } = useContext(MuConfigContext);
@@ -17,25 +22,27 @@ function CharacterRankCard({ item, index, onlineStatus }) {
   const totalPoints = getTotalPoints(item, muConfig);
   return (
     <div>
-      <div className="CardRank card shadow-sm">
-        <div className="card-body">
+      <div className="CardRank card shadow-sm ">
+        <div className={`card-body with-bg bg-${charMeta.icon}`}>
+          <div className="overlay" />
           <div className="d-flex justify-content-start align-items-center">
-            <div className="char-img me-1">
-              <CharacterAvatar item={item} isRank />
+            <div className="charImg me-1">
+              <CharacterAvatar width={70} height={70} item={item} isRank />
             </div>
 
             <div className="d-flex flex-column justify-content-start">
-              <h4 className="mb-0" title={item['Name']}>
-                {item['Name'].length > 6
-                  ? item['Name'].slice(0, 6) + '..'
-                  : item['Name']}
+              <h4 className="mb-0 title" title={item['Name']}>
+                {sliceCharName(item['Name'])}
               </h4>
               <div>
                 <small />
               </div>
             </div>
             <div className="ms-auto">
-              <span className="display-6" style={{ fontSize: '2.2rem' }}>
+              <span
+                className="display-6 options"
+                style={{ fontSize: '2.2rem' }}
+              >
                 <IconRank /> {index + 1}
               </span>
             </div>
