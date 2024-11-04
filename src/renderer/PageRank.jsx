@@ -45,7 +45,7 @@ export default function PageRank() {
       value: 'default',
     }
   );
-  const [listType, setListType] = useState('table');
+  const [listType, setListType] = useState('card');
   const [userOnlineStatus, setUserOnlineStatus] = useState([]);
 
   const errorHandler = useErrorHandler();
@@ -143,6 +143,7 @@ export default function PageRank() {
           <div>
             <div>
               <span
+                title="表格方式展示"
                 onClick={() => setListType('table')}
                 style={{
                   cursor: 'pointer',
@@ -153,6 +154,7 @@ export default function PageRank() {
                 <IconList />
               </span>
               <span
+                title="卡片方式展示"
                 onClick={() => setListType('card')}
                 style={{
                   cursor: 'pointer',
