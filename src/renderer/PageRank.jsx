@@ -146,17 +146,6 @@ export default function PageRank() {
           <div>
             <div>
               <span
-                title="显示背景"
-                onClick={() => setShowCardBg((preState) => !preState)}
-                style={{
-                  cursor: 'pointer',
-                  padding: '4px',
-                  color: showCardBg ? 'var(--bs-primary)' : '',
-                }}
-              >
-                <IconCardImage />
-              </span>
-              <span
                 title="表格方式展示"
                 onClick={() => setListType('table')}
                 style={{
@@ -178,6 +167,19 @@ export default function PageRank() {
               >
                 <IconListGrid />
               </span>
+              {listType === 'card' && (
+                <span
+                  title="显示背景"
+                  onClick={() => setShowCardBg((preState) => !preState)}
+                  style={{
+                    cursor: 'pointer',
+                    padding: '4px',
+                    color: showCardBg ? 'var(--bs-primary)' : '',
+                  }}
+                >
+                  <IconCardImage />
+                </span>
+              )}
             </div>
           </div>
         </div>
