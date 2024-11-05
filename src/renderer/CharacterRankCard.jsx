@@ -15,15 +15,18 @@ const sliceCharName = (name) => {
   return len > 6 ? name.slice(0, 6) + '...' : name;
 };
 
-function CharacterRankCard({ item, index, onlineStatus }) {
+function CharacterRankCard({ item, index, onlineStatus, showCardBg = false }) {
   const [showExtra, setShowExtra] = useState(false);
   const { muConfig } = useContext(MuConfigContext);
   const charMeta = getMetaByCharClass(item['Class']);
   const totalPoints = getTotalPoints(item, muConfig);
+
+  const showBgClassName = showCardBg ? `with-bg bg-${charMeta.icon}` : '';
+
   return (
     <div>
       <div className="CardRank card shadow-sm ">
-        <div className={`card-body with-bg bg-${charMeta.icon}`}>
+        <div className={`card-body ${showBgClassName}`}>
           <div className="overlay" />
           <div className="d-flex justify-content-start align-items-center">
             <div className="charImg me-1">
@@ -122,11 +125,16 @@ function CharacterRankCard({ item, index, onlineStatus }) {
   );
 }
 
-export default function CharacterRankCardList({ users, userOnlineStatus }) {
+export default function CharacterRankCardList({
+  users,
+  userOnlineStatus,
+  showCardBg = false,
+}) {
   return (
     <div className="RankCardList">
       {users.map((item, index) => (
         <CharacterRankCard
+          showCardBg={showCardBg}
           item={item}
           key={item['Name'] + item['AccountID']}
           index={index}

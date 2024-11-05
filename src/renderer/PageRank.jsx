@@ -10,6 +10,7 @@ import { getCharactersByPage, getUserOnlineStatus } from './api';
 import './PageRank.scss';
 import useErrorHandler from './use-error-handle';
 import { MuConfigContext } from './MuConfigProvider';
+import IconCardImage from './icons/IconCardImage';
 
 /**
  * @typedef {{ConnectStat: string}} UserOnlineStatus
@@ -36,6 +37,7 @@ function RankSkeleton() {
 
 export default function PageRank() {
   const { muConfig } = useContext(MuConfigContext);
+  const [showCardBg, setShowCardBg] = useState(true);
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -104,6 +106,7 @@ export default function PageRank() {
 
     return (
       <CharacterRankCardList
+        showCardBg={showCardBg}
         users={users}
         userOnlineStatus={userOnlineStatus}
       />
@@ -142,6 +145,17 @@ export default function PageRank() {
           </div>
           <div>
             <div>
+              <span
+                title="显示背景"
+                onClick={() => setShowCardBg((preState) => !preState)}
+                style={{
+                  cursor: 'pointer',
+                  padding: '4px',
+                  color: showCardBg ? 'var(--bs-primary)' : '',
+                }}
+              >
+                <IconCardImage />
+              </span>
               <span
                 title="表格方式展示"
                 onClick={() => setListType('table')}
