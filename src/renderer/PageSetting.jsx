@@ -1,12 +1,11 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { showIpAndPortOption } from '../config';
 import Layout from './Layout';
 import meta from '../../release/app/package.json';
-import { MuConfigContext } from './MuConfigProvider';
 import useUserSetting, { updateUserSetting } from './use-user-setting';
 import useRegeditSetting from './use-regedit-setting';
 import useServer from './use-server';

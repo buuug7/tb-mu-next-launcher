@@ -7,7 +7,6 @@ import { UserContext } from './UserProvider';
 import { changeCharacterName } from './api';
 
 import MySwal from './MySwal';
-import { MessageContext } from './MessageProvider';
 import { MuConfigContext } from './MuConfigProvider';
 import useErrorHandler from './use-error-handle';
 

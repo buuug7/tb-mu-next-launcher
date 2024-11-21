@@ -10,7 +10,6 @@ import {
   Popover,
   Button,
   Alert,
-  Badge,
 } from 'react-bootstrap';
 import {
   getMetaByCharClass,
