@@ -36,6 +36,7 @@ import {
 import MySwal from './MySwal';
 import { MessageContext } from './MessageProvider';
 import { MuConfigContext } from './MuConfigProvider';
+import useErrorHandler from './use-error-handle';
 
 export default function CharacterCard({ item, onRefresh }) {
   const { updateMessage } = useContext(MessageContext);
@@ -47,6 +48,7 @@ export default function CharacterCard({ item, onRefresh }) {
   const [Energy, setEnergy] = useState(item['Energy']);
   const [LevelUpPoint, setLevelUpPoint] = useState(item['LevelUpPoint']);
   const [showChangeNameModal, setShowChangeNameModal] = useState(false);
+  const errorHandler = useErrorHandler();
 
   const totalPoints = getTotalPoints(item, muConfig);
   const charMeta = getMetaByCharClass(item['Class']);
@@ -157,7 +159,7 @@ export default function CharacterCard({ item, onRefresh }) {
             disabled={loading || !muConfig.enableResetLife}
             variant="outline-primary"
             size="sm"
-            onClick={() => {
+            onClick={async () => {
               if (loading) {
                 return;
               }
@@ -177,23 +179,24 @@ export default function CharacterCard({ item, onRefresh }) {
                 return;
               }
 
-              MySwal.confirm('你确定要转生吗?').then((result) => {
-                if (!result.isConfirmed) {
-                  return;
-                }
+              const result = await MySwal.confirm('你确定要转生吗?');
 
+              if (!result.isConfirmed) {
+                return;
+              }
+
+              try {
                 setLoading(true);
-                resetLife({
+                await resetLife({
                   charName: item['Name'],
-                })
-                  .then(() => {
-                    MySwal.alert('成功转职');
-                    onRefresh();
-                  })
-                  .finally(() => {
-                    setLoading(false);
-                  });
-              });
+                });
+                MySwal.alert('成功转职');
+                onRefresh();
+              } catch (error) {
+                errorHandler(error);
+              } finally {
+                setLoading(false);
+              }
             }}
           >
             {loading ? 'Loading...' : '在线转生'}
@@ -202,28 +205,30 @@ export default function CharacterCard({ item, onRefresh }) {
             disabled={!muConfig.enableResetPoints}
             variant="outline-primary"
             size="sm"
-            onClick={() => {
+            onClick={async () => {
               if (loading) {
                 return;
               }
 
-              MySwal.confirm(`你确定要洗点吗？`).then((result) => {
-                if (!result.isConfirmed) {
-                  return;
-                }
+              const result = await MySwal.confirm(`你确定要洗点吗？`);
 
+              if (!result.isConfirmed) {
+                return;
+              }
+
+              try {
                 setLoading(true);
-                resetPoints({
+                await resetPoints({
                   charName: item['Name'],
-                })
-                  .then(() => {
-                    MySwal.alert('洗点成功');
-                    onRefresh();
-                  })
-                  .finally(() => {
-                    setLoading(false);
-                  });
-              });
+                });
+
+                MySwal.alert('洗点成功');
+                onRefresh();
+              } catch (error) {
+                errorHandler(error);
+              } finally {
+                setLoading(false);
+              }
             }}
           >
             {loading ? 'Loading...' : '在线洗点'}
@@ -232,37 +237,37 @@ export default function CharacterCard({ item, onRefresh }) {
             disabled={!muConfig.enableAddPoints}
             variant="outline-primary"
             size="sm"
-            onClick={() => {
+            onClick={async () => {
               if (loading) {
                 return;
               }
 
               if (LevelUpPoint < 0) {
-                updateMessage('剩余点数不能为负数');
+                MySwal.alert('剩余点数不能为负数', 'error');
                 return;
               }
 
-              MySwal.confirm('你确定要加点吗？').then((result) => {
-                if (!result.isConfirmed) {
-                  return;
-                }
+              const result = await MySwal.confirm('你确定要加点吗？');
 
+              if (!result.isConfirmed) return;
+
+              try {
                 setLoading(true);
-                addPoints({
+                await addPoints({
                   charName: item['Name'],
                   Strength: Strength,
                   Dexterity: Dexterity,
                   Vitality: Vitality,
                   Energy: Energy,
-                })
-                  .then(() => {
-                    MySwal.alert('加点成功');
-                    onRefresh();
-                  })
-                  .finally(() => {
-                    setLoading(false);
-                  });
-              });
+                });
+
+                MySwal.alert('加点成功');
+                onRefresh();
+              } catch (error) {
+                errorHandler(error);
+              } finally {
+                setLoading(false);
+              }
             }}
           >
             {loading ? 'Loading...' : '在线加点'}
@@ -271,35 +276,37 @@ export default function CharacterCard({ item, onRefresh }) {
             <Button
               disabled={loading || !muConfig.enableBackToSecondEvolution}
               variant="outline-primary"
-              onClick={() => {
+              onClick={async () => {
                 if (loading) {
                   return;
                 }
 
                 if (!isThirdEvolution(item['Class'])) {
-                  updateMessage('貌似你还没有三转');
+                  MySwal.alert('貌似你还没有三转', 'error');
                   return;
                 }
 
-                MySwal.confirm(
-                  '你确定要恢复到二转吗? 恢复二转请取下三代翅膀,不然会丢失'
-                ).then((result) => {
-                  if (!result.isConfirmed) {
-                    return;
-                  }
+                const result = await MySwal.confirm(
+                  '你确定要恢复到二转吗? 恢复二转请取下三代翅膀, 不然会丢失'
+                );
 
+                if (!result.isConfirmed) {
+                  return;
+                }
+
+                try {
                   setLoading(true);
-                  backToSecondEvolution({
+                  await backToSecondEvolution({
                     charName: item['Name'],
-                  })
-                    .then(() => {
-                      MySwal.alert('成功恢复到二转');
-                      onRefresh();
-                    })
-                    .finally(() => {
-                      setLoading(false);
-                    });
-                });
+                  });
+
+                  MySwal.alert('成功恢复到二转');
+                  onRefresh();
+                } catch (error) {
+                  errorHandler(error);
+                } finally {
+                  setLoading(false);
+                }
               }}
               size="sm"
             >
