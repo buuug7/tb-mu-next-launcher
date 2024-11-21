@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 import useUserLogout from './use-user-logout';
 import { UserContext } from './UserProvider';
@@ -11,11 +11,19 @@ export default function MyNavbar() {
   const { user } = useContext(UserContext);
   const { muConfig } = useContext(MuConfigContext);
   const { currentServer, servers, changeServer } = useServer();
+  const navigate = useNavigate();
 
   return (
     <Navbar variant="light" bg="light" expand="md" fixed="top">
       <Container>
-        <Navbar.Brand href="/">{muConfig.sitePrimaryTitle}</Navbar.Brand>
+        <Navbar.Brand
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            navigate('/');
+          }}
+        >
+          {muConfig.sitePrimaryTitle}
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav className="me-auto" navbarScroll>
