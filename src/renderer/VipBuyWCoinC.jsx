@@ -141,7 +141,7 @@ export default function VipBuyWCoinC() {
           className="me-1"
           variant="outline-primary"
           disabled={loading}
-          onClick={() => {
+          onClick={async () => {
             const cost = vip.pricePerDay * buyType.days;
             const AccountLevel = user['AccountLevel'];
             const vipItem = muConfig.vips.find((it) => it.id === AccountLevel);
@@ -158,26 +158,29 @@ export default function VipBuyWCoinC() {
               return;
             }
 
-            MySwal.confirm(
+            const result = await MySwal.confirm(
               `你正在购买 ${vip.name}, 购买方式为 ${buyType.name}, 需要 ${cost} 元宝, 你同意吗?`
-            ).then((result) => {
-              if (!result.isConfirmed) {
-                return;
-              }
+            );
 
+            if (!result.isConfirmed) {
+              return;
+            }
+
+            try {
               setLoading(true);
-              buyVip({
+              await buyVip({
                 vipId: vip.id,
                 name: buyType.name,
                 days: buyType.days,
-              })
-                .then(() => {
-                  MySwal.alert('购买成功会员');
-                  notifyUserDataChange();
-                })
-                .catch(errorHandler)
-                .finally(() => setLoading(false));
-            });
+              });
+
+              MySwal.alert('购买成功会员');
+              notifyUserDataChange();
+            } catch (error) {
+              errorHandler(error);
+            } finally {
+              setLoading(false);
+            }
           }}
         >
           {loading ? 'Loading' : '购买会员'}
@@ -186,7 +189,7 @@ export default function VipBuyWCoinC() {
         <Button
           variant="link"
           disabled={loading}
-          onClick={() => {
+          onClick={async () => {
             const AccountLevel = user['AccountLevel'];
             const vipItem = muConfig.vips.find((it) => it.id === AccountLevel);
 
@@ -195,27 +198,29 @@ export default function VipBuyWCoinC() {
               return;
             }
 
-            MySwal.confirm(
+            const result = await MySwal.confirm(
               `你当前的会员是 ${
                 vipItem.name
               }, 退订会员将会返还剩余时间一半的元宝, 退还 ${getUserVipRemainingJF(
                 user,
                 muConfig?.vips
               )} 元宝, 你同意吗?`
-            ).then((result) => {
-              if (!result.isConfirmed) {
-                return;
-              }
+            );
 
+            if (!result.isConfirmed) {
+              return;
+            }
+
+            try {
               setLoading(true);
-              cancelVip()
-                .then(() => {
-                  MySwal.alert('退订会员成功');
-                  notifyUserDataChange();
-                })
-                .catch(errorHandler)
-                .finally(() => setLoading(false));
-            });
+              await cancelVip();
+              MySwal.alert('退订会员成功');
+              notifyUserDataChange();
+            } catch (error) {
+              errorHandler(error);
+            } finally {
+              setLoading(false);
+            }
           }}
         >
           {loading ? 'Loading' : '退订会员'}

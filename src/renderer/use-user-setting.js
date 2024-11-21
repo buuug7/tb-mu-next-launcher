@@ -1,4 +1,4 @@
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useEffect, useState } from 'react';
 import {
   EVENT_ELECTRON_STORE_CHANGE_SUBSCRIBE,
   USER_SETTING_KEY,
