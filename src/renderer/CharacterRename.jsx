@@ -25,7 +25,6 @@ export default function CharacterRename({
   const [changedName, setChangedName] = useState(item['Name']);
   const [loading, setLoading] = useState(false);
   const { user, notifyUserDataChange } = useContext(UserContext);
-  const { updateMessage } = useContext(MessageContext);
   const errorHandler = useErrorHandler();
 
   return (
@@ -64,18 +63,22 @@ export default function CharacterRename({
             variant="primary"
             onClick={async () => {
               if (!checkName(changedName)) {
-                updateMessage('输入的数据包含系统所禁止的字符,请重新输入');
+                MySwal.alert(
+                  '输入的数据包含系统所禁止的字符,请重新输入',
+                  'error'
+                );
                 return;
               }
 
               if (!checkNameLength(changedName)) {
-                updateMessage('角色名称太长');
+                MySwal.alert('角色名称太长', 'error');
                 return;
               }
 
               if (user['WCoinP'] < muConfig.changeNameNeedWcoin) {
-                updateMessage(
-                  `在线改名需要 ${muConfig.changeNameNeedWcoin} 积分,你当前的积分还不够.`
+                MySwal.alert(
+                  `在线改名需要 ${muConfig.changeNameNeedWcoin} 积分,你当前的积分还不够.`,
+                  'error'
                 );
                 return;
               }
@@ -97,7 +100,7 @@ export default function CharacterRename({
                 });
 
                 setShowChangeNameModal(false);
-                updateMessage('成功修改角色名称');
+                MySwal.alert('成功修改角色名称');
                 notifyUserDataChange();
               } catch (error) {
                 errorHandler(error);

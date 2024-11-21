@@ -6,7 +6,6 @@ import { Alert, Form, Modal, Button } from 'react-bootstrap';
 import { customTitle, getSomeJson } from './api';
 import { checkName, checkNameLength, groupBy } from '../util';
 import { UserContext } from './UserProvider';
-import { MessageContext } from './MessageProvider';
 import { MuConfigContext } from './MuConfigProvider';
 import { getBaseUrl } from '../config';
 import useErrorHandler from './use-error-handle';
@@ -15,7 +14,6 @@ import MySwal from './MySwal';
 export default function CustomTitle({ character }) {
   const { muConfig } = useContext(MuConfigContext);
   const { user, notifyUserDataChange } = useContext(UserContext);
-  const { updateMessage } = useContext(MessageContext);
   const [customTitleName, setCustomTitleName] = useState(
     character.customTitleName || ''
   );
@@ -122,60 +120,63 @@ export default function CustomTitle({ character }) {
             <Button
               variant="primary"
               disabled={loading}
-              onClick={() => {
+              onClick={async () => {
                 if (!customTitleName) {
-                  updateMessage('请填写称号');
+                  MySwal.alert('请填写称号', 'error');
                   return;
                 }
 
                 if (!customTitleIndex) {
-                  updateMessage('请选择头像');
+                  MySwal.alert('请选择头像', 'error');
                   return;
                 }
 
                 if (!checkName(customTitleName)) {
-                  updateMessage('输入的数据包含系统所禁止的字符,请重新输入');
-                  return;
-                }
-
-                if (!checkNameLength(customTitleName, 16)) {
-                  updateMessage('称号太长');
-                  return;
-                }
-
-                if (user['WCoinP'] - muConfig.customTitleNeedWcoin < 0) {
-                  updateMessage(
-                    `自定义称号需要 ${muConfig.customTitleNeedWcoin} 积分,你当前的积分还不够.`
+                  MySwal.alert(
+                    '输入的数据包含系统所禁止的字符,请重新输入',
+                    'error'
                   );
                   return;
                 }
 
-                MySwal.confirm(
+                if (!checkNameLength(customTitleName, 16)) {
+                  MySwal.alert('称号太长', 'error');
+                  return;
+                }
+
+                if (user['WCoinP'] - muConfig.customTitleNeedWcoin < 0) {
+                  MySwal.alert(
+                    `自定义称号需要 ${muConfig.customTitleNeedWcoin} 积分,你当前的积分还不够.`,
+                    'error'
+                  );
+                  return;
+                }
+
+                const result = await MySwal.confirm(
                   `自定义称号需要收取额外的 ${muConfig.customTitleNeedWcoin} 积分, 你同意吗?`
-                ).then((result) => {
-                  if (!result.isConfirmed) {
-                    return;
-                  }
+                );
 
+                if (!result.isConfirmed) {
+                  return;
+                }
+
+                try {
                   setLoading(true);
-
-                  customTitle({
+                  await customTitle({
                     username: character['AccountID'],
                     characterName: character['Name'],
                     customTitleName,
                     customTitleIndex,
-                  })
-                    .then(({ data }) => {
-                      console.log(data);
-                      MySwal.alert('成功修改称号');
-                      setShowModal(false);
-                      notifyUserDataChange();
-                    })
-                    .catch(errorhandler)
-                    .finally(() => {
-                      setLoading(false);
-                    });
-                });
+                  });
+
+                  MySwal.alert('成功修改称号');
+                  setShowModal(false);
+                  notifyUserDataChange();
+                } catch (error) {
+                  errorhandler(error);
+                } finally {
+                  setLoading(false);
+                }
               }}
             >
               {loading ? 'Loading...' : '保存'}

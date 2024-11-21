@@ -14,7 +14,6 @@ import { MuConfigContext } from './MuConfigProvider';
 export default function Ext1Custom({ character }) {
   const { user, notifyUserDataChange } = useContext(UserContext);
   const { muConfig } = useContext(MuConfigContext);
-  const { updateMessage } = useContext(MessageContext);
   const [type, setType] = useState(muConfig?.updateExt1Type?.comboRate);
   const [addProb, setAddProb] = useState(0);
   const [totalProb, setTotalProb] = useState(0);
@@ -120,7 +119,7 @@ export default function Ext1Custom({ character }) {
               }
 
               if (JF - costJf < 0) {
-                updateMessage(`当前用户积分不够`);
+                MySwal.alert(`当前用户积分不够`, 'error');
                 return;
               }
 

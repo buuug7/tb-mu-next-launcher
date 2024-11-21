@@ -33,6 +33,9 @@ function message(text) {
 }
 
 function alert(text, icon = 'success') {
+  const confirmButton =
+    icon === 'error' ? 'btn btn-outline-danger' : 'btn btn-outline-success';
+
   return MySwal.fire({
     title: '',
     text,
@@ -41,7 +44,7 @@ function alert(text, icon = 'success') {
     width: '20em',
     customClass: {
       ...customClass,
-      // confirmButton: 'btn btn-outline-primary',
+      confirmButton,
     },
   });
 }
