@@ -9,6 +9,7 @@ import { changeCharacterName } from './api';
 import MySwal from './MySwal';
 import { MessageContext } from './MessageProvider';
 import { MuConfigContext } from './MuConfigProvider';
+import useErrorHandler from './use-error-handle';
 
 /**
  *
@@ -25,7 +26,7 @@ export default function CharacterRename({
   const [loading, setLoading] = useState(false);
   const { user, notifyUserDataChange } = useContext(UserContext);
   const { updateMessage } = useContext(MessageContext);
-  const JF = user['WCoinP'];
+  const errorHandler = useErrorHandler();
 
   return (
     <div>
@@ -61,7 +62,7 @@ export default function CharacterRename({
           </Button>
           <Button
             variant="primary"
-            onClick={() => {
+            onClick={async () => {
               if (!checkName(changedName)) {
                 updateMessage('输入的数据包含系统所禁止的字符,请重新输入');
                 return;
@@ -72,36 +73,37 @@ export default function CharacterRename({
                 return;
               }
 
-              if (JF < muConfig.changeNameNeedWcoin) {
+              if (user['WCoinP'] < muConfig.changeNameNeedWcoin) {
                 updateMessage(
                   `在线改名需要 ${muConfig.changeNameNeedWcoin} 积分,你当前的积分还不够.`
                 );
                 return;
               }
 
-              MySwal.confirm(
+              const result = await MySwal.confirm(
                 `在线改名要收取额外的 ${muConfig.changeNameNeedWcoin} 积分, 你同意吗?`
-              ).then((result) => {
-                if (!result.isConfirmed) {
-                  return;
-                }
+              );
 
+              if (!result.isConfirmed) {
+                return;
+              }
+
+              try {
                 setLoading(true);
-
-                changeCharacterName({
+                await changeCharacterName({
                   username: item['AccountID'],
                   oldName: item['Name'],
                   newName: changedName,
-                })
-                  .then(() => {
-                    setShowChangeNameModal(false);
-                    updateMessage('成功修改角色名称');
-                    notifyUserDataChange();
-                  })
-                  .finally(() => {
-                    setLoading(false);
-                  });
-              });
+                });
+
+                setShowChangeNameModal(false);
+                updateMessage('成功修改角色名称');
+                notifyUserDataChange();
+              } catch (error) {
+                errorHandler(error);
+              } finally {
+                setLoading(false);
+              }
             }}
           >
             {loading ? 'Loading...' : '保存'}

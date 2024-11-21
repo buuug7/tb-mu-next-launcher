@@ -17,8 +17,6 @@ import './PageSetting.scss';
 const { electron } = window;
 
 export default function PageSetting() {
-  const { muConfig } = useContext(MuConfigContext);
-
   const [ID, setID] = useState('');
   const [Resolution, setResolution] = useState(1);
   const [MusicOnOff, setMusicOnOff] = useState(1);

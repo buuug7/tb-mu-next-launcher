@@ -114,7 +114,7 @@ export default function Ext1Custom({ character }) {
             size="sm"
             className="me-1"
             variant="outline-primary"
-            onClick={() => {
+            onClick={async () => {
               if (costJf <= 0) {
                 return;
               }
@@ -124,27 +124,30 @@ export default function Ext1Custom({ character }) {
                 return;
               }
 
-              MySwal.confirm(
+              const result = await MySwal.confirm(
                 `你当前的 ${type.name} 为 ${currentValue}%, 提升之后为 ${totalProb}%, 提升需要积分 ${costJf}, 你同意吗? `
-              ).then((result) => {
-                if (!result.isConfirmed) {
-                  return;
-                }
+              );
 
+              if (!result.isConfirmed) {
+                return;
+              }
+
+              try {
                 setLoading(true);
-                customExt1Update({
+                await customExt1Update({
                   charName: character['Name'],
                   addProb: addProb,
                   typeKey: type.key,
-                })
-                  .then(() => {
-                    MySwal.alert(`升级成功!`);
-                    notifyUserDataChange();
-                    resetInitial();
-                  })
-                  .catch(errorHandler)
-                  .finally(() => setLoading(false));
-              });
+                });
+
+                MySwal.alert(`升级成功!`);
+                notifyUserDataChange();
+                resetInitial();
+              } catch (error) {
+                errorHandler(error);
+              } finally {
+                setLoading(false);
+              }
             }}
           >
             {loading ? 'Loading...' : '确认'}
@@ -154,27 +157,29 @@ export default function Ext1Custom({ character }) {
             disabled={loading}
             size="sm"
             variant="link"
-            onClick={() => {
-              MySwal.confirm(
+            onClick={async () => {
+              const result = await MySwal.confirm(
                 `重置**${type.name}**到初始状态, 花费的积分不会退还, 你同意吗? `
-              ).then((result) => {
-                if (!result.isConfirmed) {
-                  return;
-                }
+              );
 
+              if (!result.isConfirmed) {
+                return;
+              }
+
+              try {
                 setLoading(true);
-                customExt1Reset({
+                await customExt1Reset({
                   charName: character['Name'],
                   typeKey: type.key,
-                })
-                  .then(() => {
-                    notifyUserDataChange();
-                    resetInitial();
-                    MySwal.alert(`重置成功!`);
-                  })
-                  .catch(errorHandler)
-                  .finally(() => setLoading(false));
-              });
+                });
+                notifyUserDataChange();
+                resetInitial();
+                MySwal.alert(`重置成功!`);
+              } catch (error) {
+                errorHandler(error);
+              } finally {
+                setLoading(false);
+              }
             }}
           >
             {loading ? 'Loading...' : '重置'}
