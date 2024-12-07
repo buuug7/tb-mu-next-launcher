@@ -329,7 +329,11 @@ export default function CharacterCard({ item, onRefresh }) {
                   return;
                 }
 
-                MySwal.confirm('确定要三次转职?').then((result) => {
+                MySwal.confirm(
+                  `网站三次转职需要收取${
+                    muConfig.thirdEvolutionWcoin || 0
+                  }积分, 你确定要三次转职?`
+                ).then((result) => {
                   if (!result.isConfirmed) {
                     return;
                   }
