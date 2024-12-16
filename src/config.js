@@ -1,5 +1,5 @@
 // default IP
-export const defaultIp = '124.220.27.153';
+export const defaultIp = '117.72.12.89';
 
 // default port
 export const defaultPort = '44405';
@@ -29,7 +29,7 @@ export function getBaseUrl() {
 
   // return String.fromCodePoint(...codePoints);
   // return 'http://localhost:3003';
-  return 'http://124.220.27.153:55992';
+  return 'http://117.72.12.89:55992';
 }
 
 // 新闻

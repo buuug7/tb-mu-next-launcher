@@ -53,7 +53,7 @@ export default function PageBlog() {
         </div>
         {displayMenu && (
           <div className="blogPostRight">
-            <h5>小猪相关</h5>
+            <h5>土鳖相关</h5>
             <ul>
               {posts1.map((item) => (
                 <li key={item}>

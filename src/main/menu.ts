@@ -57,14 +57,14 @@ export default class MenuBuilder {
       label: 'Electron',
       submenu: [
         {
-          label: 'About 小猪公益奇迹登录器',
+          label: 'About 土鳖公益奇迹登录器',
           selector: 'orderFrontStandardAboutPanel:',
         },
         { type: 'separator' },
         { label: 'Services', submenu: [] },
         { type: 'separator' },
         {
-          label: 'Hide 小猪公益奇迹登录器',
+          label: 'Hide 土鳖公益奇迹登录器',
           accelerator: 'Command+H',
           selector: 'hide:',
         },
