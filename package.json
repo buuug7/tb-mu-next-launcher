@@ -200,7 +200,7 @@
   },
   "build": {
     "productName": "土鳖公益奇迹登录器",
-    "appId": "org.erb.TuBieQiJiDengLuQi",
+    "appId": "org.erb.TuBieQiJiDengLuQiNew",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [

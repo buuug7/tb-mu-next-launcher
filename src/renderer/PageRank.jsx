@@ -37,7 +37,7 @@ function RankSkeleton() {
 
 export default function PageRank() {
   const { muConfig } = useContext(MuConfigContext);
-  const [showCardBg, setShowCardBg] = useState(true);
+  const [showCardBg, setShowCardBg] = useState(false);
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
