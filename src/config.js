@@ -11,7 +11,7 @@ export const EVENT_CHECK_CLIENT_UPDATE = 'EVENT_CHECK_CLIENT_UPDATE';
 export const EVENT_UPDATE_PROGRESS = 'EVENT_UPDATE_PROGRESS';
 export const EVENT_UPDATE_FINISHED = 'EVENT_UPDATE_FINISHED';
 
-export const USER_SETTING_KEY = 'userSetting';
+export const USER_SETTING_KEY = 'userSettingTB';
 
 export const EVENT_ELECTRON_STORE_CHANGE_SUBSCRIBE =
   'EventElectronStoreChangeSubscribe';
@@ -29,7 +29,7 @@ export function getBaseUrl() {
 
   // return String.fromCodePoint(...codePoints);
   // return 'http://localhost:3003';
-  return 'http://117.72.12.89:55992';
+  return 'http://117.72.12.89:39155';
 }
 
 // 新闻
