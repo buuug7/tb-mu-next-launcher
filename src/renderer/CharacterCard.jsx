@@ -319,7 +319,7 @@ export default function CharacterCard({ item, onRefresh }) {
                 !muConfig.enableThirdEvolution
               }
               variant="outline-primary"
-              onClick={() => {
+              onClick={async () => {
                 if (loading) {
                   return;
                 }
@@ -329,26 +329,28 @@ export default function CharacterCard({ item, onRefresh }) {
                   return;
                 }
 
-                MySwal.confirm(
+                const result = await MySwal.confirm(
                   `网站三次转职需要收取${
                     muConfig.thirdEvolutionWcoin || 0
                   }积分, 你确定要三次转职?`
-                ).then((result) => {
-                  if (!result.isConfirmed) {
-                    return;
-                  }
+                );
+
+                if (!result.isConfirmed) {
+                  return;
+                }
+
+                try {
                   setLoading(true);
-                  toThirdEvolution({
+                  await toThirdEvolution({
                     charName: item['Name'],
-                  })
-                    .then(() => {
-                      MySwal.alert('成功三次转职');
-                      onRefresh();
-                    })
-                    .finally(() => {
-                      setLoading(false);
-                    });
-                });
+                  });
+                  MySwal.alert('成功三次转职');
+                  onRefresh();
+                } catch (error) {
+                  errorHandler(error);
+                } finally {
+                  setLoading(false);
+                }
               }}
               size="sm"
             >
