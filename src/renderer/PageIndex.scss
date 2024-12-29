@@ -58,3 +58,17 @@
   font-size: 1.4rem;
   margin-bottom: 1.25rem;
 }
+
+.index-carousel {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 8px;
+  background-color: white;
+  padding: 8px;
+}
+
+@media (max-width: 1024px) {
+  .index-carousel {
+    grid-template-columns: 1fr 1fr;
+  }
+}

@@ -45,9 +45,9 @@ export default function MyNavbar() {
             <Link to="/rank" className="nav-link">
               排行
             </Link>
-            {/* <Link to="/misc" className="nav-link">
+            <Link to="/collections" className="nav-link">
               图鉴
-            </Link> */}
+            </Link>
           </Nav>
 
           <Nav>

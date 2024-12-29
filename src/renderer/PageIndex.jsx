@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import { MuConfigContext } from './MuConfigProvider';
 import Layout from './Layout';
 import CheckClient from './CheckClient';
+import MyCarouselBasic from './MyCarouselBasic';
 import { delay } from '../util';
 
 import './PageIndex.scss';
@@ -70,6 +71,16 @@ export default function PageIndex() {
             </Link>
           </div>
         </div>
+      </div>
+
+      <div className="index-carousel">
+        {(muConfig?.indexCarousel || []).map((it) => (
+          <MyCarouselBasic
+            baseUrl={muConfig.baseUrl}
+            item={it}
+            key={it.title}
+          />
+        ))}
       </div>
 
       <div className="index-feature mt-4">

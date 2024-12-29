@@ -11,6 +11,7 @@ import PageCharacters from './PageCharacters';
 import PageCustom from './PageCustom';
 import PageSetting from './PageSetting';
 import PageBlog from './PageBlog';
+import PageCollections from './PageCollections';
 import Post from './Post';
 import UserProvider from './UserProvider';
 import MuConfigProvider from './MuConfigProvider';
@@ -30,6 +31,7 @@ export default function App() {
               <Route path="/login" element={<PageLogin />} />
               <Route path="/account" element={<PageAccount />} />
               <Route path="/rank" element={<PageRank />} />
+              <Route path="/collections" element={<PageCollections />} />
               <Route path="/vip" element={<PageVip />} />
               <Route path="/characters" element={<PageCharacters />} />
               <Route path="/custom" element={<PageCustom />} />
