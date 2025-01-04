@@ -1,13 +1,13 @@
 {
   "name": "TuBieQiJiDengLuQiNew",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "土鳖公益奇迹登录器",
   "productionName": "土鳖公益奇迹登录器",
   "license": "MIT",
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://github.com/electron-react-boilerplate"
+    "name": "TBGM",
+    "email": "TBGM@qq.com",
+    "url": "https://TBGM.github.io"
   },
   "main": "./dist/main/main.js",
   "scripts": {
