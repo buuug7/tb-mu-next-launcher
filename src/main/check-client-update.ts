@@ -126,7 +126,11 @@ export async function downloadUpdatedFiles(
 
     if (updateItems.length > 0) {
       // 更新前杀死正在运行的 main.exe
-      await killMainProcess();
+      try {
+        await killMainProcess();
+      } catch (error) {
+        log.info(`killMainProcess error: `, error);
+      }
       await delay(3000);
     }
 
