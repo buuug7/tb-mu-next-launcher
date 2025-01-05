@@ -4,6 +4,7 @@ import path from 'path';
 import log from 'electron-log';
 import findProcess from 'find-process';
 import { rootPath } from '../../release/app/node_modules/electron-root-path';
+import findProcessByName from './find-process';
 
 export function resolveHtmlPath(htmlFileName: string) {
   if (process.env.NODE_ENV === 'development') {
@@ -22,11 +23,9 @@ export const _rootPath = rootPath;
 
 export function killMainProcess() {
   return new Promise((resolve, reject) => {
-    // eslint-disable-next-line promise/catch-or-return
-    findProcess('name', 'main.exe', true).then(
-      // eslint-disable-next-line promise/always-return
-      (list) => {
-        log.info(`main.exe process list: `, list);
+    findProcessByName('main.exe')
+      .then((list) => {
+        log.info(`All main.exe process list: `, list);
         try {
           list.forEach((it) => {
             process.kill(it.pid);
@@ -36,12 +35,11 @@ export function killMainProcess() {
           reject();
         }
         resolve(true);
-      },
-      (err) => {
-        log.info(`err`, err);
-        reject();
-      }
-    );
+      })
+      .catch((error) => {
+        log.info(`err`, error);
+        reject(error);
+      });
   });
 }
 
