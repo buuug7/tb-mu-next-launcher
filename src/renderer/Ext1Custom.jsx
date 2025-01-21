@@ -5,7 +5,6 @@ import { Alert, Button } from 'react-bootstrap';
 import { getExt1ValueByIndex } from '../util';
 import { UserContext } from './UserProvider';
 import { customExt1Reset, customExt1Update } from './api';
-import { MessageContext } from './MessageProvider';
 
 import MySwal from './MySwal';
 import useErrorHandler from './use-error-handle';

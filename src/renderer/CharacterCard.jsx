@@ -23,6 +23,7 @@ import CharacterAvatar from './CharacterAvatar';
 import Ext1Custom from './Ext1Custom';
 import CustomTitle from './CustomTitle';
 import CharacterRename from './CharacterRename';
+import CustomAutoReset from './CustomAutoReset';
 import {
   addPoints,
   backToSecondEvolution,
@@ -153,6 +154,9 @@ export default function CharacterCard({ item, onRefresh }) {
       <Card.Body style={{ padding: '0.5rem 1rem' }}>
         {muConfig.enableExt1 && <Ext1Custom character={item} />}
         {muConfig.enableCustomTitle && <CustomTitle character={item} />}
+        {muConfig.autoResetConfig?.enable && (
+          <CustomAutoReset character={item} />
+        )}
         <div className="characters-actions">
           <Button
             disabled={loading || !muConfig.enableResetLife}

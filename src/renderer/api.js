@@ -58,6 +58,10 @@ export const customExt1Update = (data) => {
   return http.post(`/mu/api/users/customExt1Update`, data);
 };
 
+export const autoResetConfig = (data) => {
+  return http.post(`/mu/api/users/autoResetConfig`, data);
+};
+
 export const customExt1Reset = (data) => {
   return http.post(`/mu/api/users/customExt1Reset`, data);
 };
